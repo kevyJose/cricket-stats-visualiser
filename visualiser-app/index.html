@@ -4,17 +4,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/main.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="./js/main.js"></script>
   <script>
     window.onload = function() {
-      readData("./data/raw-data.csv", "#raw")     
+      readData("./data/data-statsguru.csv", "#raw")
+        .then(doFirstChart)
+        .catch((error) => console.log("Error: ", error.message));      
     };
   </script>
 
-  <title>Document</title>
+  <title>Cricket Mania</title>
 </head>
 <body>
+  <h1>Cricket Mania</h1>
+
+  <button onclick="doFirstChart('#scatter_plot')">Runs vs Matches Played</button>
+  <div id="scatter_plot"></div>
+
+
   
 </body>
 </html>
