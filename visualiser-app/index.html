@@ -9,7 +9,7 @@
   <script src="./js/main.js"></script>
   <script>
     window.onload = function() {
-      readData("./data/data-statsguru.csv", "#raw")
+      readData("./data/data-statsguru-2.csv", "#raw")
         .then(doFirstChart)
         .catch((error) => console.log("Error: ", error.message));      
     };

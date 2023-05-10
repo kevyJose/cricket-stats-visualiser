@@ -1,4 +1,3 @@
-// const { parse } = require("uuid");
 
 function readData(file, id) {
   return d3.csv(file)
@@ -43,9 +42,9 @@ function reduceData(values){
       batting_avg: parseFloat(row.Ave) || "na",
       balls_faced: parseInt(row.BF) || "na",
       strike_rate: parseFloat(row.SR) || "na",
-      centuries: parseInt(row["100"]) || "na",
-      half_cents: parseInt(row["50"]) || "na",
-      half_cents: parseInt(row["0"]) || "na"      
+      centuries: row["100"] === "0" ? 0 : (parseInt(row["100"]) || "na"),
+      half_cents: row["50"] === "0" ? 0 : (parseInt(row["50"]) || "na"),
+      below_fifty: row["0"] === "0" ? 0 : (parseInt(row["0"]) || "na")      
     };
   });    
 }
