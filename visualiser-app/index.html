@@ -8,17 +8,25 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="./js/main.js"></script>
   <script>
-    window.onload = function() {
-      readData("./data/data-statsguru-2.csv", "#raw")
-        .then(doFirstChart)
-        .catch((error) => console.log("Error: ", error.message));      
-    };
+    // window.onload = function() {
+    //   readData("./data/data-statsguru-2.csv", "#raw")
+    //     .catch((error) => console.log("Error: ", error.message));      
+    // };
   </script>
 
   <title>Cricket Mania</title>
 </head>
 <body>
   <h1>Cricket Mania</h1>
+
+  <select id="location-menu">
+    <option value="T">Total</option>
+    <option value="H">Home</option>
+    <option value="A">Away</option>
+    <option value="N">Neutral</option>
+    <option value="BIS">BIS</option>
+    <option value="SENA">SENA</option>
+  </select>
 
   <button onclick="doFirstChart('#scatter_plot')">Runs vs Matches Played</button>
   <div id="scatter_plot"></div>

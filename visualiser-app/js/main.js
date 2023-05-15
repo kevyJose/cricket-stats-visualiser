@@ -1,8 +1,30 @@
 
+let selectedLocation = 'T';
+
+//Do these initial calls once the DOM is finished loading
+window.addEventListener('DOMContentLoaded', function() {
+  setupDropdownListener()
+
+  readData('./data/data-statsguru-2.csv', '#raw')    
+    .then(console.log('Data read successfully'))
+    .catch((error) => console.log('Error: ', error.message)); 
+});
+
+
+function setupDropdownListener() {   
+  const location_menu = document.getElementById('location-menu');
+
+  location_menu.addEventListener('change', function() {
+    selectedLocation = location_menu.value
+    console.log('selected location: ' + selectedLocation);    
+  });
+}
+
+
 function readData(file, id) {
   return d3.csv(file)
   .then(processData)
-  .catch((error) => console.log("Error: ", error.message));
+  .catch((error) => console.log('Error: ', error.message));
 }
 
 var raw_data;
@@ -14,15 +36,15 @@ function processData(data) {
   let players = Array.from(rolledUpData, ([name, data]) => ({ name, data }))
 
   raw_data = players
-
-  console.log(players)
+  
+  console.log('raw_data: ', raw_data)
 }
 
 
 //key function
 function groupBy(data) {
   // return data.Player;
-  return data.Player.slice(0, data.Player.indexOf("("));
+  return data.Player.slice(0, data.Player.indexOf('('));
 }
 
 //reducer function
@@ -30,21 +52,21 @@ function reduceData(values){
   return values.map(function(row) {
     return {
       id: parseInt(row.ID),
-      // name: row.Player.slice(0, row.Player.indexOf("(")) || "na",    
-      country: row.Player.slice(row.Player.indexOf("(")+1, row.Player.length-1) || "na",
-      location: row.Location || "na",
-      span: row.Span || "na",
-      matches_played: parseInt(row.Mat) || "na",
-      innings: parseInt(row.Inns) || "na",
-      not_outs: parseInt(row.NO) || "na",
-      runs: parseInt(row.Runs) || "na",
-      high_score: parseInt(row.HS) || "na",
-      batting_avg: parseFloat(row.Ave) || "na",
-      balls_faced: parseInt(row.BF) || "na",
-      strike_rate: parseFloat(row.SR) || "na",
-      centuries: row["100"] === "0" ? 0 : (parseInt(row["100"]) || "na"),
-      half_cents: row["50"] === "0" ? 0 : (parseInt(row["50"]) || "na"),
-      below_fifty: row["0"] === "0" ? 0 : (parseInt(row["0"]) || "na")      
+      name: row.Player.slice(0, row.Player.indexOf('(')) || 'na',    
+      country: row.Player.slice(row.Player.indexOf('(')+1, row.Player.length-1) || 'na',
+      location: row.Location || 'na',
+      span: row.Span || 'na',
+      matches_played: parseInt(row.Mat) || 'na',
+      innings: parseInt(row.Inns) || 'na',
+      not_outs: parseInt(row.NO) || 'na',
+      runs: parseInt(row.Runs) || 'na',
+      high_score: parseInt(row.HS) || 'na',
+      batting_avg: parseFloat(row.Ave) || 'na',
+      balls_faced: parseInt(row.BF) || 'na',
+      strike_rate: parseFloat(row.SR) || 'na',
+      centuries: row['100'] === '0' ? 0 : (parseInt(row['100']) || 'na'),
+      half_cents: row['50'] === '0' ? 0 : (parseInt(row['50']) || 'na'),
+      below_fifty: row['0'] === '0' ? 0 : (parseInt(row['0']) || 'na')      
     };
   });    
 }
@@ -55,11 +77,33 @@ function reduceData(values){
 function doFirstChart(id_tag) {
   // console.log(raw_data)
 
-  const filteredData = raw_data.map(d => {
-    return {id: d.id, name: d.name, runs: d.runs, matches_played: d.matches_played};
+  // const filteredData = raw_data.map(d => {
+  //   return {id: d.id, name: d.name, runs: d.runs, matches_played: d.matches_played};
+  // });
+  // console.log('filtered:  ', filteredData);
+
+  // array of player objects (filtered by location)
+  const filteredData = raw_data.map(player => {
+    const filteredRow = player.data.filter(row => row.location === selectedLocation);
+    const selectedRow = filteredRow[0];
+    // console.log(selectedRow)
+
+    if (filteredRow.length === 0) {
+      return { name: player.name, row: {} };
+    }
+
+    const selectedData = {
+      id: selectedRow.id,
+      runs: selectedRow.runs,
+      matches_played: selectedRow.matches_played
+    };
+    // return { name: player.name, row: selectedData};
+    
+    return { name: player.name, id: selectedData.id, runs: selectedData.runs, matches_played: selectedData.matches_played};
   });
 
-  // console.log("filtered:  ", filteredData);
+  console.log('Data_filtered_by_' + selectedLocation, filteredData)
+
 
   let matchesData = filteredData.map((d) => d.matches_played)
   let runsData = filteredData.map((d) => d.runs)
@@ -70,49 +114,76 @@ function doFirstChart(id_tag) {
   // console.log(runsMax)
 
   // set the dimensions and margins of the graph
-  var margin = {top: 10, right: 30, bottom: 30, left: 60},
+  var margin = {top: 25, right: 30, bottom: 50, left: 70},
   width = 460 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select(id_tag)
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-          
+  .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+  .append('g')
+    .attr('transform',
+          'translate(' + margin.left + ',' + margin.top + ')');          
           
   // Add X axis
   var x = d3.scaleLinear()
   .domain([0, matchesMax+50])
   .range([ 0, width ]);
-  svg.append("g")
-  .attr("transform", "translate(0," + height + ")")
+  svg.append('g')
+  .attr('transform', 'translate(0,' + height + ')')
   .call(d3.axisBottom(x))
-  .style("fill", "#ffffff")
-  .style("color", "#ffffff");
+  .style('fill', '#ffffff')
+  .style('color', '#ffffff');
 
   // Add Y axis
   var y = d3.scaleLinear()
   .domain([0, runsMax+2000])
   .range([ height, 0]);
-  svg.append("g")
+  svg.append('g')
   .call(d3.axisLeft(y))
-  .style("fill", "#ffffff")
-  .style("color", "#ffffff");
+  .style('fill', '#ffffff')
+  .style('color', '#ffffff');
 
   // Add dots
   svg.append('g')
-  .selectAll("dot")
+  .selectAll('dot')
   .data(filteredData)
   .enter()
-  .append("circle")
-    .attr("cx", function (d) { return x(d.matches_played); } )
-    .attr("cy", function (d) { return y(d.runs); } )
-    .attr("r", 1.5)
-    .style("fill", "#ffffff")
+  .append('circle')
+    .attr('cx', function (d) { return x(d.matches_played); } )
+    .attr('cy', function (d) { return y(d.runs); } )
+    .attr('r', 1.5)
+    .style('fill', '#ffffff')
+
+  // Add chart title
+  svg.append('text')
+    .attr('x', (width / 2))
+    .attr('y', margin.top)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '16px')
+    .style('fill', '#ffffff')
+    .text('Runs vs Matches Played');
+
+  // Add X axis label
+  svg.append('text')
+    .attr('transform', 'translate(' + (width / 2) + ',' + (height + 45) + ')')
+    .style('text-anchor', 'middle')
+    .style('font-size', '12px')
+    .style('fill', '#ffffff')
+    .text('Matches Played');
+
+  // Add Y axis label
+  svg.append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('y', 0 - margin.left)
+    .attr('x',0 - (height / 2))
+    .attr('dy', '1em')
+    .style('text-anchor', 'middle')
+    .style('font-size', '12px')
+    .style('fill', '#ffffff')
+    .text('Runs');
 
   
 
