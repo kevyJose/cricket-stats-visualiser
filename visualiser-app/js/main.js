@@ -94,12 +94,14 @@ function doFirstChart(id_tag) {
 
     const selectedData = {
       id: selectedRow.id,
+      name: selectedRow.name,
+      country: selectedRow.country,
       runs: selectedRow.runs,
       matches_played: selectedRow.matches_played
     };
     // return { name: player.name, row: selectedData};
     
-    return { name: player.name, id: selectedData.id, runs: selectedData.runs, matches_played: selectedData.matches_played};
+    return { name: player.name, id: selectedData.id,  country: selectedData.country, runs: selectedData.runs, matches_played: selectedData.matches_played};
   });
 
   console.log('Data_filtered_by_' + selectedLocation, filteredData)
@@ -115,14 +117,16 @@ function doFirstChart(id_tag) {
 
   // set the dimensions and margins of the graph
   var margin = {top: 25, right: 30, bottom: 50, left: 70},
-  width = 460 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+  width = 650 - margin.left - margin.right,
+  height = 550 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3.select(id_tag)
   .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
+    .style('background-color', '#131054') // background color
+    .style('border', '4px solid #ccc') // Set the border properties here
   .append('g')
     .attr('transform',
           'translate(' + margin.left + ',' + margin.top + ')');          
@@ -154,13 +158,23 @@ function doFirstChart(id_tag) {
   .append('circle')
     .attr('cx', function (d) { return x(d.matches_played); } )
     .attr('cy', function (d) { return y(d.runs); } )
-    .attr('r', 1.5)
-    .style('fill', '#ffffff')
+    .attr('r', 3.0)
+    .style('fill', function(d) {
+      // Specify color based on the 'country' attribute
+      if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
+        return '#e41a1c';
+      } else if (d.country === 'SA' || d.country === 'ENG' || d.country === 'NZ' || d.country === 'AUS') {
+        return '#377eb8';
+      } else {
+        return '#4daf4a';
+      }
+    });
+
 
   // Add chart title
   svg.append('text')
     .attr('x', (width / 2))
-    .attr('y', margin.top)
+    .attr('y', margin.top - 20)
     .attr('text-anchor', 'middle')
     .style('font-size', '16px')
     .style('fill', '#ffffff')
@@ -185,6 +199,44 @@ function doFirstChart(id_tag) {
     .style('fill', '#ffffff')
     .text('Runs');
 
+
+  //LEGEND
+  // Append the legend to the SVG
+  var legend = svg.append('g')
+    .attr('class', 'legend')
+    .attr('transform', 'translate(' + (width - 40) + ',' + 2 + ')'); // Adjust the position as needed
+
+  // Define the legend data based on the 'country' attribute
+  var legendData = [
+    { label: 'BIS', color: '#e41a1c' },
+    { label: 'SENA', color: '#377eb8' },
+    { label: 'Other', color: '#4daf4a' }
+  ];
+
+  // Create the legend items
+  var legendItems = legend.selectAll('.legend-item')
+    .data(legendData)
+    .enter()
+    .append('g')
+    .attr('class', 'legend-item')
+    .attr('transform', (d, i) => `translate(0, ${i * 20})`); // Adjust the spacing between legend items
+
+  // Add the colored rectangles to the legend items
+  legendItems.append('rect')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', 12)
+    .attr('height', 12)
+    .style('fill', d => d.color);
+
+  // Add the text labels to the legend items
+  legendItems.append('text')
+    .attr('x', 20)
+    .attr('y', 6)
+    .attr('dy', '0.35em')
+    .style('font-size', '12px')
+    .style('fill', '#ffffff')
+    .text(d => d.label);
   
 
 }
