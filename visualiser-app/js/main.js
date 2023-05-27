@@ -66,7 +66,7 @@ function reduceData(values){
       strike_rate: parseFloat(row.SR) || 'na',
       centuries: row['100'] === '0' ? 0 : (parseInt(row['100']) || 'na'),
       half_cents: row['50'] === '0' ? 0 : (parseInt(row['50']) || 'na'),
-      below_fifty: row['0'] === '0' ? 0 : (parseInt(row['0']) || 'na')      
+      below_fifties: row['0'] === '0' ? 0 : (parseInt(row['0']) || 'na')      
     };
   });    
 }
