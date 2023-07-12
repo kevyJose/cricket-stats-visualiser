@@ -1,5 +1,7 @@
 
-let selectedLocation = 'T';
+let selectedLocation = 'T'
+let selected_x = 'none'
+let selected_y = 'none'
 
 //Do these initial calls once the DOM is finished loading
 window.addEventListener('DOMContentLoaded', function() {
@@ -12,11 +14,23 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 function setupDropdownListener() {   
-  const location_menu = document.getElementById('location-menu');
+  const location_menu = document.getElementById('location-menu')
+  const x_attr_menu = document.getElementById('x-attr-menu')
+  const y_attr_menu = document.getElementById('y-attr-menu')
 
   location_menu.addEventListener('change', function() {
     selectedLocation = location_menu.value
-    console.log('selected location: ' + selectedLocation);    
+    console.log('selected location: ' + selectedLocation)    
+  });
+
+  x_attr_menu.addEventListener('change', function() {
+    selected_x = x_attr_menu.value
+    console.log('selected x-attribute: ' + selected_x)
+  });
+
+  y_attr_menu.addEventListener('change', function() {
+    selected_y = y_attr_menu.value
+    console.log('selected y-attribute: ' + selected_y)
   });
 }
 
@@ -73,14 +87,10 @@ function reduceData(values){
 
 
 
+
 // scatter chart: runs vs matches_played
 function doFirstChart(id_tag) {
   // console.log(raw_data)
-
-  // const filteredData = raw_data.map(d => {
-  //   return {id: d.id, name: d.name, runs: d.runs, matches_played: d.matches_played};
-  // });
-  // console.log('filtered:  ', filteredData);
 
   // array of player objects (filtered by location)
   const filteredData = raw_data.map(player => {
@@ -107,12 +117,12 @@ function doFirstChart(id_tag) {
   console.log('Data_filtered_by_' + selectedLocation, filteredData)
 
   //array of 'matches_played' values 
-  let matchesData = filteredData.map((d) => d.matches_played)
+  let x_values = filteredData.map((d) => d[selected_x])
   //array of 'runs' values
-  let runsData = filteredData.map((d) => d.runs)
+  let y_values = filteredData.map((d) => d[selected_y])
 
-  matchesMax = d3.max(matchesData)
-  runsMax = d3.max(runsData)
+  xMax = d3.max(x_values)
+  yMax = d3.max(y_values)
   // console.log(matchesMax)
   // console.log(runsMax)
 
@@ -134,7 +144,7 @@ function doFirstChart(id_tag) {
           
   // Add X axis
   var x = d3.scaleLinear()
-  .domain([0, matchesMax+50])
+  .domain([0, xMax+50])
   .range([ 0, width ]);
   svg.append('g')
   .attr('transform', 'translate(0,' + height + ')')
@@ -144,7 +154,7 @@ function doFirstChart(id_tag) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-  .domain([0, runsMax+2000])
+  .domain([0, yMax+2000])
   .range([ height, 0]);
   svg.append('g')
   .call(d3.axisLeft(y))
@@ -159,8 +169,8 @@ function doFirstChart(id_tag) {
   .data(filteredData)
   .enter()
   .append('circle')
-    .attr('cx', function (d) { return x(d.matches_played); } )
-    .attr('cy', function (d) { return y(d.runs); } )
+    .attr('cx', function (d) { return x(d[selected_x]); } )
+    .attr('cy', function (d) { return y(d[selected_y]); } )
     .attr('r', 3.0)
     .style('fill', function(d) {
       // Specify color based on the 'country' attribute
