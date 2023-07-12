@@ -106,8 +106,9 @@ function doFirstChart(id_tag) {
 
   console.log('Data_filtered_by_' + selectedLocation, filteredData)
 
-
+  //array of 'matches_played' values 
   let matchesData = filteredData.map((d) => d.matches_played)
+  //array of 'runs' values
   let runsData = filteredData.map((d) => d.runs)
 
   matchesMax = d3.max(matchesData)
@@ -151,6 +152,8 @@ function doFirstChart(id_tag) {
   .style('color', '#ffffff');
 
   // Add dots
+  // iterates over the items in 'filteredData'
+  // in each iteration: access x/y values and plot a point
   svg.append('g')
   .selectAll('dot')
   .data(filteredData)
