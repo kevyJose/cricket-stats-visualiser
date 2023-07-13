@@ -9,4 +9,12 @@ h1 {
   font-size: 40px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
-} 
+}
+
+.dropdown-container {
+  margin-bottom: 10px; /* Adjust the value as needed */
+}
+
+.chart {  
+  margin-top: 20px;
+}

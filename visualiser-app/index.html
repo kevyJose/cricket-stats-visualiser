@@ -19,31 +19,58 @@
 <body>
   <h1>Cricket Mania</h1>
 
-  <select id="location-menu">
-    <option value="T">Total</option>
-    <option value="H">Home</option>
-    <option value="A">Away</option>
-    <option value="N">Neutral</option>
-    <option value="BIS">BIS</option>
-    <option value="SENA">SENA</option>
-  </select>
+  <div class="dropdown-container">
+    <label for="location-menu">Location:</label>
+    <select id="location-menu">
+      <option value="T">Total</option>
+      <option value="H">Home</option>
+      <option value="A">Away</option>
+      <option value="N">Neutral</option>
+      <option value="BIS">BIS</option>
+      <option value="SENA">SENA</option>
+    </select>
+  </div>
 
-  <select id="x-attr-menu">
-    <option value="NONE">None</option>
-    <option value="runs">Runs</option>
-    <option value="matches_played">Matches Played</option>
-  </select>
+  <div class="dropdown-container">
+    <label for="x-attr-menu">X feature:</label>
+    <select id="x-attr-menu">
+      <option value="NONE">None</option>
+      <option value="runs">Runs</option>
+      <option value="matches_played">Matches Played</option>
+      <option value="innings">Innings</option>
+      <option value="not_outs">Not-Outs</option>
+      <option value="high_score">High Score</option>
+      <option value="batting_avg">Batting Average</option>
+      <option value="balls_faced">Balls Faced</option>
+      <option value="strike_rate">Strike Rate</option>
+      <option value="centuries">Centuries</option>
+      <option value="half_cents">Half-Centuries</option>
+      <option value="below_fifties">Below-Fifties</option>
+    </select>
+  </div>
 
-  <select id="y-attr-menu">
-    <option value="NONE">None</option>
-    <option value="runs">Runs</option>
-    <option value="matches_played">Matches Played</option>
-  </select>
+  <div class="dropdown-container">
+    <label for="y-attr-menu">Y feature:</label>
+    <select id="y-attr-menu">
+      <option value="NONE">None</option>
+      <option value="runs">Runs</option>
+      <option value="matches_played">Matches Played</option>
+      <option value="innings">Innings</option>
+      <option value="not_outs">Not-Outs</option>
+      <option value="high_score">High Score</option>
+      <option value="batting_avg">Batting Average</option>
+      <option value="balls_faced">Balls Faced</option>
+      <option value="strike_rate">Strike Rate</option>
+      <option value="centuries">Centuries</option>
+      <option value="half_cents">Half-Centuries</option>
+      <option value="below_fifties">Below-Fifties</option>
+    </select>
+  </div>
+
 
   <button onclick="doFirstChart('#scatter_plot')">Runs vs Matches Played</button>
-  <div id="scatter_plot"></div>
 
-
+  <div class="chart" id="scatter_plot"></div>
   
 </body>
 </html>

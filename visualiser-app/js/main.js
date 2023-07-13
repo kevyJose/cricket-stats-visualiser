@@ -102,24 +102,50 @@ function doFirstChart(id_tag) {
       return { name: player.name, row: {} };
     }
 
+    // console.log('select X: ', selected_x)
+    // console.log('selected Y: ', selected_y)
+
     const selectedData = {
       id: selectedRow.id,
       name: selectedRow.name,
       country: selectedRow.country,
-      runs: selectedRow.runs,
-      matches_played: selectedRow.matches_played
+      xAttr: selectedRow[selected_x],
+      yAttr: selectedRow[selected_y],
+
+      ///THE ABOVE METHOD DOESN'T SEEM TO WORK. CHANGE BACK TO LONG AND HARD METHOD.
+      // runs: selectedRow.runs,
+      // matches_played: selectedRow.matches_played,
+      // location: selectedRow.location,
+      // span: selectedRow.span,      
+      // innings: selectedRow.innings,
+      // not_outs: selectedRow.not_outs,      
+      // high_score: selectedRow.high_score,
+      // batting_avg: selectedRow.batting_avg,
+      // balls_faced: selectedRow.balls_faced,
+      // strike_rate: selectedRow.strike_rate,
+      // centuries: selectedRow.centuries,
+      // half_cents: selectedRow.half_cents,
+      // below_fifties: selectedRow.below_fifties
     };
     // return { name: player.name, row: selectedData};
     
-    return { name: player.name, id: selectedData.id,  country: selectedData.country, runs: selectedData.runs, matches_played: selectedData.matches_played};
+    return { name: player.name, id: selectedData.id,  country: selectedData.country, xAttr: selectedData.xAttr, yAttr: selectedData.yAttr };
   });
 
   console.log('Data_filtered_by_' + selectedLocation, filteredData)
 
+  console.log('filteredData printing...')
+  filteredData.forEach(element => {
+    console.log(element);
+  });
+
   //array of 'matches_played' values 
-  let x_values = filteredData.map((d) => d[selected_x])
+  let x_values = filteredData.map((d) => d.xAttr)
   //array of 'runs' values
-  let y_values = filteredData.map((d) => d[selected_y])
+  let y_values = filteredData.map((d) => d.yAttr)
+
+  // console.log(x_values)
+  // console.log(y_values)
 
   xMax = d3.max(x_values)
   yMax = d3.max(y_values)
@@ -169,8 +195,8 @@ function doFirstChart(id_tag) {
   .data(filteredData)
   .enter()
   .append('circle')
-    .attr('cx', function (d) { return x(d[selected_x]); } )
-    .attr('cy', function (d) { return y(d[selected_y]); } )
+    .attr('cx', function (d) { return x(d.xAttr); } )
+    .attr('cy', function (d) { return y(d.yAttr); } )
     .attr('r', 3.0)
     .style('fill', function(d) {
       // Specify color based on the 'country' attribute
