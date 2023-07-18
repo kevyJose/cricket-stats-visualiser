@@ -180,7 +180,7 @@ function doFirstChart(id_tag) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-  .domain([0, yMax+2000])
+  .domain([0, yMax+40])
   .range([ height, 0]);
   svg.append('g')
   .call(d3.axisLeft(y))
@@ -195,9 +195,24 @@ function doFirstChart(id_tag) {
   .data(filteredData)
   .enter()
   .append('circle')
-    .attr('cx', function (d) { return x(d.xAttr); } )
-    .attr('cy', function (d) { return y(d.yAttr); } )
+    .attr('cx', function (d) {
+      if (d.xAttr === 'na' || d.yAttr === 'na') {
+        return null;
+      } else {
+        return x(d.xAttr);
+      }
+    })
+
+    .attr('cy', function (d) {
+      if (d.xAttr === 'na' || d.yAttr === 'na') {
+        return null;
+      } else {
+        return y(d.yAttr);
+      }
+    })
+
     .attr('r', 3.0)
+
     .style('fill', function(d) {
       // Specify color based on the 'country' attribute
       if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
@@ -207,6 +222,25 @@ function doFirstChart(id_tag) {
       } else {
         return '#4daf4a';
       }
+    })
+
+    .on('mouseover', function(d) {
+      // show tooltip on mouseover
+      d3.select('.tooltip')
+        .style('opacity', 0.9)
+        .html(`
+          <div>Name: ${d.name}</div>
+          <div>Country: ${d.country}</div>
+          <div>${selected_x}: ${d.xAttr}</div>
+          <div>${selected_y}: ${d.yAttr}</div>        
+        `)                        
+        .style('left', (d3.event.pageX + 10) + 'px')
+        .style('top', (d3.event.pageY - 28) + 'px');
+    })
+
+    .on('mouseout', function(d) {
+      //hide tooltip on  mouseout
+      d3.select('.tooltip').style('opacity', 0);
     });
 
 
