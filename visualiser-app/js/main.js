@@ -190,58 +190,58 @@ function doFirstChart(id_tag) {
   // Add dots
   // iterates over the items in 'filteredData'
   // in each iteration: access x/y values and plot a point
-  svg.append('g')
-  .selectAll('dot')
-  .data(filteredData)
-  .enter()
-  .append('circle')
-    .attr('cx', function (d) {
-      if (d.xAttr === 'na' || d.yAttr === 'na') {
-        return null;
-      } else {
-        return x(d.xAttr);
-      }
-    })
+  svg.append('g')  
+    .selectAll('dot')
+    .data(filteredData)
+    .enter()
+    .append('circle')
+      .attr('cx', function (d) {
+        if (d.xAttr === 'na' || d.yAttr === 'na') {
+          return null;
+        } else {
+          return x(d.xAttr);
+        }
+      })
 
-    .attr('cy', function (d) {
-      if (d.xAttr === 'na' || d.yAttr === 'na') {
-        return null;
-      } else {
-        return y(d.yAttr);
-      }
-    })
+      .attr('cy', function (d) {
+        if (d.xAttr === 'na' || d.yAttr === 'na') {
+          return null;
+        } else {
+          return y(d.yAttr);
+        }
+      })
 
-    .attr('r', 3.0)
+      .attr('r', 3.0)
 
-    .style('fill', function(d) {
-      // Specify color based on the 'country' attribute
-      if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
-        return '#e41a1c';
-      } else if (d.country === 'SA' || d.country === 'ENG' || d.country === 'NZ' || d.country === 'AUS') {
-        return '#377eb8';
-      } else {
-        return '#4daf4a';
-      }
-    })
+      .style('fill', function(d) {
+        // Specify color based on the 'country' attribute
+        if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
+          return '#e41a1c';
+        } else if (d.country === 'SA' || d.country === 'ENG' || d.country === 'NZ' || d.country === 'AUS') {
+          return '#377eb8';
+        } else {
+          return '#4daf4a';
+        }
+      })
 
-    .on('mouseover', function(d) {
-      // show tooltip on mouseover
-      d3.select('.tooltip')
-        .style('opacity', 0.9)
-        .html(`
-          <div>Name: ${d.name}</div>
-          <div>Country: ${d.country}</div>
-          <div>${selected_x}: ${d.xAttr}</div>
-          <div>${selected_y}: ${d.yAttr}</div>        
-        `)                        
-        .style('left', (d3.event.pageX + 10) + 'px')
-        .style('top', (d3.event.pageY - 28) + 'px');
-    })
+      .on('mouseover', function(event, d) {
+        // show tooltip on mouseover
+        d3.select('.tooltip')
+          .style('opacity', 0.9)
+          .html(`
+            <div>Name: ${d.name}</div>
+            <div>Country: ${d.country}</div>
+            <div>${selected_x}: ${d.xAttr}</div>
+            <div>${selected_y}: ${d.yAttr}</div>        
+          `)                        
+          // .style('left', (d3.event.pageX + 10) + 'px')
+          // .style('top', (d3.event.pageY - 28) + 'px');
+      })
 
-    .on('mouseout', function(d) {
-      //hide tooltip on  mouseout
-      d3.select('.tooltip').style('opacity', 0);
-    });
+      .on('mouseout', function(d) {
+        //hide tooltip on  mouseout
+        d3.select('.tooltip').style('opacity', 0);
+      });
 
 
   // Add chart title
