@@ -1,5 +1,4 @@
-
-let selectedLocation = 'T'
+let selectedLocation = 'C'
 let selected_x = 'none'
 let selected_y = 'none'
 
@@ -7,7 +6,7 @@ let selected_y = 'none'
 window.addEventListener('DOMContentLoaded', function() {
   setupDropdownListener()
 
-  readData('./data/data-statsguru-2.csv', '#raw')    
+  readData('./data/data-statsguru-3.csv', '#raw')    
     .then(console.log('Data read successfully'))
     .catch((error) => console.log('Error: ', error.message)); 
 });
@@ -196,6 +195,11 @@ function doFirstChart(id_tag) {
     .enter()
     .append('circle')
       .attr('cx', function (d) {
+        // if (isPositiveInteger(d.xAttr)) {
+        //   return x(d.xAttr)
+        // } else {
+        //   return null
+        // }
         if (d.xAttr === 'na' || d.yAttr === 'na') {
           return null;
         } else {
@@ -204,9 +208,14 @@ function doFirstChart(id_tag) {
       })
 
       .attr('cy', function (d) {
+        // if (isPositiveInteger(d.yAttr)) {
+        //   return y(d.yAttr)
+        // } else {
+        //   return null
+        // }
         if (d.xAttr === 'na' || d.yAttr === 'na') {
           return null;
-        } else {
+        } else if (d.yAttr !== 'na') {
           return y(d.yAttr);
         }
       })
@@ -312,6 +321,26 @@ function doFirstChart(id_tag) {
     .text(d => d.label);
   
 
+}
+
+
+function isPositiveInteger(value) {
+  // Check if the value is a number
+  if (typeof value !== 'number') {
+    return false;
+  }
+
+  // Check if the value is an integer
+  if (!Number.isInteger(value)) {
+    return false;
+  }
+
+  // Check if the value is positive
+  if (value < 0) {
+    return false;
+  }
+
+  return true;
 }
 
 
