@@ -1,6 +1,8 @@
 let selectedLocation = 'C'
 let selected_x = 'none'
 let selected_y = 'none'
+let x_title = 'X title'
+let y_title = 'Y title'
 
 //Do these initial calls once the DOM is finished loading
 window.addEventListener('DOMContentLoaded', function() {
@@ -23,13 +25,20 @@ function setupDropdownListener() {
   });
 
   x_attr_menu.addEventListener('change', function() {
-    selected_x = x_attr_menu.value
+    const selected_x_option = x_attr_menu.options[x_attr_menu.selectedIndex]
+    x_title = selected_x_option.textContent
+    selected_x = selected_x_option.value
     console.log('selected x-attribute: ' + selected_x)
+    console.log('X title: ' + x_title)
   });
 
   y_attr_menu.addEventListener('change', function() {
-    selected_y = y_attr_menu.value
+    const selected_y_option = y_attr_menu.options[y_attr_menu.selectedIndex]
+    y_title = selected_y_option.textContent
+    selected_y = selected_y_option.value
     console.log('selected y-attribute: ' + selected_y)
+    console.log('Y title: ' + y_title)
+    
   });
 }
 
