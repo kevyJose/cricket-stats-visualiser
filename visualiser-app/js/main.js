@@ -1,6 +1,6 @@
 let selectedLocation = 'C'
-let selected_x = 'none'
-let selected_y = 'none'
+let x_selected = 'none'
+let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
 
@@ -27,16 +27,16 @@ function setupDropdownListener() {
   x_attr_menu.addEventListener('change', function() {
     const selected_x_option = x_attr_menu.options[x_attr_menu.selectedIndex]
     x_title = selected_x_option.textContent
-    selected_x = selected_x_option.value
-    console.log('selected x-attribute: ' + selected_x)
+    x_selected = selected_x_option.value
+    console.log('selected x-attribute: ' + x_selected)
     console.log('X title: ' + x_title)
   });
 
   y_attr_menu.addEventListener('change', function() {
     const selected_y_option = y_attr_menu.options[y_attr_menu.selectedIndex]
     y_title = selected_y_option.textContent
-    selected_y = selected_y_option.value
-    console.log('selected y-attribute: ' + selected_y)
+    y_selected = selected_y_option.value
+    console.log('selected y-attribute: ' + y_selected)
     console.log('Y title: ' + y_title)
     
   });
@@ -117,23 +117,9 @@ function doFirstChart(id_tag) {
       id: selectedRow.id,
       name: selectedRow.name,
       country: selectedRow.country,
-      xAttr: selectedRow[selected_x],
-      yAttr: selectedRow[selected_y],
+      xAttr: selectedRow[x_selected],
+      yAttr: selectedRow[y_selected],
 
-      ///THE ABOVE METHOD DOESN'T SEEM TO WORK. CHANGE BACK TO LONG AND HARD METHOD.
-      // runs: selectedRow.runs,
-      // matches_played: selectedRow.matches_played,
-      // location: selectedRow.location,
-      // span: selectedRow.span,      
-      // innings: selectedRow.innings,
-      // not_outs: selectedRow.not_outs,      
-      // high_score: selectedRow.high_score,
-      // batting_avg: selectedRow.batting_avg,
-      // balls_faced: selectedRow.balls_faced,
-      // strike_rate: selectedRow.strike_rate,
-      // centuries: selectedRow.centuries,
-      // half_cents: selectedRow.half_cents,
-      // below_fifties: selectedRow.below_fifties
     };
     // return { name: player.name, row: selectedData};
     
@@ -249,8 +235,8 @@ function doFirstChart(id_tag) {
           .html(`
             <div>Name: ${d.name}</div>
             <div>Country: ${d.country}</div>
-            <div>${selected_x}: ${d.xAttr}</div>
-            <div>${selected_y}: ${d.yAttr}</div>        
+            <div>${x_title}: ${d.xAttr}</div>
+            <div>${y_title}: ${d.yAttr}</div>        
           `)                        
           // .style('left', (d3.event.pageX + 10) + 'px')
           // .style('top', (d3.event.pageY - 28) + 'px');
@@ -269,15 +255,15 @@ function doFirstChart(id_tag) {
     .attr('text-anchor', 'middle')
     .style('font-size', '16px')
     .style('fill', '#ffffff')
-    .text('Runs vs Matches Played');
+    .text(y_title + ' vs. ' + x_title);
 
   // Add X axis label
   svg.append('text')
     .attr('transform', 'translate(' + (width / 2) + ',' + (height + 45) + ')')
     .style('text-anchor', 'middle')
-    .style('font-size', '12px')
+    .style('font-size', '14px')
     .style('fill', '#ffffff')
-    .text('Matches Played');
+    .text(x_title);
 
   // Add Y axis label
   svg.append('text')
@@ -286,9 +272,9 @@ function doFirstChart(id_tag) {
     .attr('x',0 - (height / 2))
     .attr('dy', '1em')
     .style('text-anchor', 'middle')
-    .style('font-size', '12px')
+    .style('font-size', '14px')
     .style('fill', '#ffffff')
-    .text('Runs');
+    .text(y_title);
 
 
   //LEGEND
