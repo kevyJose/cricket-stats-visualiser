@@ -4,6 +4,8 @@ let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
 
+let raw_data;
+
 //Do these initial calls once the DOM is finished loading
 window.addEventListener('DOMContentLoaded', function() {
   setupDropdownListener()
@@ -49,7 +51,7 @@ function readData(file, id) {
   .catch((error) => console.log('Error: ', error.message));
 }
 
-var raw_data;
+
 
 function processData(data) {
   //nest the data by name
@@ -93,15 +95,16 @@ function reduceData(values){
   });    
 }
 
+/** 
+ * Filters the raw_data by selected location and attributes
+ * 
+ * @param {array} rawData 
+ * @param {string} selectedLocation 
+ * @returns {array} array of (filtered) player objects
+ */
+function filterData(rawData, selectedLocation) {
 
-
-
-// scatter chart: runs vs matches_played
-function doFirstChart(id_tag) {
-  // console.log(raw_data)
-
-  // array of player objects (filtered by location)
-  const filteredData = raw_data.map(player => {
+  return raw_data.map(player => {
     const filteredRow = player.data.filter(row => row.location === selectedLocation);
     const selectedRow = filteredRow[0];
     // console.log(selectedRow)
@@ -125,6 +128,18 @@ function doFirstChart(id_tag) {
     
     return { name: player.name, id: selectedData.id,  country: selectedData.country, xAttr: selectedData.xAttr, yAttr: selectedData.yAttr };
   });
+  
+}
+
+
+
+
+// scatter chart: runs vs matches_played
+function doFirstChart(id_tag) {
+  // console.log(raw_data)
+
+  // array of player objects (filtered by location & attributes)
+  const filteredData = filterData(raw_data, selectedLocation)
 
   console.log('Data_filtered_by_' + selectedLocation, filteredData)
 
