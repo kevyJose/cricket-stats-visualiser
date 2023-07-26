@@ -69,6 +69,18 @@
   </div>
 
 
+  <div class="radio-container">
+    <label>Colour-coding:</label><br>    
+      <label for="bis">Country Groupings (BIS/SENA)</label>
+      <input type="radio" name="chart-type" value="bis" checked>
+      <label for="matches">&nbsp;&nbsp;&nbsp;Matches Played</label>
+      <input type="radio" name="chart-type" value="matches">
+      
+    <!-- You can add more radio buttons for different chart types if needed -->
+  </div>
+
+
+  <br>
   <button onclick="doFirstChart('#scatter_plot')">Runs vs Matches Played</button>
 
   <div class="chart" id="scatter_plot"></div>
