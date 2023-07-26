@@ -133,10 +133,57 @@ function filterData(rawData, selectedLocation) {
 
 
 
+/**
+ * 
+ * @param {*} id_tag 
+ * @param {*} margin 
+ * @param {*} width 
+ * @param {*} height 
+ */
+function createSVG(id_tag, margin, width, height) {
+
+  return d3.select(id_tag)
+    .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .style('background-color', '#131054') // background color
+      .style('border', '4px solid #ccc') // Set the border properties here
+    .append('g')
+      .attr('transform',
+            'translate(' + margin.left + ',' + margin.top + ')');  
+
+}
+
+/**
+ * Uses tooltip to display pop-up on mouseover
+ * 
+ * @param {*} event 
+ * @param {*} d 
+ */
+function doMouseOver(event, d) {
+  // show tooltip on mouseover
+  d3.select('.tooltip')
+  .style('opacity', 0.9)
+  .html(`
+    <div>Name: ${d.name}</div>
+    <div>Country: ${d.country}</div>
+    <div>${x_title}: ${d.xAttr}</div>
+    <div>${y_title}: ${d.yAttr}</div>        
+  `)                        
+  // .style('left', (d3.event.pageX + 10) + 'px')
+  // .style('top', (d3.event.pageY - 28) + 'px');
+
+}
+
+
+
 
 // scatter chart: runs vs matches_played
 function doFirstChart(id_tag) {
   // console.log(raw_data)
+
+  //NEED TO CONTINUE MODULARISATION OF THIS FUNCTION
+  //ONLY DONE THE FILTERDATA() FUNCTION SO FAR...
 
   // array of player objects (filtered by location & attributes)
   const filteredData = filterData(raw_data, selectedLocation)
@@ -162,20 +209,11 @@ function doFirstChart(id_tag) {
   // console.log(runsMax)
 
   // set the dimensions and margins of the graph
-  var margin = {top: 25, right: 30, bottom: 50, left: 70},
-  width = 650 - margin.left - margin.right,
-  height = 550 - margin.top - margin.bottom;
-
-  // append the svg object to the body of the page
-  var svg = d3.select(id_tag)
-  .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    .style('background-color', '#131054') // background color
-    .style('border', '4px solid #ccc') // Set the border properties here
-  .append('g')
-    .attr('transform',
-          'translate(' + margin.left + ',' + margin.top + ')');          
+  let margin = {top: 25, right: 30, bottom: 50, left: 70};
+  let width = 650 - margin.left - margin.right;
+  let height = 550 - margin.top - margin.bottom;
+  let svg = createSVG(id_tag, margin, width, height);
+    
           
   // Add X axis
   var x = d3.scaleLinear()
@@ -243,22 +281,13 @@ function doFirstChart(id_tag) {
         }
       })
 
+      //call helper fn. on mouseover
       .on('mouseover', function(event, d) {
-        // show tooltip on mouseover
-        d3.select('.tooltip')
-          .style('opacity', 0.9)
-          .html(`
-            <div>Name: ${d.name}</div>
-            <div>Country: ${d.country}</div>
-            <div>${x_title}: ${d.xAttr}</div>
-            <div>${y_title}: ${d.yAttr}</div>        
-          `)                        
-          // .style('left', (d3.event.pageX + 10) + 'px')
-          // .style('top', (d3.event.pageY - 28) + 'px');
+        doMouseOver(event, d)
       })
 
-      .on('mouseout', function(d) {
-        //hide tooltip on  mouseout
+      //hide the tooltip on mouseout
+      .on('mouseout', function(d) {        
         d3.select('.tooltip').style('opacity', 0);
       });
 
