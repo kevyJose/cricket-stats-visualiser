@@ -31,7 +31,7 @@ function setupDropdownListener() {
     x_title = selected_x_option.textContent
     x_selected = selected_x_option.value
     console.log('selected x-attribute: ' + x_selected)
-    console.log('X title: ' + x_title)
+    // console.log('X title: ' + x_title)
   });
 
   y_attr_menu.addEventListener('change', function() {
@@ -39,7 +39,7 @@ function setupDropdownListener() {
     y_title = selected_y_option.textContent
     y_selected = selected_y_option.value
     console.log('selected y-attribute: ' + y_selected)
-    console.log('Y title: ' + y_title)
+    // console.log('Y title: ' + y_title)
     
   });
 }
@@ -154,6 +154,7 @@ function createSVG(id_tag, margin, width, height) {
 
 }
 
+
 /**
  * Uses tooltip to display pop-up on mouseover
  * 
@@ -191,11 +192,6 @@ function doDotsGroup(svg, filteredData, x, y) {
     .enter()
     .append('circle')
       .attr('cx', function (d) {
-        // if (isPositiveInteger(d.xAttr)) {
-        //   return x(d.xAttr)
-        // } else {
-        //   return null
-        // }
         if (d.xAttr === 'na' || d.yAttr === 'na') {
           return null;
         } else {
@@ -204,11 +200,6 @@ function doDotsGroup(svg, filteredData, x, y) {
       })
 
       .attr('cy', function (d) {
-        // if (isPositiveInteger(d.yAttr)) {
-        //   return y(d.yAttr)
-        // } else {
-        //   return null
-        // }
         if (d.xAttr === 'na' || d.yAttr === 'na') {
           return null;
         } else if (d.yAttr !== 'na') {
@@ -267,6 +258,7 @@ function doAxisLabels(svg, width, height, margin) {
     .text(y_title);
 }
 
+
 /**
  * 
  * @param {*} svg 
@@ -312,42 +304,17 @@ function doLegend(svg, width) {
 }
 
 
-// scatter chart: runs vs matches_played
-function doFirstChart(id_tag) {
-  // console.log(raw_data)
-
-  // array of player objects (filtered by location & attributes)
-  const filteredData = filterData(raw_data, selectedLocation)
-
-  console.log('Data_filtered_by_' + selectedLocation, filteredData)
-
-  console.log('filteredData printing...')
-  filteredData.forEach(element => {
-    console.log(element);
-  });
-
-  //array of 'matches_played' values 
-  let x_values = filteredData.map((d) => d.xAttr)
-  //array of 'runs' values
-  let y_values = filteredData.map((d) => d.yAttr)
-
-  // console.log(x_values)
-  // console.log(y_values)
-
-  xMax = d3.max(x_values)
-  yMax = d3.max(y_values)
-  // console.log(matchesMax)
-  // console.log(runsMax)
-
-  // set the dimensions and margins of the graph
-  let margin = {top: 25, right: 30, bottom: 50, left: 70};
-  let width = 650 - margin.left - margin.right;
-  let height = 550 - margin.top - margin.bottom;
-  let svg = createSVG(id_tag, margin, width, height);  
-    
-          
+/**
+ * 
+ * @param {*} svg 
+ * @param {*} width 
+ * @param {*} height 
+ * @param {*} xMax 
+ * @param {*} yMax 
+ */
+function doAxes(svg, width, height, xMax, yMax) {
   // Add X axis
-  var x = d3.scaleLinear()
+  let x = d3.scaleLinear()
   .domain([0, xMax+50])
   .range([ 0, width ]);
   svg.append('g')
@@ -357,7 +324,7 @@ function doFirstChart(id_tag) {
     .style('color', '#ffffff');
 
   // Add Y axis
-  var y = d3.scaleLinear()
+  let y = d3.scaleLinear()
   .domain([0, yMax+40])
   .range([ height, 0]);
   svg.append('g')
@@ -365,27 +332,67 @@ function doFirstChart(id_tag) {
     .style('fill', '#ffffff')
     .style('color', '#ffffff');
 
-  // Create and draw the dot objects
-  doDotsGroup(svg, filteredData, x, y); 
+  return { x: x, y: y };
+}
 
 
-  // Add chart title
+/**
+ * 
+ * @param {*} svg 
+ * @param {*} width 
+ * @param {*} margin 
+ */
+function doTitle(svg, width, margin) {  
   svg.append('text')
-    .attr('x', (width / 2))
-    .attr('y', margin.top - 20)
-    .attr('text-anchor', 'middle')
-    .style('font-size', '16px')
-    .style('fill', '#ffffff')
-    .text(y_title + ' vs. ' + x_title);
+  .attr('x', (width / 2))
+  .attr('y', margin.top - 20)
+  .attr('text-anchor', 'middle')
+  .style('font-size', '16px')
+  .style('fill', '#ffffff')
+  .text(y_title + ' vs. ' + x_title);
+}
 
+
+function doChart(id_tag) {
+  // console.log(raw_data)
+  // array of player objects (filtered by location & attributes)
+  const filteredData = filterData(raw_data, selectedLocation)
+
+  console.log('Data_filtered_by_' + selectedLocation, filteredData)
+
+  //array of 'matches_played' values 
+  let x_values = filteredData.map((d) => d.xAttr)
+  //array of 'runs' values
+  let y_values = filteredData.map((d) => d.yAttr)
+
+  // console.log(x_values)
+  // console.log(y_values)
+
+  let xMax = d3.max(x_values)
+  let yMax = d3.max(y_values)
+
+  // set the dimensions and margins of the graph
+  let margin = {top: 25, right: 30, bottom: 50, left: 70};
+  let width = 650 - margin.left - margin.right;
+  let height = 550 - margin.top - margin.bottom;
+  let svg = createSVG(id_tag, margin, width, height);
+  
+  let x, y
+
+  // Create x and y axes
+  ({ x, y } = doAxes(svg, width, height, xMax, yMax));
+
+  // Create and draw the dot objects
+  doDotsGroup(svg, filteredData, x, y);
+
+  // Create chart title
+  doTitle(svg, width, margin);
   
   // Create the axis labels
   doAxisLabels(svg, width, height, margin);
 
-  //LEGEND
-  // Append the legend to the SVG
-  doLegend(svg, width);  
-
+  // Create the legend
+  doLegend(svg, width);
 }
 
 
