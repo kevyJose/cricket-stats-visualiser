@@ -176,68 +176,16 @@ function doMouseOver(event, d) {
 }
 
 
-
-
-// scatter chart: runs vs matches_played
-function doFirstChart(id_tag) {
-  // console.log(raw_data)
-
-  //NEED TO CONTINUE MODULARISATION OF THIS FUNCTION
-  //ONLY DONE THE FILTERDATA() FUNCTION SO FAR...
-
-  // array of player objects (filtered by location & attributes)
-  const filteredData = filterData(raw_data, selectedLocation)
-
-  console.log('Data_filtered_by_' + selectedLocation, filteredData)
-
-  console.log('filteredData printing...')
-  filteredData.forEach(element => {
-    console.log(element);
-  });
-
-  //array of 'matches_played' values 
-  let x_values = filteredData.map((d) => d.xAttr)
-  //array of 'runs' values
-  let y_values = filteredData.map((d) => d.yAttr)
-
-  // console.log(x_values)
-  // console.log(y_values)
-
-  xMax = d3.max(x_values)
-  yMax = d3.max(y_values)
-  // console.log(matchesMax)
-  // console.log(runsMax)
-
-  // set the dimensions and margins of the graph
-  let margin = {top: 25, right: 30, bottom: 50, left: 70};
-  let width = 650 - margin.left - margin.right;
-  let height = 550 - margin.top - margin.bottom;
-  let svg = createSVG(id_tag, margin, width, height);
-    
-          
-  // Add X axis
-  var x = d3.scaleLinear()
-  .domain([0, xMax+50])
-  .range([ 0, width ]);
-  svg.append('g')
-  .attr('transform', 'translate(0,' + height + ')')
-  .call(d3.axisBottom(x))
-  .style('fill', '#ffffff')
-  .style('color', '#ffffff');
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-  .domain([0, yMax+40])
-  .range([ height, 0]);
-  svg.append('g')
-  .call(d3.axisLeft(y))
-  .style('fill', '#ffffff')
-  .style('color', '#ffffff');
-
-  // Add dots
-  // iterates over the items in 'filteredData'
-  // in each iteration: access x/y values and plot a point
-  svg.append('g')  
+/**
+ * configure and draw the dot objects
+ * 
+ * @param {*} svg 
+ * @param {*} filteredData 
+ * @param {*} x 
+ * @param {*} y 
+ */
+function doDotsGroup(svg, filteredData, x, y) {
+  svg.append('g')    
     .selectAll('dot')
     .data(filteredData)
     .enter()
@@ -269,7 +217,6 @@ function doFirstChart(id_tag) {
       })
 
       .attr('r', 3.0)
-
       .style('fill', function(d) {
         // Specify color based on the 'country' attribute
         if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
@@ -285,22 +232,21 @@ function doFirstChart(id_tag) {
       .on('mouseover', function(event, d) {
         doMouseOver(event, d)
       })
-
       //hide the tooltip on mouseout
       .on('mouseout', function(d) {        
         d3.select('.tooltip').style('opacity', 0);
       });
+}
 
 
-  // Add chart title
-  svg.append('text')
-    .attr('x', (width / 2))
-    .attr('y', margin.top - 20)
-    .attr('text-anchor', 'middle')
-    .style('font-size', '16px')
-    .style('fill', '#ffffff')
-    .text(y_title + ' vs. ' + x_title);
-
+/**
+ * 
+ * @param {*} svg 
+ * @param {*} width 
+ * @param {*} height 
+ * @param {*} margin 
+ */
+function doAxisLabels(svg, width, height, margin) {
   // Add X axis label
   svg.append('text')
     .attr('transform', 'translate(' + (width / 2) + ',' + (height + 45) + ')')
@@ -319,23 +265,28 @@ function doFirstChart(id_tag) {
     .style('font-size', '14px')
     .style('fill', '#ffffff')
     .text(y_title);
+}
 
-
-  //LEGEND
-  // Append the legend to the SVG
-  var legend = svg.append('g')
-    .attr('class', 'legend')
-    .attr('transform', 'translate(' + (width - 40) + ',' + 2 + ')'); // Adjust the position as needed
+/**
+ * 
+ * @param {*} svg 
+ * @param {*} width 
+ * @param {*} height 
+ */
+function doLegend(svg, width) {  
+  let legend = svg.append('g')
+  .attr('class', 'legend')
+  .attr('transform', 'translate(' + (width - 40) + ',' + 2 + ')'); // Adjust the position as needed
 
   // Define the legend data based on the 'country' attribute
-  var legendData = [
+  let legendData = [
     { label: 'BIS', color: '#e41a1c' },
     { label: 'SENA', color: '#377eb8' },
     { label: 'Other', color: '#4daf4a' }
   ];
 
   // Create the legend items
-  var legendItems = legend.selectAll('.legend-item')
+  let legendItems = legend.selectAll('.legend-item')
     .data(legendData)
     .enter()
     .append('g')
@@ -358,7 +309,82 @@ function doFirstChart(id_tag) {
     .style('font-size', '12px')
     .style('fill', '#ffffff')
     .text(d => d.label);
+}
+
+
+// scatter chart: runs vs matches_played
+function doFirstChart(id_tag) {
+  // console.log(raw_data)
+
+  // array of player objects (filtered by location & attributes)
+  const filteredData = filterData(raw_data, selectedLocation)
+
+  console.log('Data_filtered_by_' + selectedLocation, filteredData)
+
+  console.log('filteredData printing...')
+  filteredData.forEach(element => {
+    console.log(element);
+  });
+
+  //array of 'matches_played' values 
+  let x_values = filteredData.map((d) => d.xAttr)
+  //array of 'runs' values
+  let y_values = filteredData.map((d) => d.yAttr)
+
+  // console.log(x_values)
+  // console.log(y_values)
+
+  xMax = d3.max(x_values)
+  yMax = d3.max(y_values)
+  // console.log(matchesMax)
+  // console.log(runsMax)
+
+  // set the dimensions and margins of the graph
+  let margin = {top: 25, right: 30, bottom: 50, left: 70};
+  let width = 650 - margin.left - margin.right;
+  let height = 550 - margin.top - margin.bottom;
+  let svg = createSVG(id_tag, margin, width, height);  
+    
+          
+  // Add X axis
+  var x = d3.scaleLinear()
+  .domain([0, xMax+50])
+  .range([ 0, width ]);
+  svg.append('g')
+    .attr('transform', 'translate(0,' + height + ')')
+    .call(d3.axisBottom(x))
+    .style('fill', '#ffffff')
+    .style('color', '#ffffff');
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+  .domain([0, yMax+40])
+  .range([ height, 0]);
+  svg.append('g')
+    .call(d3.axisLeft(y))
+    .style('fill', '#ffffff')
+    .style('color', '#ffffff');
+
+  // Create and draw the dot objects
+  doDotsGroup(svg, filteredData, x, y); 
+
+
+  // Add chart title
+  svg.append('text')
+    .attr('x', (width / 2))
+    .attr('y', margin.top - 20)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '16px')
+    .style('fill', '#ffffff')
+    .text(y_title + ' vs. ' + x_title);
+
   
+  // Create the axis labels
+  doAxisLabels(svg, width, height, margin);
+
+  //LEGEND
+  // Append the legend to the SVG
+  doLegend(svg, width);  
 
 }
 
