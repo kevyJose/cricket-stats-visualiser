@@ -53,7 +53,6 @@ function readData(file, id) {
 }
 
 
-
 function processData(data) {
   //nest the data by name
   let rolledUpData = d3.rollup(data, reduceData, groupBy)
@@ -98,7 +97,7 @@ function reduceData(values){
 
 
 
-function doChart(id_tag) {
+function doGlobalChart(id_tag) {
 
   let gc = new GlobalChart(id_tag, raw_data, selectedLocation, 
                            x_title, y_title, x_selected, y_selected)
