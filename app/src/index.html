@@ -14,73 +14,83 @@
 <body>
   <h1>Cricket Mania</h1>
 
-  <div class="dropdown-container">
-    <label for="location-menu">Location:</label>
-    <select id="location-menu">
-      <option value="C">Combined</option>
-      <option value="H">Home</option>
-      <option value="A">Away</option>
-      <option value="N">Neutral</option>
-      <option value="BIS">BIS</option>
-      <option value="SENA">SENA</option>
-      <option value="O">Other Countries</option>
-    </select>
-  </div>
+  <form>  
 
-  <div class="dropdown-container">
-    <label for="x-attr-menu">X feature:</label>
-    <select id="x-attr-menu">
-      <option value="NONE">None</option>
-      <option value="runs">Runs</option>
-      <option value="matches_played">Matches Played</option>
-      <option value="innings">Innings</option>
-      <option value="not_outs">Not-Outs</option>
-      <option value="high_score">High Score</option>
-      <option value="batting_avg">Batting Average</option>
-      <option value="balls_faced">Balls Faced</option>
-      <option value="strike_rate">Strike Rate</option>
-      <option value="centuries">Centuries</option>
-      <option value="half_cents">Half-Centuries</option>
-      <option value="below_fifties">Below-Fifties</option>
-    </select>
-  </div>
+    <div class="dropdown-container">
+      <label for="location-menu">Location:</label>
+      <select id="location-menu">
+        <option value="C">Combined</option>
+        <option value="H">Home</option>
+        <option value="A">Away</option>
+        <option value="N">Neutral</option>
+        <option value="BIS">BIS</option>
+        <option value="SENA">SENA</option>
+        <option value="O">Other Countries</option>
+      </select>
+    </div>
 
-  <div class="dropdown-container">
-    <label for="y-attr-menu">Y feature:</label>
-    <select id="y-attr-menu">
-      <option value="NONE">None</option>
-      <option value="runs">Runs</option>
-      <option value="matches_played">Matches Played</option>
-      <option value="innings">Innings</option>
-      <option value="not_outs">Not-Outs</option>
-      <option value="high_score">High Score</option>
-      <option value="batting_avg">Batting Average</option>
-      <option value="balls_faced">Balls Faced</option>
-      <option value="strike_rate">Strike Rate</option>
-      <option value="centuries">Centuries</option>
-      <option value="half_cents">Half-Centuries</option>
-      <option value="below_fifties">Below-Fifties</option>
-    </select>
-  </div>
+    <div class="dropdown-container">
+      <label for="x-attr-menu">X feature:</label>
+      <select id="x-attr-menu">
+        <option value="NONE">None</option>
+        <option value="runs">Runs</option>
+        <option value="matches_played">Matches Played</option>
+        <option value="innings">Innings</option>
+        <option value="not_outs">Not-Outs</option>
+        <option value="high_score">High Score</option>
+        <option value="batting_avg">Batting Average</option>
+        <option value="balls_faced">Balls Faced</option>
+        <option value="strike_rate">Strike Rate</option>
+        <option value="centuries">Centuries</option>
+        <option value="half_cents">Half-Centuries</option>
+        <option value="below_fifties">Below-Fifties</option>
+      </select>
+    </div>
+
+    <div class="dropdown-container">
+      <label for="y-attr-menu">Y feature:</label>
+      <select id="y-attr-menu">
+        <option value="NONE">None</option>
+        <option value="runs">Runs</option>
+        <option value="matches_played">Matches Played</option>
+        <option value="innings">Innings</option>
+        <option value="not_outs">Not-Outs</option>
+        <option value="high_score">High Score</option>
+        <option value="batting_avg">Batting Average</option>
+        <option value="balls_faced">Balls Faced</option>
+        <option value="strike_rate">Strike Rate</option>
+        <option value="centuries">Centuries</option>
+        <option value="half_cents">Half-Centuries</option>
+        <option value="below_fifties">Below-Fifties</option>
+      </select>
+    </div>
 
 
-  <div class="radio-container">
-    <label>Colour-coding:</label><br>    
-      <label for="bis">Country Groupings (BIS/SENA)</label>
-      <input type="radio" name="chart-type" value="bis" checked>
-      <label for="matches">&nbsp;&nbsp;&nbsp;Matches Played</label>
-      <input type="radio" name="chart-type" value="matches">
+    <div class="radio-container">      
+      <label for="color-code-menu">Colour-coding:</label><br>
       
-    <!-- You can add more radio buttons for different chart types if needed -->
-  </div>
+        <label for="bis-option">
+          <input type="radio" name="color-code-bis" value="0" checked>
+          Country Groupings (BIS/SENA)
+        </label>  
+        
+        <label for="matches-option">
+          <input type="radio" name="color-code-matches" value="1">
+          &nbsp;&nbsp;&nbsp;Matches Played
+        </label>       
+      
+    </div>
 
 
-  <br>
-  <button onclick="doGlobalChart('#scatter_plot')">Runs vs Matches Played</button>
+    <br>
+    <button onclick="doGlobalChart(event, '#scatter_plot')">Generate Chart</button>
+
+  </form>
+
 
   <div class="chart" id="scatter_plot"></div>
-
   <div class="tooltip" style="opacity: 0;"></div>
+
   
 </body>
 </html>
