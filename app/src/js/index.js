@@ -1,15 +1,15 @@
-
 let selectedLocation = 'C'
 let x_selected = 'none'
 let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
+let color_code = 0  // 0=BIS/SENA, 1=Matches_Played
 
 let raw_data;
 
 //Do these initial calls once the DOM is finished loading
 window.addEventListener('DOMContentLoaded', function() {
-  setupDropdownListener()
+  setupGlobalListeners();  
 
   readData('./data/data-statsguru-3.csv', '#raw')    
     .then(console.log('Data read successfully'))
@@ -17,33 +17,69 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function setupDropdownListener() {   
-  const location_menu = document.getElementById('location-menu')
-  const x_attr_menu = document.getElementById('x-attr-menu')
-  const y_attr_menu = document.getElementById('y-attr-menu')
-
-  location_menu.addEventListener('change', function() {
-    selectedLocation = location_menu.value
-    console.log('selected location: ' + selectedLocation)    
-  });
-
-  x_attr_menu.addEventListener('change', function() {
-    const selected_x_option = x_attr_menu.options[x_attr_menu.selectedIndex]
-    x_title = selected_x_option.textContent
-    x_selected = selected_x_option.value
-    console.log('selected x-attribute: ' + x_selected)
-    // console.log('X title: ' + x_title)
-  });
-
-  y_attr_menu.addEventListener('change', function() {
-    const selected_y_option = y_attr_menu.options[y_attr_menu.selectedIndex]
-    y_title = selected_y_option.textContent
-    y_selected = selected_y_option.value
-    console.log('selected y-attribute: ' + y_selected)
-    // console.log('Y title: ' + y_title)
-    
-  });
+function handleLocationChange(input_elem) {
+  selectedLocation = input_elem.value
+  console.log('selected location: ' + selectedLocation)  
 }
+
+function handleXAttributeChange(input_elem) {
+  const selected_x_option = input_elem.options[input_elem.selectedIndex]
+  x_title = selected_x_option.textContent
+  x_selected = selected_x_option.value
+  console.log('selected x-attribute: ' + x_selected)
+  // console.log('X title: ' + x_title)
+}
+
+function handleYAttributeChange(input_elem) {
+  const selected_y_option = input_elem.options[input_elem.selectedIndex]
+  y_title = selected_y_option.textContent
+  y_selected = selected_y_option.value
+  console.log('selected y-attribute: ' + y_selected)
+  // console.log('Y title: ' + y_title)
+}
+
+function handleColorCodeChange(input_elem) {
+  const selected_colorCode = input_elem
+  colorCode_title = selected_colorCode.textContent;
+  color_code = selected_colorCode.value;
+  console.log('selected color-code: ' + color_code)
+
+  // Uncheck the previously checked radio button
+  const previouslyChecked = document.querySelector('[name*="color-code"]:checked');
+  if (previouslyChecked !== selected_colorCode) {
+    previouslyChecked.checked = false;
+  }
+  // Check the currently clicked radio button
+  selected_colorCode.checked = true;
+}
+
+
+
+function setupGlobalListeners() {   
+  const location_input = document.getElementById('location-menu')
+  const Xattr_input = document.getElementById('x-attr-menu')
+  const Yattr_input = document.getElementById('y-attr-menu')
+  const colorCode_input = document.querySelector('[name*="color-code"]');
+
+  location_input.addEventListener('change', function() {
+    handleLocationChange(location_input);
+  });
+  Xattr_input.addEventListener('change', function() {
+    handleXAttributeChange(Xattr_input);
+  });
+  Yattr_input.addEventListener('change', function() {
+    handleYAttributeChange(Yattr_input);
+  });
+
+  colorCode_input.addEventListener('click', function() {
+      handleColorCodeChange(colorCode_input);
+  });
+  
+
+}
+
+
+
 
 
 function readData(file, id) {
@@ -56,11 +92,8 @@ function readData(file, id) {
 function processData(data) {
   //nest the data by name
   let rolledUpData = d3.rollup(data, reduceData, groupBy)
-
   let players = Array.from(rolledUpData, ([name, data]) => ({ name, data }))
-
-  raw_data = players
-  
+  raw_data = players  
   console.log('raw_data: ', raw_data)
 }
 
@@ -70,6 +103,7 @@ function groupBy(data) {
   // return data.Player;
   return data.Player.slice(0, data.Player.indexOf('('));
 }
+
 
 //reducer function
 function reduceData(values){
@@ -97,11 +131,11 @@ function reduceData(values){
 
 
 
-function doGlobalChart(id_tag) {
-
+function doGlobalChart(event, id_tag) {  
+  event.preventDefault();    
   let gc = new GlobalChart(id_tag, raw_data, selectedLocation, 
                            x_title, y_title, x_selected, y_selected)
-  gc.doChart()
+  gc.doChart(event);
 
 }
 
