@@ -14,11 +14,11 @@
 <body>
   <h1>Cricket Mania</h1>
 
-  <form>  
+  <form onsubmit="processFormSubmission(event);">  
 
     <div class="dropdown-container">
       <label for="location-menu">Location:</label>
-      <select id="location-menu">
+      <select id="location-menu" name="location">
         <option value="C">Combined</option>
         <option value="H">Home</option>
         <option value="A">Away</option>
@@ -31,7 +31,7 @@
 
     <div class="dropdown-container">
       <label for="x-attr-menu">X feature:</label>
-      <select id="x-attr-menu">
+      <select id="x-attr-menu" name="x-attr">
         <option value="NONE">None</option>
         <option value="runs">Runs</option>
         <option value="matches_played">Matches Played</option>
@@ -49,7 +49,7 @@
 
     <div class="dropdown-container">
       <label for="y-attr-menu">Y feature:</label>
-      <select id="y-attr-menu">
+      <select id="y-attr-menu" name="y-attr">
         <option value="NONE">None</option>
         <option value="runs">Runs</option>
         <option value="matches_played">Matches Played</option>
@@ -66,9 +66,8 @@
     </div>
 
 
-    <div class="radio-container">      
-      <label for="color-code-menu">Colour-coding:</label><br>
-      
+    <div class="color-coding-container">      
+      <!-- <label for="color-code-menu">Colour-coding:</label><br>      
         <label for="bis-option">
           <input type="radio" name="color-code-bis" value="0" checked>
           Country Groupings (BIS/SENA)
@@ -77,13 +76,32 @@
         <label for="matches-option">
           <input type="radio" name="color-code-matches" value="1">
           &nbsp;&nbsp;&nbsp;Matches Played
-        </label>       
+        </label>        -->
+
+      <fieldset>
+        <legend>Colour-coding:</legend>
+        <div>          
+          <input type="radio" id="colorCode_1" name="color-code" value="bis" checked/>
+          <label for="colorCode_1">BIS/SENA/Other</label>
+
+          <input type="radio" id="colorCode_2" name="color-code" value="matches"/>
+          <label for="colorCode_2">Matches Played</label>
+        </div>
+
+        <div>
+          <!-- <button onclick="doGlobalChart(event, '#scatter_plot')">Generate Chart</button>                     -->
+          <button type="submit">Submit</button>
+        </div>
+        
+      </fieldset>
+
+
       
     </div>
 
 
     <br>
-    <button onclick="doGlobalChart(event, '#scatter_plot')">Generate Chart</button>
+    
 
   </form>
 

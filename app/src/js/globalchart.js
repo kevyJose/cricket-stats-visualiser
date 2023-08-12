@@ -6,10 +6,11 @@ class GlobalChart {
   x_title
   y_title
   x_selected
-  y_selected  
+  y_selected
+  color_code
 
   constructor(id_tag, rawData, selectedLocation, x_title, 
-              y_title, x_selected, y_selected) {                
+              y_title, x_selected, y_selected, color_code) {                
     this.id_tag = id_tag;
     this.rawData = rawData;
     this.selectedLocation = selectedLocation;
@@ -17,6 +18,7 @@ class GlobalChart {
     this.y_title = y_title;
     this.x_selected = x_selected;
     this.y_selected = y_selected;
+    this.color_code = color_code;
   }
 
 
