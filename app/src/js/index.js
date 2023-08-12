@@ -4,7 +4,7 @@ let x_selected = 'none'
 let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
-let color_code = ''  // 0=BIS/SENA, 1=Matches_Played
+let color_code = ''
 let allMaps = []  //each chart has a map
 
 let raw_data;
@@ -21,9 +21,7 @@ window.addEventListener('DOMContentLoaded', function() {
 const processFormSubmission = (event) => {
   event.preventDefault();
   const form = document.querySelector("form")
-  // const log = document.querySelector("#log")
-  const map = new Map(); // Creating a map to store the data
-  // event.preventDefault();
+  const map = new Map();
   const data = new FormData(form)
 
   for (const entry of data) {
@@ -48,9 +46,6 @@ const processFormSubmission = (event) => {
       map.set(key, value)
     }
   }
-  // Displaying the map in the log
-  // log.innerText = JSON.stringify(map, null, 2)    
-  // event.preventDefault()
 
   //set global variables
   setCurrChartAttributes(map);
@@ -68,10 +63,9 @@ function setCurrChartAttributes(map) {
   y_title = capitalizeString(y_selected)
   color_code = map.get('color-code')
 
-  console.log('testing global var updates:  { ', selectedLocation, x_selected, y_selected, x_title, y_title, color_code, ' }')
+  console.log('testing global var updates:  { ', selectedLocation, x_selected, y_selected, 
+                                                 x_title, y_title, color_code, ' }')
 }
-
-
 
 
 
@@ -124,12 +118,10 @@ function reduceData(values){
 
 
 
-function doGlobalChart(event, id_tag) {  
-  // event.preventDefault();    
+function doGlobalChart(event, id_tag) {   
   let gc = new GlobalChart(id_tag, raw_data, selectedLocation, 
                            x_title, y_title, x_selected, y_selected)
   gc.doChart();
-
 }
 
 
