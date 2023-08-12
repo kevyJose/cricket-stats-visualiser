@@ -54,12 +54,15 @@ class GlobalChart {
         id: selectedRow.id,
         name: selectedRow.name,
         country: selectedRow.country,
+        matches_played: selectedRow.matches_played,
         xAttr: selectedRow[x_selected],
-        yAttr: selectedRow[y_selected],  
+        yAttr: selectedRow[y_selected],
+
       };
       
-      return { name: player.name, id: selectedData.id,  country: selectedData.country, 
-               xAttr: selectedData.xAttr, yAttr: selectedData.yAttr };
+      return { name: player.name, id: selectedData.id, country: selectedData.country, 
+               matches_played: selectedData.matches_played, xAttr: selectedData.xAttr, 
+               yAttr: selectedData.yAttr };
     });    
   }
 
@@ -101,15 +104,41 @@ class GlobalChart {
 
         .attr('r', 3.0)
 
+        //Set 'fill' color of the dot, based on color_code
         .style('fill', function(d) {
-          // Specify color based on the 'country' attribute
-          if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
-            return '#e41a1c';
-          } else if (d.country === 'SA' || d.country === 'ENG' || 
-                    d.country === 'NZ' || d.country === 'AUS') {
-            return '#377eb8';
-          } else {
-            return '#4daf4a';
+          if(this.color_code === 'bis') {
+            // Specify color based on the 'country' attribute
+            if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
+              return '#e41a1c';
+            } 
+            else if (d.country === 'SA' || d.country === 'ENG' || 
+                     d.country === 'NZ' || d.country === 'AUS') {
+              return '#377eb8';
+            } 
+            else {
+              return '#4daf4a';
+            }
+          } 
+          else if(this.color_code === 'matches') {
+            //specify color-regions based on no. matches played
+            if (d.matches_played >= 0 <= 24) { // 0-24
+              return '#FFFFFF';                             
+            }
+            else if(d.matches_played >= 25 <= 49) { // 25-49
+              return '#cccccc'; 
+            }
+            else if(d.matches_played >= 50 <= 99) { // 50-99
+              return '#969696'; 
+            }
+            else if(d.matches_played >= 100 <= 249) { // 100-249
+              return '#636363'; 
+            }
+            else if(d.matches_played >= 250 <= 500) { // 250-500
+              return '#252525'; 
+            }
+            else { //any other values
+              return '#FF0000'; 
+            }
           }
         })
 
@@ -128,8 +157,11 @@ class GlobalChart {
         //hide the tooltip on mouseout
         .on('mouseout', function(d) {        
           d3.select('.tooltip').style('opacity', 0);
-        });
-  }
+        })
+  };
+
+
+
 
 
   doAxisLabels(svg, width, height, margin) {    
@@ -159,12 +191,29 @@ class GlobalChart {
     .attr('class', 'legend')
     .attr('transform', 'translate(' + (width - 40) + ',' + 2 + ')'); // Adjust the position as needed
   
-    // Define the legend data based on the 'country' attribute
-    let legendData = [
+    // Define the legend for COUNTRY-GROUPINGS
+    let legendData_bis = [
       { label: 'BIS', color: '#e41a1c' },
       { label: 'SENA', color: '#377eb8' },
       { label: 'Other', color: '#4daf4a' }
     ];
+
+    let legendData_matches = [
+      { label: '0-24', color: '#f7f7f7' },
+      { label: '25-49', color: '#cccccc' },
+      { label: '50-99', color: '#969696' },
+      { label: '100-249', color: '#636363' },
+      { label: '250-500', color: '#252525' }
+    ];
+
+    let legendData = []
+
+    if(this.color_code === 'bis') {
+      legendData = legendData_bis            
+    }
+    else if(this.color_code === 'matches') {
+      legendData = legendData_matches
+    }    
   
     // Create the legend items
     let legendItems = legend.selectAll('.legend-item')
@@ -226,7 +275,6 @@ class GlobalChart {
     .style('fill', '#ffffff')
     .text(y_title + ' vs. ' + x_title);
   }
-
 
 }
 
