@@ -120,7 +120,8 @@ function reduceData(values){
 
 function doGlobalChart(event, id_tag) {   
   let gc = new GlobalChart(id_tag, raw_data, selectedLocation, 
-                           x_title, y_title, x_selected, y_selected)
+                           x_title, y_title, x_selected, y_selected,
+                           color_code)
   gc.doChart();
 }
 

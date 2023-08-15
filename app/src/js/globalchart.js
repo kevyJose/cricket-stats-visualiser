@@ -104,9 +104,13 @@ class GlobalChart {
 
         .attr('r', 3.0)
 
+        //NEED TO ADD IN THE 'SELF' REFERENCE TO USE 'THIS' KEYWORD...
         //Set 'fill' color of the dot, based on color_code
         .style('fill', function(d) {
-          if(this.color_code === 'bis') {
+          console.log('color_code... ', color_code)
+          // console.log('country... ', d.country)
+          // console.log('matches_played... ', d.matches_played)
+          if(color_code === 'bis') {
             // Specify color based on the 'country' attribute
             if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
               return '#e41a1c';
@@ -119,21 +123,21 @@ class GlobalChart {
               return '#4daf4a';
             }
           } 
-          else if(this.color_code === 'matches') {
+          else if(color_code === 'matches') {
             //specify color-regions based on no. matches played
-            if (d.matches_played >= 0 <= 24) { // 0-24
+            if (d.matches_played >= 0 && d.matches_played <= 24) { // 0-24
               return '#FFFFFF';                             
             }
-            else if(d.matches_played >= 25 <= 49) { // 25-49
+            else if(d.matches_played >= 25 && d.matches_played <= 49) { // 25-49
               return '#cccccc'; 
             }
-            else if(d.matches_played >= 50 <= 99) { // 50-99
+            else if(d.matches_played >= 50 && d.matches_played <= 99) { // 50-99
               return '#969696'; 
             }
-            else if(d.matches_played >= 100 <= 249) { // 100-249
+            else if(d.matches_played >= 100 && d.matches_played <= 249) { // 100-249
               return '#636363'; 
             }
-            else if(d.matches_played >= 250 <= 500) { // 250-500
+            else if(d.matches_played >= 250 && d.matches_played <= 500) { // 250-500
               return '#252525'; 
             }
             else { //any other values
@@ -208,10 +212,10 @@ class GlobalChart {
 
     let legendData = []
 
-    if(this.color_code === 'bis') {
+    if(color_code === 'bis') {
       legendData = legendData_bis            
     }
-    else if(this.color_code === 'matches') {
+    else if(color_code === 'matches') {
       legendData = legendData_matches
     }    
   
