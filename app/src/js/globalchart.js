@@ -86,7 +86,7 @@ class GlobalChart {
       .data(filteredData)
       .enter()
       .append('circle')
-        .attr('cx', function (d) {
+        .attr('cx', (d) => {
           if (d.xAttr === 'na' || d.yAttr === 'na') {
             return null;
           } else {
@@ -94,7 +94,7 @@ class GlobalChart {
           }
         })
 
-        .attr('cy', function (d) {
+        .attr('cy', (d) => {
           if (d.xAttr === 'na' || d.yAttr === 'na') {
             return null;
           } else if (d.yAttr !== 'na') {
@@ -104,13 +104,10 @@ class GlobalChart {
 
         .attr('r', 3.0)
 
-        //NEED TO ADD IN THE 'SELF' REFERENCE TO USE 'THIS' KEYWORD...
         //Set 'fill' color of the dot, based on color_code
-        .style('fill', function(d) {
-          console.log('color_code... ', color_code)
-          // console.log('country... ', d.country)
-          // console.log('matches_played... ', d.matches_played)
-          if(color_code === 'bis') {
+        .style('fill', (d) => {
+          // console.log('color_code... ', this.color_code)
+          if(this.color_code === 'bis') {
             // Specify color based on the 'country' attribute
             if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
               return '#e41a1c';
@@ -123,7 +120,7 @@ class GlobalChart {
               return '#4daf4a';
             }
           } 
-          else if(color_code === 'matches') {
+          else if(this.color_code === 'matches') {
             //specify color-regions based on no. matches played
             if (d.matches_played >= 0 && d.matches_played <= 24) { // 0-24
               return '#FFFFFF';                             
@@ -147,7 +144,7 @@ class GlobalChart {
         })
 
         //call helper fn. on mouseover
-        .on('mouseover', function(event, d) {        
+        .on('mouseover', (event, d) => {        
           // show tooltip on mouseover
           d3.select('.tooltip')
           .style('opacity', 0.9)
@@ -159,7 +156,7 @@ class GlobalChart {
           `)
         })
         //hide the tooltip on mouseout
-        .on('mouseout', function(d) {        
+        .on('mouseout', (event, d) => {        
           d3.select('.tooltip').style('opacity', 0);
         })
   };
@@ -212,10 +209,10 @@ class GlobalChart {
 
     let legendData = []
 
-    if(color_code === 'bis') {
+    if(this.color_code === 'bis') {
       legendData = legendData_bis            
     }
-    else if(color_code === 'matches') {
+    else if(this.color_code === 'matches') {
       legendData = legendData_matches
     }    
   
