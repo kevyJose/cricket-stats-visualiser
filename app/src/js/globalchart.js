@@ -72,7 +72,7 @@ class GlobalChart {
     .append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
-      .style('background-color', '#131054') // background color
+      .style('background-color', '#e6effc') // background color
       .style('border', '4px solid #ccc') // Set the border properties here
     .append('g')
       .attr('transform',
@@ -147,7 +147,7 @@ class GlobalChart {
         .on('mouseover', (event, d) => {        
           // show tooltip on mouseover
           d3.select('.tooltip')
-          .style('opacity', 0.9)
+          .style('opacity', 0.9)          
           .html(`
             <div>Name: ${d.name}</div>
             <div>Country: ${d.country}</div>
@@ -171,7 +171,7 @@ class GlobalChart {
     .attr('transform', 'translate(' + (width / 2) + ',' + (height + 45) + ')')
     .style('text-anchor', 'middle')
     .style('font-size', '14px')
-    .style('fill', '#ffffff')
+    .style('fill', '#000000')
     .text(x_title);
 
     // Add Y axis label
@@ -182,7 +182,7 @@ class GlobalChart {
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
       .style('font-size', '14px')
-      .style('fill', '#ffffff')
+      .style('fill', '#000000')
       .text(y_title);
   }
 
@@ -238,7 +238,7 @@ class GlobalChart {
       .attr('y', 6)
       .attr('dy', '0.35em')
       .style('font-size', '12px')
-      .style('fill', '#ffffff')
+      .style('fill', '#000000')
       .text(d => d.label);
   }
 
@@ -251,8 +251,8 @@ class GlobalChart {
     svg.append('g')
       .attr('transform', 'translate(0,' + height + ')')
       .call(d3.axisBottom(x))
-      .style('fill', '#ffffff')
-      .style('color', '#ffffff');
+      .style('fill', '#000000')
+      .style('color', '#000000');
 
     // Add Y axis
     let y = d3.scaleLinear()
@@ -260,8 +260,8 @@ class GlobalChart {
     .range([ height, 0]);
     svg.append('g')
       .call(d3.axisLeft(y))
-      .style('fill', '#ffffff')
-      .style('color', '#ffffff');
+      .style('fill', '#000000')
+      .style('color', '#000000');
 
     return { x: x, y: y };
   }
@@ -273,7 +273,7 @@ class GlobalChart {
     .attr('y', margin.top - 20)
     .attr('text-anchor', 'middle')
     .style('font-size', '16px')
-    .style('fill', '#ffffff')
+    .style('fill', '#000000')
     .text(y_title + ' vs. ' + x_title);
   }
 

@@ -14,9 +14,8 @@
 <body>
   <h1>Cricket Mania</h1>
 
-  <form onsubmit="processFormSubmission(event);">  
-
-    <div class="dropdown-container">
+  <form id="config_form" onsubmit="processFormSubmission(event);">
+    <div class="dropdown">
       <label for="location-menu">Location:</label>
       <select id="location-menu" name="location">
         <option value="C">Combined</option>
@@ -29,7 +28,7 @@
       </select>
     </div>
 
-    <div class="dropdown-container">
+    <div class="dropdown">
       <label for="x-attr-menu">X feature:</label>
       <select id="x-attr-menu" name="x-attr">
         <option value="NONE">None</option>
@@ -47,7 +46,7 @@
       </select>
     </div>
 
-    <div class="dropdown-container">
+    <div class="dropdown">
       <label for="y-attr-menu">Y feature:</label>
       <select id="y-attr-menu" name="y-attr">
         <option value="NONE">None</option>
@@ -66,8 +65,8 @@
     </div>
 
 
-    <div class="color-coding-container">
-        <legend>Colour-coding:</legend>
+    <div class="color-coding">
+        <label>Colour-coding:</label>
         <div>          
           <input type="radio" id="colorCode_1" name="color-code" value="bis" checked/>
           <label for="colorCode_1">BIS/SENA/Other</label>
@@ -80,8 +79,24 @@
           <button type="submit">Submit</button>
         </div>      
     </div>
-    <br>    
+    <br>
+  </form>
 
+  <form id="filter_form">
+
+    <div class="dropdown">
+      <label for="">Start Year:</label>
+      <select name="start-year" id="start-year-dropdown"></select>
+
+      <!-- <label for="">End Year:</label>
+      <select name="end-year-filter"></select>       -->
+    </div>
+
+
+
+    <div>
+      <button type="submit">Apply Filter</button>
+    </div>     
   </form>
 
 

@@ -5,7 +5,8 @@ let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
 let color_code = ''
-let allMaps = []  //each chart has a map
+let allMaps = []  // a map contains chart specs.
+let allCharts = [] // all generated charts 
 
 let raw_data;
 
@@ -13,8 +14,25 @@ let raw_data;
 window.addEventListener('DOMContentLoaded', function() {
   readData('./data/data-statsguru-3.csv', '#raw')    
     .then(console.log('Data read successfully'))
-    .catch((error) => console.log('Error: ', error.message)); 
+    .catch((error) => console.log('Error: ', error.message));
+    
+  doFilterDropdowns();
 });
+
+
+
+function doFilterDropdowns() { 
+
+  var elem = document.getElementById("start-year-dropdown");
+
+  for (var i = 1971; i <= 2023; i++) {
+    var option = document.createElement("option");
+    option.value = i;
+    option.text = i;
+    elem.appendChild(option);
+  }
+
+}
 
 
 
@@ -52,6 +70,7 @@ const processFormSubmission = (event) => {
   //use extracted info to plot chart
   doGlobalChart(event, '#scatter_plot');
   allMaps.push(map)
+  // console.log('allMaps: ', allMaps)
 }
 
 
@@ -123,6 +142,8 @@ function doGlobalChart(event, id_tag) {
                            x_title, y_title, x_selected, y_selected,
                            color_code)
   gc.doChart();
+  allCharts.push(gc)
+  console.log('allCharts: ', allCharts)
 }
 
 

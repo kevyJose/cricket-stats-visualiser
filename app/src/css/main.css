@@ -1,18 +1,40 @@
-
 body {
-  background-color: #82b4ff;
-  
+  background-color: #262c7e;  
 }
 
 h1 {
   color:white;
   font-size: 40px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI';
   text-align: center;
 }
 
-.dropdown-container {
-  margin-bottom: 10px; /* Adjust the value as needed */
+.dropdown {
+  margin-bottom: 15px;
+}
+
+form label {
+  color: white;
+  font-size: 27px;
+  font-weight: bold;
+}
+
+input[name="color-code"] + label {
+  font-size: 20px;
+  font-weight: normal;
+}
+
+select {
+  width: 200px;
+  height: 28px;
+  font-size: medium;
+}
+
+button {
+  width: 120px;
+  height: 30px;
+  margin-top: 20px;
+  font-size: large;
 }
 
 .chart {  
