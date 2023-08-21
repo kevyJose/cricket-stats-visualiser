@@ -69,9 +69,10 @@ class GlobalChart {
           yAttr: selectedRow[y_selected],
         };
 
-        console.log('selectedData:  ', selectedData)
-        return { name: player.name, row: selectedData }
-        // return selectedData;        
+        // console.log('selectedData:  ', selectedData)
+        // return { name: player.name, row: selectedData }
+        // return { row: selectedData }
+        return selectedData;        
       }
       
       return null;
@@ -115,7 +116,7 @@ class GlobalChart {
             if (((query_start >= span_start) && (query_start <= span_end)) || 
                ((query_end >= span_start) && (query_end <= span_end))) {                                             
   
-                console.log('REACHED INSIDE.....  ', selectedData)
+                // console.log('REACHED INSIDE.....  ', selectedData)
                 row = selectedData
                 // return { name: player.name, row: selectedData }
                 // return selectedData;
@@ -123,7 +124,8 @@ class GlobalChart {
           }
         });
 
-        return { name: player.name, row: row }
+        // return { name: player.name, row: row }
+        return row;
       }
 
       return null;      
@@ -144,10 +146,12 @@ class GlobalChart {
   }
 
 
-  doDotsGroup(svg, filteredData, x, y) {    
+  doDotsGroup(svg, data, x, y) {  
+    console.log('doing doDotsGroup....')
+    // console.log('data:  ', data)  
     svg.append('g')    
       .selectAll('dot')
-      .data(filteredData)
+      .data(data)
       .enter()
       .append('circle')
         .attr('cx', (d) => {
