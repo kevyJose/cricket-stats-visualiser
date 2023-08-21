@@ -59,7 +59,7 @@ class GlobalChart {
       if (filteredRow.length > 0) {
         const selectedRow = filteredRow[0];        
         
-        const selectedData = {
+        const row = {
           id: selectedRow.id,
           name: selectedRow.name,
           country: selectedRow.country,
@@ -68,15 +68,12 @@ class GlobalChart {
           xAttr: selectedRow[x_selected],
           yAttr: selectedRow[y_selected],
         };
-
-        // console.log('selectedData:  ', selectedData)
-        // return { name: player.name, row: selectedData }
-        // return { row: selectedData }
-        return selectedData;        
+        
+        return row;        
       }
       
       return null;
-    }).filter(selectedData => selectedData !== null);    
+    }).filter(row => row !== null);    
   }  
 
 
@@ -89,7 +86,7 @@ class GlobalChart {
       if (filteredRow.length > 0) {
         const selectedRow = filteredRow[0];
 
-        const selectedData = {
+        const row = {
           id: selectedRow.id,
           name: selectedRow.name,
           country: selectedRow.country,
@@ -99,37 +96,34 @@ class GlobalChart {
           yAttr: selectedRow[y_selected],
         };  
         
-        let row = null
+        let filteredPlayer = null
   
         filters.forEach((value, key) => {
           // console.log('Filters Array contents...')
           // console.log(`Key: ${key}, Value: ${value}`)
           if (key === 'year-range') {
-            const query_start = value[0]
-            const query_end = value[1]
-            let player_span = selectedData.span
+            let player_span = row.span
             let spanArray = player_span.split('-')
             const span_start = parseInt(spanArray[0]) 
             const span_end = parseInt(spanArray[1])
+            const query_start = value[0]
+            const query_end = value[1]
+            
   
             // check if query-range touches span-range
             if (((query_start >= span_start) && (query_start <= span_end)) || 
-               ((query_end >= span_start) && (query_end <= span_end))) {                                             
-  
-                // console.log('REACHED INSIDE.....  ', selectedData)
-                row = selectedData
-                // return { name: player.name, row: selectedData }
-                // return selectedData;
+               ((query_end >= span_start) && (query_end <= span_end))) {
+                // console.log('REACHED INSIDE.....  ', row)
+                filteredPlayer = row                
             }
           }
         });
-
-        // return { name: player.name, row: row }
-        return row;
+        
+        return filteredPlayer;
       }
 
       return null;      
-    }).filter(selectedData => selectedData !== null && selectedData.row !== null);     
+    }).filter(filteredPlayer => filteredPlayer !== null);     
   }
 
 
