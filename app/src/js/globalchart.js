@@ -19,13 +19,23 @@ class GlobalChart {
     this.x_selected = x_selected;
     this.y_selected = y_selected;
     this.color_code = color_code;
-  }
+  }  
 
 
-  doChart() {
-    const filteredData = this.filterData();
-    const x_values = filteredData.map((d) => d.xAttr);
-    const y_values = filteredData.map((d) => d.yAttr);
+  doChart(filters = {}) {
+    let selectedData = this.selectData();
+
+    // console.log('filters length:  ', Object.keys(filters).length)
+    // console.log('filters:  ', filters)
+
+    if (filters.size > 0) {
+      selectedData = this.filterData(filters);            
+    }
+
+    console.log('selectedData: ', selectedData)
+
+    const x_values = selectedData.map((d) => d.xAttr);
+    const y_values = selectedData.map((d) => d.yAttr);
     const xMax = d3.max(x_values);
     const yMax = d3.max(y_values);
     const margin = { top: 25, right: 30, bottom: 50, left: 70 };
@@ -33,37 +43,91 @@ class GlobalChart {
     const height = 550 - margin.top - margin.bottom;
     const svg = this.createSVG(this.id_tag, margin, width, height);
     const { x, y } = this.doAxes(svg, width, height, xMax, yMax);
-    this.doDotsGroup(svg, filteredData, x, y);
+    this.doDotsGroup(svg, selectedData, x, y);
     this.doTitle(svg, width, margin);
     this.doAxisLabels(svg, width, height, margin);
     this.doLegend(svg, width);
   }
 
 
-  filterData() {   
+  // select relevant data, according to configuration
+  selectData() {   
     return raw_data.map(player => {
-      const filteredRow = player.data.filter(row => row.location === selectedLocation);
-      const selectedRow = filteredRow[0];
-      // console.log(selectedRow)
-  
-      if (filteredRow.length === 0) {
-        return { name: player.name, row: {} };
-      }
-  
-      const selectedData = {
-        id: selectedRow.id,
-        name: selectedRow.name,
-        country: selectedRow.country,
-        matches_played: selectedRow.matches_played,
-        xAttr: selectedRow[x_selected],
-        yAttr: selectedRow[y_selected],
+      const filteredRow = player.data.filter(row => row.location === selectedLocation); 
 
-      };
+      // only process players that return a row
+      if (filteredRow.length > 0) {
+        const selectedRow = filteredRow[0];        
+        
+        const selectedData = {
+          id: selectedRow.id,
+          name: selectedRow.name,
+          country: selectedRow.country,
+          span: selectedRow.span,
+          matches_played: selectedRow.matches_played,        
+          xAttr: selectedRow[x_selected],
+          yAttr: selectedRow[y_selected],
+        };
+
+        console.log('selectedData:  ', selectedData)
+        return { name: player.name, row: selectedData }
+        // return selectedData;        
+      }
       
-      return { name: player.name, id: selectedData.id, country: selectedData.country, 
-               matches_played: selectedData.matches_played, xAttr: selectedData.xAttr, 
-               yAttr: selectedData.yAttr };
-    });    
+      return null;
+    }).filter(selectedData => selectedData !== null);    
+  }  
+
+
+
+  filterData(filters = {}) {   
+    return raw_data.map(player => {
+      const filteredRow = player.data.filter(row => row.location === selectedLocation);     
+
+      // handle players that don't return rows for the queried-location
+      if (filteredRow.length > 0) {
+        const selectedRow = filteredRow[0];
+
+        const selectedData = {
+          id: selectedRow.id,
+          name: selectedRow.name,
+          country: selectedRow.country,
+          span: selectedRow.span,
+          matches_played: selectedRow.matches_played,        
+          xAttr: selectedRow[x_selected],
+          yAttr: selectedRow[y_selected],
+        };  
+        
+        let row = null
+  
+        filters.forEach((value, key) => {
+          // console.log('Filters Array contents...')
+          // console.log(`Key: ${key}, Value: ${value}`)
+          if (key === 'year-range') {
+            const query_start = value[0]
+            const query_end = value[1]
+            let player_span = selectedData.span
+            let spanArray = player_span.split('-')
+            const span_start = parseInt(spanArray[0]) 
+            const span_end = parseInt(spanArray[1])
+  
+            // check if query-range touches span-range
+            if (((query_start >= span_start) && (query_start <= span_end)) || 
+               ((query_end >= span_start) && (query_end <= span_end))) {                                             
+  
+                console.log('REACHED INSIDE.....  ', selectedData)
+                row = selectedData
+                // return { name: player.name, row: selectedData }
+                // return selectedData;
+            }
+          }
+        });
+
+        return { name: player.name, row: row }
+      }
+
+      return null;      
+    }).filter(selectedData => selectedData !== null && selectedData.row !== null);     
   }
 
 

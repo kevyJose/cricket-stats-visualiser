@@ -6,39 +6,89 @@ let x_title = 'X title'
 let y_title = 'Y title'
 let color_code = ''
 let allMaps = []  // a map contains chart specs.
-let allCharts = [] // all generated charts 
+let allCharts = [] // all generated charts
 
 let raw_data;
 
-//Do these initial calls once the DOM is finished loading
-window.addEventListener('DOMContentLoaded', function() {
+
+window.addEventListener('DOMContentLoaded', () => {
+});
+
+document.addEventListener('DOMContentLoaded', () => {
   readData('./data/data-statsguru-3.csv', '#raw')    
     .then(console.log('Data read successfully'))
-    .catch((error) => console.log('Error: ', error.message));
+    .catch((error) => console.log('Error: ', error.message))
     
-  doFilterDropdowns();
+  doFilterDropdowns();  
 });
 
 
+function submit_filterForm(event) {
+  event.preventDefault();
+
+  // Get selected start and end years
+  const startYear = parseInt(document.getElementById('start-year-dropdown').value);
+  const endYear = parseInt(document.getElementById('end-year-dropdown').value);
+  const chartNum = parseInt(document.getElementById('chart-select-dropdown').value);
+
+  const filtersMap = new Map()
+
+  if (endYear >= startYear) {
+    //update the graph to render filtered values
+    selectedChart = allCharts[chartNum-1]
+    filtersMap.set('year-range', [startYear, endYear])        
+    selectedChart.doChart(filtersMap)    
+  }
+  else {
+    alert("End year must be greater than or equal to start year.")
+  }
+}
+
 
 function doFilterDropdowns() { 
+  const startYr_elem = document.getElementById("start-year-dropdown")
+  const endYr_elem = document.getElementById("end-year-dropdown")  
 
-  var elem = document.getElementById("start-year-dropdown");
+  doYearDropdown(startYr_elem)
+  doYearDropdown(endYr_elem)
+}
 
-  for (var i = 1971; i <= 2023; i++) {
-    var option = document.createElement("option");
-    option.value = i;
-    option.text = i;
-    elem.appendChild(option);
-  }
 
+function doChartSelectDropdown(elem) {
+  let i = allCharts.length
+  let option = document.createElement("option")
+  option.value = i
+  option.text = 'Chart #' + i
+  elem.appendChild(option)  
+}
+
+
+function doYearDropdown(elem) {
+  for (let i = 1971; i <= 2023; i++) {
+    let option = document.createElement("option")
+    option.value = i
+    option.text = i
+    elem.appendChild(option)
+  }  
+}
+
+
+function enableFilterElems() {
+  const startYr_elem = document.getElementById("start-year-dropdown")
+  const endYr_elem = document.getElementById("end-year-dropdown")
+
+  startYr_elem.disabled = false
+  endYr_elem.disabled = false
 }
 
 
 
-const processFormSubmission = (event) => {
+function submit_configForm(event) {
   event.preventDefault();
-  const form = document.querySelector("form")
+  enableFilterElems();   
+  const form = document.getElementById("config_form")
+  const chartSelect_elem = document.getElementById("chart-select-dropdown")  
+
   const map = new Map();
   const data = new FormData(form)
 
@@ -70,7 +120,13 @@ const processFormSubmission = (event) => {
   //use extracted info to plot chart
   doGlobalChart(event, '#scatter_plot');
   allMaps.push(map)
-  // console.log('allMaps: ', allMaps)
+  // console.log('allMaps: ', allMaps)  
+
+  // update chart-selection dropdown
+  if(allCharts.length > 0){
+    doChartSelectDropdown(chartSelect_elem)
+    chartSelect_elem.disabled = false
+  }
 }
 
 
@@ -143,7 +199,7 @@ function doGlobalChart(event, id_tag) {
                            color_code)
   gc.doChart();
   allCharts.push(gc)
-  console.log('allCharts: ', allCharts)
+  console.log('allCharts: ', allCharts)  
 }
 
 

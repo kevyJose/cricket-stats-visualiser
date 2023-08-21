@@ -14,7 +14,7 @@
 <body>
   <h1>Cricket Mania</h1>
 
-  <form id="config_form" onsubmit="processFormSubmission(event);">
+  <form id="config_form" onsubmit="submit_configForm(event)">
     <div class="dropdown">
       <label for="location-menu">Location:</label>
       <select id="location-menu" name="location">
@@ -82,17 +82,20 @@
     <br>
   </form>
 
-  <form id="filter_form">
+  <form id="filter_form" onsubmit="submit_filterForm(event)">
 
-    <div class="dropdown">
-      <label for="">Start Year:</label>
-      <select name="start-year" id="start-year-dropdown"></select>
-
-      <!-- <label for="">End Year:</label>
-      <select name="end-year-filter"></select>       -->
+    <div>
+      <label for="chart-select-dropdown">Select Chart:</label>
+      <select name="chart-select" id="chart-select-dropdown" disabled></select>
     </div>
 
+    <div class="dropdown">
+      <label for="start-year-dropdown">Start Year:</label>
+      <select name="start-year" id="start-year-dropdown" disabled></select>
 
+      <label for="end-year-dropdown">End Year:</label>
+      <select name="end-year" id="end-year-dropdown" disabled></select>  
+    </div>
 
     <div>
       <button type="submit">Apply Filter</button>
