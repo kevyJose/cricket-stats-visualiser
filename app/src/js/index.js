@@ -35,9 +35,9 @@ function submit_filterForm(event) {
 
   if (endYear >= startYear) {
     //update the graph to render filtered values
-    selectedChart = allCharts[chartNum-1]
+    const selectedChart = allCharts[chartNum-1]
     filtersMap.set('year-range', [startYear, endYear])        
-    selectedChart.doChart(filtersMap)    
+    selectedChart.reRender(filtersMap)    
   }
   else {
     alert("End year must be greater than or equal to start year.")
@@ -197,7 +197,7 @@ function doGlobalChart(event, id_tag) {
   let gc = new GlobalChart(id_tag, raw_data, selectedLocation, 
                            x_title, y_title, x_selected, y_selected,
                            color_code)
-  gc.doChart();
+  gc.initChart();
   allCharts.push(gc)
   console.log('allCharts: ', allCharts)  
 }

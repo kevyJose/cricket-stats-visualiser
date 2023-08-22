@@ -1,13 +1,5 @@
 
 class GlobalChart {
-  id_tag
-  rawData
-  selectedLocation
-  x_title
-  y_title
-  x_selected
-  y_selected
-  color_code
 
   constructor(id_tag, rawData, selectedLocation, x_title, 
               y_title, x_selected, y_selected, color_code) {                
@@ -19,35 +11,75 @@ class GlobalChart {
     this.x_selected = x_selected;
     this.y_selected = y_selected;
     this.color_code = color_code;
-  }  
+    this.margin = { top: 25, right: 30, bottom: 50, left: 70 };
+    this.width = 650 - this.margin.left - this.margin.right;
+    this.height = 550 - this.margin.top - this.margin.bottom;
+  }
 
-
-  doChart(filters = {}) {
-    let selectedData = this.selectData();
-
-    // console.log('filters length:  ', Object.keys(filters).length)
-    // console.log('filters:  ', filters)
-
-    if (filters.size > 0) {
-      selectedData = this.filterData(filters);            
-    }
+  
+  // initialise the chart
+  initChart() {
+    let selectedData = this.selectData()
 
     console.log('selectedData: ', selectedData)
 
     const x_values = selectedData.map((d) => d.xAttr);
     const y_values = selectedData.map((d) => d.yAttr);
     const xMax = d3.max(x_values);
-    const yMax = d3.max(y_values);
-    const margin = { top: 25, right: 30, bottom: 50, left: 70 };
-    const width = 650 - margin.left - margin.right;
-    const height = 550 - margin.top - margin.bottom;
-    const svg = this.createSVG(this.id_tag, margin, width, height);
-    const { x, y } = this.doAxes(svg, width, height, xMax, yMax);
+    const yMax = d3.max(y_values);    
+    const svg = this.createSVG(this.id_tag, this.margin, this.width, this.height);
+    const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
     this.doDotsGroup(svg, selectedData, x, y);
-    this.doTitle(svg, width, margin);
-    this.doAxisLabels(svg, width, height, margin);
-    this.doLegend(svg, width);
+    this.doTitle(svg, this.width, this.margin);
+    this.doAxisLabels(svg, this.width, this.height, this.margin);
+    this.doLegend(svg, this.width);
   }
+
+
+  // update the chart 
+  reRender(filters = {}) {
+    // console.log('filters length:  ', Object.keys(filters).length)
+    // console.log('filters:  ', filters)
+    if (filters.size > 0) {
+      const filteredData = this.filterData(filters);
+
+      // Update existing chart elements with filtered data
+      const x_values = filteredData.map((d) => d.xAttr);
+      const y_values = filteredData.map((d) => d.yAttr);
+      const xMax = d3.max(x_values);
+      const yMax = d3.max(y_values);
+
+      const svg = d3.select(this.id_tag).select('svg'); // Get the existing SVG
+      const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
+      
+      // Update dots group
+      const dots = svg.selectAll('circle').data(filteredData);
+
+      dots.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
+          .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr)));
+
+      // Title Prefix
+      // extract the applied 'filter types' and concat. into string
+      const keysArray = Array.from(filters.keys())
+      const keysString = keysArray.join(' & ')
+      const titlePrefix = 'FILTERS (' + keysString + ') : '
+
+      // Update title
+      this.doTitle(svg, this.width, this.margin, titlePrefix);
+
+      // Update axis labels
+      this.doAxisLabels(svg, this.width, this.height, this.margin);
+      
+      // Remove any extra dots if needed
+      dots.exit().remove();      
+      
+    }    
+         
+
+  }
+
+
+
 
 
   // select relevant data, according to configuration
@@ -330,14 +362,14 @@ class GlobalChart {
   }
 
 
-  doTitle(svg, width, margin) {            
+  doTitle(svg, width, margin, prefix = '') {            
     svg.append('text')
     .attr('x', (width / 2))
     .attr('y', margin.top - 20)
     .attr('text-anchor', 'middle')
     .style('font-size', '16px')
     .style('fill', '#000000')
-    .text(y_title + ' vs. ' + x_title);
+    .text(prefix + y_title + ' vs. ' + x_title);
   }
 
 }
