@@ -209,7 +209,8 @@ class GlobalChart {
         .on('mouseover', (event, d) => {        
           // show tooltip on mouseover
           d3.select('.tooltip')
-          .style('opacity', 0.9)          
+          .style('opacity', 0.9)
+          .style('color', 'white')          
           .html(`
             <div>Name: ${d.name}</div>
             <div>Country: ${d.country}</div>
