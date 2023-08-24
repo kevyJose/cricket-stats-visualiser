@@ -5,7 +5,7 @@ let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
 let color_code = ''
-let allMaps = []  // a map contains chart specs.
+// let allMaps = []  // a map contains chart specs.
 let allCharts = [] // all generated charts
 
 let raw_data;
@@ -35,7 +35,7 @@ function submit_filterForm(event) {
 
   if (endYear >= startYear) {
     //update the graph to render filtered values
-    const selectedChart = allCharts[chartNum-1]
+    const selectedChart = allCharts[chartNum-1] // CHANGE THIS SO THAT IT GETS THE SELECTED CHART INPUT VALUE....
     filtersMap.set('year-range', [startYear, endYear])        
     selectedChart.reRender(filtersMap)    
   }
@@ -82,9 +82,29 @@ function enableFilterElems() {
 }
 
 
+// creates a new div element for each scatter-plot
+function doScatterPlot_div() {
+
+  let numPlots = document.querySelectorAll('[id^="scatter-plot"]').length
+  console.log('num of scatter plots:  ' + numPlots)
+  let newPlotId = 'scatter-plot-' + numPlots
+
+  let newDiv = document.createElement('div')
+  newDiv.className = 'chart'
+  newDiv.id = newPlotId
+
+  // add div element to html body
+  document.body.appendChild(newDiv)
+
+  return newPlotId;
+}
+
+
 
 function submit_configForm(event) {
   event.preventDefault();
+  
+  let newPlotId = doScatterPlot_div();
   enableFilterElems();   
   const form = document.getElementById("config_form")
   const chartSelect_elem = document.getElementById("chart-select-dropdown")  
@@ -118,8 +138,10 @@ function submit_configForm(event) {
   //set global variables
   setCurrChartAttributes(map);
   //use extracted info to plot chart
-  doGlobalChart(event, '#scatter_plot');
-  allMaps.push(map)
+  // const chartIndex = allCharts.length
+
+  doGlobalChart(event, '#'+newPlotId);
+  // allMaps.push(map)
   // console.log('allMaps: ', allMaps)  
 
   // update chart-selection dropdown

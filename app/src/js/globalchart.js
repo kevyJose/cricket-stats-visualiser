@@ -19,6 +19,7 @@ class GlobalChart {
   
   // initialise the chart
   initChart() {
+    console.log('doing initChart...')
     let selectedData = this.selectData()
 
     console.log('selectedData: ', selectedData)
@@ -36,7 +37,7 @@ class GlobalChart {
   }
 
 
-  // update the chart 
+  // NEW version
   reRender(filters = {}) {
     // console.log('filters length:  ', Object.keys(filters).length)
     // console.log('filters:  ', filters)
@@ -53,32 +54,70 @@ class GlobalChart {
       const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
       
       // Update dots group
-      const dots = svg.selectAll('circle').data(filteredData);
+      // const dots = svg.selectAll('circle').data(filteredData);
+      const dots = d3.selectAll(this.id_tag).selectAll('circle')
 
-      dots.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
-          .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr)));
+      //JOIN, ENTER, UPDATE, EXIT
+      let join = dots.data(filteredData)
+      let enter = join.enter()
 
-      // Title Prefix
-      // extract the applied 'filter types' and concat. into string
-      const keysArray = Array.from(filters.keys())
-      const keysString = keysArray.join(' & ')
-      const titlePrefix = 'FILTERS (' + keysString + ') : '
+      enter.append('circle')
+           .attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
+           .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr)))
+          //  .attr('r', 1)
+          //  .attr('fill', )
 
-      // Update title
-      this.doTitle(svg, this.width, this.margin, titlePrefix);
+      circles.join(update => update.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
+                                   .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr))));
 
-      // Update axis labels
-      this.doAxisLabels(svg, this.width, this.height, this.margin);
-      
-      // Remove any extra dots if needed
-      dots.exit().remove();      
-      
-    }    
-         
-
+      let exit = join.exit()
+      exit.remove();
+      // UpdateAxis(filteredData);
+    }
   }
 
 
+
+  // // OLD version: update the chart 
+  // reRender(filters = {}) {
+  //   // console.log('filters length:  ', Object.keys(filters).length)
+  //   // console.log('filters:  ', filters)
+  //   if (filters.size > 0) {
+  //     const filteredData = this.filterData(filters);
+
+  //     // Update existing chart elements with filtered data
+  //     const x_values = filteredData.map((d) => d.xAttr);
+  //     const y_values = filteredData.map((d) => d.yAttr);
+  //     const xMax = d3.max(x_values);
+  //     const yMax = d3.max(y_values);
+
+  //     const svg = d3.select(this.id_tag).select('svg'); // Get the existing SVG
+  //     const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
+      
+  //     // Update dots group
+  //     const dots = svg.selectAll('circle').data(filteredData);
+  //     // const dots = d3.selectAll(this.id_tag).selectAll("circle")
+
+  //     dots.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
+  //         .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr)));
+
+  //     // Title Prefix
+  //     // extract the applied 'filter types' and concat. into string
+  //     const keysArray = Array.from(filters.keys())
+  //     const keysString = keysArray.join(' & ')
+  //     const titlePrefix = 'FILTERS (' + keysString + ') : '
+
+  //     // Update title
+  //     this.doTitle(svg, this.width, this.margin, titlePrefix);
+
+  //     // Update axis labels
+  //     this.doAxisLabels(svg, this.width, this.height, this.margin);
+      
+  //     // Remove any extra dots if needed
+  //     dots.exit().remove();      
+      
+  //   }
+  // }
 
 
 
@@ -159,7 +198,8 @@ class GlobalChart {
   }
 
 
-  createSVG(id_tag, margin, width, height) {    
+  createSVG(id_tag, margin, width, height) {  
+    console.log('id_tag:  ' + id_tag)  
     return d3.select(id_tag)
     .append('svg')
       .attr('width', width + margin.left + margin.right)
