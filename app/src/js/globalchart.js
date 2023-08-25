@@ -20,7 +20,7 @@ class GlobalChart {
   // initialise the chart
   initChart() {
     console.log('doing initChart...')
-    let selectedData = this.selectData()
+    const selectedData = this.selectData()
 
     console.log('selectedData: ', selectedData)
 
@@ -42,7 +42,9 @@ class GlobalChart {
     // console.log('filters length:  ', Object.keys(filters).length)
     // console.log('filters:  ', filters)
     if (filters.size > 0) {
-      const filteredData = this.filterData(filters);
+      const filteredData = this.filterData(filters)
+
+      console.log('filteredData: ', filteredData)
 
       // Update existing chart elements with filtered data
       const x_values = filteredData.map((d) => d.xAttr);
@@ -51,7 +53,7 @@ class GlobalChart {
       const yMax = d3.max(y_values);
 
       const svg = d3.select(this.id_tag).select('svg'); // Get the existing SVG
-      const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
+      // const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
       
       // Update dots group
       // const dots = svg.selectAll('circle').data(filteredData);
@@ -67,7 +69,7 @@ class GlobalChart {
           //  .attr('r', 1)
           //  .attr('fill', )
 
-      circles.join(update => update.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
+      dots.join(update => update.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
                                    .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr))));
 
       let exit = join.exit()
@@ -145,11 +147,13 @@ class GlobalChart {
       
       return null;
     }).filter(row => row !== null);    
-  }  
+  }
+  
 
 
-
-  filterData(filters = {}) {   
+  filterData(filters = {}) {
+    let count = 0
+    
     return raw_data.map(player => {
       const filteredRow = player.data.filter(row => row.location === selectedLocation);     
 
@@ -172,7 +176,7 @@ class GlobalChart {
         filters.forEach((value, key) => {
           // console.log('Filters Array contents...')
           // console.log(`Key: ${key}, Value: ${value}`)
-          if (key === 'year-range') {
+          if (key === 'year-range') { 
             let player_span = row.span
             let spanArray = player_span.split('-')
             const span_start = parseInt(spanArray[0]) 
@@ -180,11 +184,25 @@ class GlobalChart {
             const query_start = value[0]
             const query_end = value[1]
             
+            // console.log('name: ' + player.name)
+            // console.log('span-start: ' + span_start)
+            // console.log('span-end: ' + span_end)
+            // console.log('query-start: ' + query_start)
+            // console.log('query-end: ' + query_end)
+            
   
             // check if query-range touches span-range
             if (((query_start >= span_start) && (query_start <= span_end)) || 
                ((query_end >= span_start) && (query_end <= span_end))) {
                 // console.log('REACHED INSIDE.....  ', row)
+                count++
+                console.log('count #' + count)
+                console.log('name: ' + player.name)
+                console.log('span-start: ' + span_start)
+                console.log('span-end: ' + span_end)
+                console.log('query-start: ' + query_start)
+                console.log('query-end: ' + query_end)
+
                 filteredPlayer = row                
             }
           }
