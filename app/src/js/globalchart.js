@@ -1,5 +1,5 @@
 
-class GlobalChart {
+class GlobalChart { 
 
   constructor(id_tag, rawData, selectedLocation, x_title, 
               y_title, x_selected, y_selected, color_code) {                
@@ -14,27 +14,25 @@ class GlobalChart {
     this.margin = { top: 25, right: 30, bottom: 50, left: 70 };
     this.width = 650 - this.margin.left - this.margin.right;
     this.height = 550 - this.margin.top - this.margin.bottom;
+    this.svg = null; 
   }
+
 
   
   // initialise the chart
   initChart() {
     // console.log('doing initChart...')
     const selectedData = this.selectData()
-
     console.log('selectedData: ', selectedData)
 
-    const x_values = selectedData.map((d) => d.xAttr);
-    const y_values = selectedData.map((d) => d.yAttr);
-    const xMax = d3.max(x_values);
-    const yMax = d3.max(y_values);    
-    const svg = this.createSVG(this.id_tag, this.margin, this.width, this.height);
-    const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
-    this.doDotsGroup(svg, selectedData, x, y);
-    this.doTitle(svg, this.width, this.margin);
-    this.doAxisLabels(svg, this.width, this.height, this.margin);
-    this.doLegend(svg, this.width);
+    this.svg = this.createSVG(this.id_tag, this.margin, this.width, this.height);
+    const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, selectedData, this.margin);
+    this.doDotsGroup(this.svg, selectedData, xScale, yScale);
+    this.doTitle(this.svg, this.width, this.margin);
+    this.doAxisLabels(this.svg, this.width, this.height, this.margin);
+    this.doLegend(this.svg, this.width);
   }
+
 
 
   // NEW version
@@ -45,37 +43,21 @@ class GlobalChart {
       const filteredData = this.filterData(filters)
       console.log('filteredData: ', filteredData)
 
-      // Update existing chart elements with filtered data
-      const x_values = filteredData.map((d) => d.xAttr);
-      const y_values = filteredData.map((d) => d.yAttr);
-      const xMax = d3.max(x_values);
-      const yMax = d3.max(y_values);
+      // remove chart contents (axes, dots)
+      const dotsGroup = this.svg.select('.dots')
+      dotsGroup.selectAll('circle').remove()
+      const xAxis = this.svg.select('.x-axis')
+      const yAxis = this.svg.select('.y-axis')
+      xAxis.remove()
+      yAxis.remove()
 
-      const svg = d3.select(this.id_tag).select('svg'); // Get the existing SVG
-      // const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
-      
-      // Update dots group
-      // const dots = svg.selectAll('circle').data(filteredData);
-      const dots = d3.selectAll(this.id_tag).selectAll('circle')
-
-      //JOIN, ENTER, UPDATE, EXIT
-      let join = dots.data(filteredData)
-      let enter = join.enter()
-
-      enter.append('circle')
-           .attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
-           .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr)))
-          //  .attr('r', 1)
-          //  .attr('fill', )
-
-      dots.join(update => update.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
-                                   .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr))));
-
-      let exit = join.exit()
-      exit.remove();
-      // UpdateAxis(filteredData);
+      // new axes
+      const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, filteredData, this.margin);
+      // new dots-group
+      this.doDotsGroup(this.svg, filteredData, xScale, yScale);      
     }
   }
+  
 
 
 
@@ -177,16 +159,21 @@ class GlobalChart {
   }
 
 
+
   doDotsGroup(svg, data, x, y) {  
     // console.log('doing doDotsGroup....')
     // console.log('data:  ', data)  
-    svg.append('g')    
-      .selectAll('dot')
+    svg.append('g')
+      .attr('class', 'dots') // reference    
+      .selectAll('circle')
       .data(data)
       .enter()
       .append('circle')
         .attr('cx', (d) => {
           if (d.xAttr === 'na' || d.yAttr === 'na') {
+            console.log('NA name: ' + d.name)
+            console.log('xAttr: ' + d.xAttr)
+            console.log('yAttr: ' + d.yAttr)
             return null;
           } else {
             return x(d.xAttr);
@@ -195,6 +182,7 @@ class GlobalChart {
 
         .attr('cy', (d) => {
           if (d.xAttr === 'na' || d.yAttr === 'na') {
+            console.log('NA name: ' + d.name)
             return null;
           } else if (d.yAttr !== 'na') {
             return y(d.yAttr);
@@ -259,7 +247,7 @@ class GlobalChart {
         .on('mouseout', (event, d) => {        
           d3.select('.tooltip').style('opacity', 0);
         })
-  };
+  }
 
 
 
@@ -343,27 +331,33 @@ class GlobalChart {
   }
 
 
-  doAxes(svg, width, height, xMax, yMax) {    
-    // Add X axis
-    let x = d3.scaleLinear()
-    .domain([0, xMax+50])
-    .range([ 0, width ]);
-    svg.append('g')
+  doAxes(svg, width, height, data, margin) {    
+    // X-scale
+    let xScale = d3.scaleLinear()   
+    .domain(d3.extent(data, d => d.xAttr)).nice()
+    .range([ 0, width ])    
+
+    // Y-scale
+    let yScale = d3.scaleLinear()    
+    .domain(d3.extent(data, d => d.yAttr)).nice()
+    .range([ height, 0])    
+
+    // add X-axis
+    const xAxis = svg.append('g')
+      .attr('class', 'x-axis') // reference
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(xScale).ticks(width/50))
+      .style('fill', '#000000')
+      .style('color', '#000000');
+     
+    // add Y-axis
+    const yAxis = svg.append('g')
+      .attr('class', 'y-axis') // reference
+      .call(d3.axisLeft(yScale))
       .style('fill', '#000000')
       .style('color', '#000000');
 
-    // Add Y axis
-    let y = d3.scaleLinear()
-    .domain([0, yMax+40])
-    .range([ height, 0]);
-    svg.append('g')
-      .call(d3.axisLeft(y))
-      .style('fill', '#000000')
-      .style('color', '#000000');
-
-    return { x: x, y: y };
+    return { xScale: xScale, yScale: yScale };
   }
 
 
