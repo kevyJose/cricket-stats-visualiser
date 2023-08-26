@@ -19,7 +19,7 @@ class GlobalChart {
   
   // initialise the chart
   initChart() {
-    console.log('doing initChart...')
+    // console.log('doing initChart...')
     const selectedData = this.selectData()
 
     console.log('selectedData: ', selectedData)
@@ -43,7 +43,6 @@ class GlobalChart {
     // console.log('filters:  ', filters)
     if (filters.size > 0) {
       const filteredData = this.filterData(filters)
-
       console.log('filteredData: ', filteredData)
 
       // Update existing chart elements with filtered data
@@ -77,49 +76,6 @@ class GlobalChart {
       // UpdateAxis(filteredData);
     }
   }
-
-
-
-  // // OLD version: update the chart 
-  // reRender(filters = {}) {
-  //   // console.log('filters length:  ', Object.keys(filters).length)
-  //   // console.log('filters:  ', filters)
-  //   if (filters.size > 0) {
-  //     const filteredData = this.filterData(filters);
-
-  //     // Update existing chart elements with filtered data
-  //     const x_values = filteredData.map((d) => d.xAttr);
-  //     const y_values = filteredData.map((d) => d.yAttr);
-  //     const xMax = d3.max(x_values);
-  //     const yMax = d3.max(y_values);
-
-  //     const svg = d3.select(this.id_tag).select('svg'); // Get the existing SVG
-  //     const { x, y } = this.doAxes(svg, this.width, this.height, xMax, yMax);
-      
-  //     // Update dots group
-  //     const dots = svg.selectAll('circle').data(filteredData);
-  //     // const dots = d3.selectAll(this.id_tag).selectAll("circle")
-
-  //     dots.attr('cx', (d) => (d.xAttr === 'na' ? null : x(d.xAttr)))
-  //         .attr('cy', (d) => (d.yAttr === 'na' ? null : y(d.yAttr)));
-
-  //     // Title Prefix
-  //     // extract the applied 'filter types' and concat. into string
-  //     const keysArray = Array.from(filters.keys())
-  //     const keysString = keysArray.join(' & ')
-  //     const titlePrefix = 'FILTERS (' + keysString + ') : '
-
-  //     // Update title
-  //     this.doTitle(svg, this.width, this.margin, titlePrefix);
-
-  //     // Update axis labels
-  //     this.doAxisLabels(svg, this.width, this.height, this.margin);
-      
-  //     // Remove any extra dots if needed
-  //     dots.exit().remove();      
-      
-  //   }
-  // }
 
 
 
@@ -182,27 +138,18 @@ class GlobalChart {
             const span_start = parseInt(spanArray[0]) 
             const span_end = parseInt(spanArray[1])
             const query_start = value[0]
-            const query_end = value[1]
-            
-            // console.log('name: ' + player.name)
-            // console.log('span-start: ' + span_start)
-            // console.log('span-end: ' + span_end)
-            // console.log('query-start: ' + query_start)
-            // console.log('query-end: ' + query_end)
-            
+            const query_end = value[1]           
   
             // check if query-range touches span-range
             if (((query_start >= span_start) && (query_start <= span_end)) || 
-               ((query_end >= span_start) && (query_end <= span_end))) {
-                // console.log('REACHED INSIDE.....  ', row)
-                count++
-                console.log('count #' + count)
-                console.log('name: ' + player.name)
-                console.log('span-start: ' + span_start)
-                console.log('span-end: ' + span_end)
-                console.log('query-start: ' + query_start)
-                console.log('query-end: ' + query_end)
-
+               ((query_end >= span_start) && (query_end <= span_end))) {                
+                // count++
+                // console.log('count #' + count)
+                // console.log('name: ' + player.name)
+                // console.log('span-start: ' + span_start)
+                // console.log('span-end: ' + span_end)
+                // console.log('query-start: ' + query_start)
+                // console.log('query-end: ' + query_end)
                 filteredPlayer = row                
             }
           }
@@ -231,7 +178,7 @@ class GlobalChart {
 
 
   doDotsGroup(svg, data, x, y) {  
-    console.log('doing doDotsGroup....')
+    // console.log('doing doDotsGroup....')
     // console.log('data:  ', data)  
     svg.append('g')    
       .selectAll('dot')
