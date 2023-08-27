@@ -163,93 +163,79 @@ class GlobalChart {
   doDotsGroup(svg, data, x, y) {  
     // console.log('doing doDotsGroup....')
     // console.log('data:  ', data)  
-    svg.append('g')
-      .attr('class', 'dots') // reference    
-      .selectAll('circle')
+    const dotsGroup = svg.append('g')
+      .attr('class', 'dots')
+
+    const circles = dotsGroup.selectAll('circle')
       .data(data)
       .enter()
-      .append('circle')
-        .attr('cx', (d) => {
-          if (d.xAttr === 'na' || d.yAttr === 'na') {
-            console.log('NA name: ' + d.name)
-            console.log('xAttr: ' + d.xAttr)
-            console.log('yAttr: ' + d.yAttr)
-            return null;
-          } else {
-            return x(d.xAttr);
-          }
-        })
+      .filter((d) => d.xAttr !== 'na' && d.yAttr !== 'na') // Filter data points
 
-        .attr('cy', (d) => {
-          if (d.xAttr === 'na' || d.yAttr === 'na') {
-            console.log('NA name: ' + d.name)
-            return null;
-          } else if (d.yAttr !== 'na') {
-            return y(d.yAttr);
-          }
-        })
+    circles.append('circle')
+      .attr('cx', (d) => x(d.xAttr))
+      .attr('cy', (d) => y(d.yAttr))
+      .attr('r', 3.0)
+      .style('fill', (d) => this.setDotColor(d))
 
-        .attr('r', 3.0)
-
-        //Set 'fill' color of the dot, based on color_code
-        .style('fill', (d) => {
-          // console.log('color_code... ', this.color_code)
-          if(this.color_code === 'bis') {
-            // Specify color based on the 'country' attribute
-            if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
-              return '#e41a1c';
-            } 
-            else if (d.country === 'SA' || d.country === 'ENG' || 
-                     d.country === 'NZ' || d.country === 'AUS') {
-              return '#377eb8';
-            } 
-            else {
-              return '#4daf4a';
-            }
-          } 
-          else if(this.color_code === 'matches') {
-            //specify color-regions based on no. matches played
-            if (d.matches_played >= 0 && d.matches_played <= 24) { // 0-24
-              return '#FFFFFF';                             
-            }
-            else if(d.matches_played >= 25 && d.matches_played <= 49) { // 25-49
-              return '#cccccc'; 
-            }
-            else if(d.matches_played >= 50 && d.matches_played <= 99) { // 50-99
-              return '#969696'; 
-            }
-            else if(d.matches_played >= 100 && d.matches_played <= 249) { // 100-249
-              return '#636363'; 
-            }
-            else if(d.matches_played >= 250 && d.matches_played <= 500) { // 250-500
-              return '#252525'; 
-            }
-            else { //any other values
-              return '#FF0000'; 
-            }
-          }
-        })
-
-        //call helper fn. on mouseover
-        .on('mouseover', (event, d) => {        
-          // show tooltip on mouseover
-          d3.select('.tooltip')
-          .style('opacity', 0.9)
-          .style('color', 'white')          
-          .html(`
-            <div>Name: ${d.name}</div>
-            <div>Country: ${d.country}</div>
-            <div>${x_title}: ${d.xAttr}</div>
-            <div>${y_title}: ${d.yAttr}</div>        
-          `)
-        })
-        //hide the tooltip on mouseout
-        .on('mouseout', (event, d) => {        
-          d3.select('.tooltip').style('opacity', 0);
-        })
+      // mouseover...
+      .on('mouseover', (event, d) => {        
+        // show tooltip on mouseover
+        d3.select('.tooltip')
+        .style('opacity', 0.9)
+        .style('color', 'white')          
+        .html(`
+          <div>Name: ${d.name}</div>
+          <div>Country: ${d.country}</div>
+          <div>${x_title}: ${d.xAttr}</div>
+          <div>${y_title}: ${d.yAttr}</div>        
+        `)
+      })
+      // mouseout...
+      .on('mouseout', (event, d) => {        
+        d3.select('.tooltip').style('opacity', 0);
+      });
+        
   }
 
 
+  // Set the color of the dot
+  setDotColor(d) {
+    // console.log('color_code... ', this.color_code)
+    if(this.color_code === 'bis') {
+      // Specify color based on the 'country' attribute
+      if (d.country === 'BAN' || d.country === 'IND' || d.country === 'SL') {
+        return '#e41a1c';
+      } 
+      else if (d.country === 'SA' || d.country === 'ENG' || 
+               d.country === 'NZ' || d.country === 'AUS') {
+        return '#377eb8';
+      } 
+      else {
+        return '#4daf4a';
+      }
+    } 
+    else if(this.color_code === 'matches') {
+      //specify color-regions based on no. matches played
+      if (d.matches_played >= 0 && d.matches_played <= 24) { // 0-24
+        return '#FFFFFF';                             
+      }
+      else if(d.matches_played >= 25 && d.matches_played <= 49) { // 25-49
+        return '#cccccc'; 
+      }
+      else if(d.matches_played >= 50 && d.matches_played <= 99) { // 50-99
+        return '#969696'; 
+      }
+      else if(d.matches_played >= 100 && d.matches_played <= 249) { // 100-249
+        return '#636363'; 
+      }
+      else if(d.matches_played >= 250 && d.matches_played <= 500) { // 250-500
+        return '#252525'; 
+      }
+      else { //any other values
+        return '#FF0000'; 
+      }
+    }
+  }
 
 
 
