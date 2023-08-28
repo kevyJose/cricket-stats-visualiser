@@ -110,15 +110,20 @@ class GlobalChart {
         };  
         
         let filteredPlayer = null
+
+        // THIS IS WORKING FOR APPLYING ONE FILTER. I DONT THINK YOU CAN APPLY BOTH FILTER OPTIONS SIMULTANEOUSLY
+        // NEED TO IMPLEMENT THIS
   
         filters.forEach((value, key) => {
           // console.log('Filters Array contents...')
           // console.log(`Key: ${key}, Value: ${value}`)
           if (key === 'year-range') { 
-            let player_span = row.span
-            let spanArray = player_span.split('-')
+            // curr. player value
+            const player_span = row.span 
+            const spanArray = player_span.split('-')
             const span_start = parseInt(spanArray[0]) 
             const span_end = parseInt(spanArray[1])
+            // queried values 
             const query_start = value[0]
             const query_end = value[1]           
   
@@ -133,6 +138,16 @@ class GlobalChart {
                 // console.log('query-start: ' + query_start)
                 // console.log('query-end: ' + query_end)
                 filteredPlayer = row                
+            }
+          }
+          else if (key === 'country-select') {
+            // curr. player value
+            const player_country = row.country
+            // queried value
+            const query_country = value
+
+            if(player_country == query_country){
+              filteredPlayer = row
             }
           }
         });

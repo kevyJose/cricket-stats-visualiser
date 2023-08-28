@@ -5,9 +5,7 @@ let y_selected = 'none'
 let x_title = 'X title'
 let y_title = 'Y title'
 let color_code = ''
-// let allMaps = []  // a map contains chart specs.
 let allCharts = [] // all generated charts
-
 let raw_data;
 
 
@@ -26,29 +24,48 @@ document.addEventListener('DOMContentLoaded', () => {
 function submit_filterForm(event) {
   event.preventDefault();
 
-  // Get selected start and end years
-  const startYear = parseInt(document.getElementById('start-year-dropdown').value);
-  const endYear = parseInt(document.getElementById('end-year-dropdown').value);
-  const chartNum = parseInt(document.getElementById('chart-select-dropdown').value);
+  // Get filter-form inputs
+  let startYear = document.getElementById('start-year-dropdown').value;
+  let endYear = document.getElementById('end-year-dropdown').value;
+  const chartSelect = parseInt(document.getElementById('chart-select-dropdown').value);
+  const countrySelect = document.getElementById('country-select-dropdown').value;
 
+  const selectedChart = allCharts[chartSelect-1]
   const filtersMap = new Map()
 
-  if (endYear >= startYear) {
-    //update the graph to render filtered values
-    const selectedChart = allCharts[chartNum-1] // CHANGE THIS SO THAT IT GETS THE SELECTED CHART INPUT VALUE....
-    filtersMap.set('year-range', [startYear, endYear])        
-    selectedChart.reRender(filtersMap)    
+  console.log('startYr: ' + startYear)
+  console.log('endYr: ' + endYear)
+
+  if ((startYear !== 'NONE') && (endYear !== 'NONE')) {
+    startYear = parseInt(startYear)
+    endYear = parseInt(endYear)
+    if (endYear >= startYear) {
+      //update the graph to render filtered values    
+      filtersMap.set('year-range', [startYear, endYear])        
+      // selectedChart.reRender(filtersMap) 
+    }
+    else {
+      alert("End year must be greater than or equal to start year.")
+    }       
+  }
+  else if (countrySelect !== 'NONE') {
+    filtersMap.set('country-select', countrySelect)    
+  }
+
+  // Do the reRender
+  if (filtersMap.size === 0) {
+    alert("You must input the fields to apply filters!")
   }
   else {
-    alert("End year must be greater than or equal to start year.")
+    selectedChart.reRender(filtersMap) 
   }
+  
 }
 
 
 function doFilterDropdowns() { 
   const startYr_elem = document.getElementById("start-year-dropdown")
-  const endYr_elem = document.getElementById("end-year-dropdown")  
-
+  const endYr_elem = document.getElementById("end-year-dropdown")
   doYearDropdown(startYr_elem)
   doYearDropdown(endYr_elem)
 }
@@ -76,9 +93,10 @@ function doYearDropdown(elem) {
 function enableFilterElems() {
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
-
+  const countrySelect_elem = document.getElementById("country-select-dropdown")
   startYr_elem.disabled = false
   endYr_elem.disabled = false
+  countrySelect_elem.disabled = false
 }
 
 
@@ -141,8 +159,6 @@ function submit_configForm(event) {
   // const chartIndex = allCharts.length
 
   doGlobalChart(event, '#'+newPlotId);
-  // allMaps.push(map)
-  // console.log('allMaps: ', allMaps)  
 
   // update chart-selection dropdown
   if(allCharts.length > 0){
