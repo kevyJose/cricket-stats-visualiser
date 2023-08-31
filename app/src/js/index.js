@@ -27,6 +27,8 @@ function submit_filterForm(event) {
   // Get filter-form inputs
   let startYear = document.getElementById('start-year-dropdown').value;
   let endYear = document.getElementById('end-year-dropdown').value;
+  let debutYear = document.getElementById('debut-year-dropdown').value;
+  let finalYear = document.getElementById('final-year-dropdown').value;
   const chartSelect = parseInt(document.getElementById('chart-select-dropdown').value);
   const countrySelect = document.getElementById('country-select-dropdown').value;
 
@@ -41,23 +43,33 @@ function submit_filterForm(event) {
     endYear = parseInt(endYear)
     if (endYear >= startYear) {
       //update the graph to render filtered values    
-      filtersMap.set('year-range', [startYear, endYear])        
-      // selectedChart.reRender(filtersMap) 
+      filtersMap.set('year-range', [startYear, endYear])
     }
     else {
       alert("End year must be greater than or equal to start year.")
     }       
   }
-  else if (countrySelect !== 'NONE') {
+
+  if (countrySelect !== 'NONE') {
     filtersMap.set('country-select', countrySelect)    
   }
 
-  // Do the reRender
-  if (filtersMap.size === 0) {
-    alert("You must input the fields to apply filters!")
+  if (debutYear !== 'NONE') {    
+    debutYear = parseInt(debutYear)
+    filtersMap.set('debut-year', debutYear)
   }
-  else {
-    selectedChart.reRender(filtersMap) 
+
+  if(finalYear !== 'NONE') {
+    finalYear = parseInt(finalYear)
+    filtersMap.set('final-year', finalYear)
+  }
+
+  // Do the reRender
+  if (filtersMap.size > 0) {
+    selectedChart.reRender(filtersMap)    
+  }
+  else {    
+    alert("You must input the fields to apply filters!")    
   }
   
 }
@@ -66,8 +78,12 @@ function submit_filterForm(event) {
 function doFilterDropdowns() { 
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
+  const debutYr_elem = document.getElementById("debut-year-dropdown")
+  const finalYr_elem = document.getElementById("final-year-dropdown")
   doYearDropdown(startYr_elem)
   doYearDropdown(endYr_elem)
+  doYearDropdown(debutYr_elem)
+  doYearDropdown(finalYr_elem)
 }
 
 
@@ -94,9 +110,13 @@ function enableFilterElems() {
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
   const countrySelect_elem = document.getElementById("country-select-dropdown")
+  const debutYr_elem = document.getElementById("debut-year-dropdown")
+  const finalYr_elem = document.getElementById("final-year-dropdown")
   startYr_elem.disabled = false
   endYr_elem.disabled = false
   countrySelect_elem.disabled = false
+  debutYr_elem.disabled = false
+  finalYr_elem.disabled = false
 }
 
 
@@ -249,7 +269,7 @@ function reduceData(values) {
       half_cents: parseInt(row['50']) || 0,
       below_fifties: parseInt(row['0']) || 0      
     };
-    
+
   }).filter(row => row !== null); //remove skipped rows
 }
 

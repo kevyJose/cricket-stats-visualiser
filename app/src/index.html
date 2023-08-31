@@ -86,12 +86,15 @@
 
   <form id="filter_form" onsubmit="submit_filterForm(event)">
 
+    <h2>Filters:</h2>
+
     <div>
       <label for="chart-select-dropdown">Select Chart:</label>
       <select id="chart-select-dropdown" name="chart-select" disabled></select>
     </div>
 
     <div class="dropdown">
+      <filter_type>Year-Range:</filter_type><br><br>
       <label for="start-year-dropdown">Start Year:</label>
       <select id="start-year-dropdown" name="start-year" disabled>
         <option value="NONE">None</option>
@@ -103,8 +106,24 @@
       </select>  
     </div>
 
+
     <div class="dropdown">
-      <label for="country-select-dropdown">Select Country:</label>
+      <filter_type>Debut Year:</filter_type><br><br>      
+      <select id="debut-year-dropdown" name="debut-year" disabled>
+        <option value="NONE">None</option>
+      </select>
+    </div>
+
+    <div class="dropdown">
+      <filter_type>Final Year:</filter_type><br><br>      
+      <select id="final-year-dropdown" name="final-year" disabled>
+        <option value="NONE">None</option>
+      </select>
+    </div>
+
+
+    <div class="dropdown">
+      <filter_type for="country-select-dropdown">Select Country:</filter_type><br><br>
       <select id="country-select-dropdown" name="country-select" disabled>
         <option value="NONE">None</option>
         <option value="AFG">Afghanistan</option>
@@ -135,6 +154,11 @@
         <option value="ZIM">Zimbabwe</option>
       </select>
     </div>
+
+
+    
+
+
 
     <div>
       <button type="submit">Apply Filter</button>

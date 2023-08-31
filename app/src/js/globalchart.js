@@ -37,11 +37,12 @@ class GlobalChart {
 
   // NEW version
   reRender(filters = {}) {
-    // console.log('filters length:  ', Object.keys(filters).length)
+    console.log('filters length:  ', filters.size)
     // console.log('filters:  ', filters)
     if (filters.size > 0) {
-      const filteredData = this.filterData(filters)
+      const filteredData = this.filterData(filters)      
       console.log('filteredData: ', filteredData)
+      console.log('filteredData size: ', filteredData.length)
 
       // remove chart contents (axes, dots)
       const dotsGroup = this.svg.select('.dots')
@@ -136,7 +137,7 @@ class GlobalChart {
                 // console.log('span-start: ' + span_start)
                 // console.log('span-end: ' + span_end)
                 // console.log('query-start: ' + query_start)
-                // console.log('query-end: ' + query_end)
+                // console.log('query-end: ' + query_end)                
                 filteredPlayer = row                
             }
           }
@@ -149,6 +150,16 @@ class GlobalChart {
             if(player_country == query_country){
               filteredPlayer = row
             }
+          }
+          else if (key === 'debut-year') {
+            const player_span = row.span
+            const spanArray = player_span.split('-')
+            const span_start = parseInt(spanArray[0])
+            const query_debut = value
+
+            if (query_debut == span_start) {
+              filteredPlayer = row
+            }            
           }
         });
         
@@ -201,8 +212,9 @@ class GlobalChart {
         .html(`
           <div>Name: ${d.name}</div>
           <div>Country: ${d.country}</div>
+          <div>Span: ${d.span}</div> 
           <div>${x_title}: ${d.xAttr}</div>
-          <div>${y_title}: ${d.yAttr}</div>        
+          <div>${y_title}: ${d.yAttr}</div>                
         `)
       })
       // mouseout...
