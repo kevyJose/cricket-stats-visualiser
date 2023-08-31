@@ -118,12 +118,15 @@ class GlobalChart {
         filters.forEach((value, key) => {
           // console.log('Filters Array contents...')
           // console.log(`Key: ${key}, Value: ${value}`)
-          if (key === 'year-range') { 
-            // curr. player value
-            const player_span = row.span 
-            const spanArray = player_span.split('-')
-            const span_start = parseInt(spanArray[0]) 
-            const span_end = parseInt(spanArray[1])
+
+          // curr. player values
+          const player_span = row.span 
+          const spanArray = player_span.split('-')
+          const span_start = parseInt(spanArray[0]) 
+          const span_end = parseInt(spanArray[1])
+          const player_country = row.country          
+
+          if (key === 'year-range') {
             // queried values 
             const query_start = value[0]
             const query_end = value[1]           
@@ -142,8 +145,6 @@ class GlobalChart {
             }
           }
           else if (key === 'country-select') {
-            // curr. player value
-            const player_country = row.country
             // queried value
             const query_country = value
 
@@ -151,15 +152,19 @@ class GlobalChart {
               filteredPlayer = row
             }
           }
-          else if (key === 'debut-year') {
-            const player_span = row.span
-            const spanArray = player_span.split('-')
-            const span_start = parseInt(spanArray[0])
+          else if (key === 'debut-year') {            
             const query_debut = value
 
             if (query_debut == span_start) {
               filteredPlayer = row
             }            
+          }
+          else if (key === 'final-year') {
+            const query_final = value
+
+            if (query_final == span_end) {
+              filteredPlayer = row
+            }
           }
         });
         
