@@ -146,11 +146,17 @@ class GlobalChart {
           }
           else if (key === 'country-select') {
             // queried value
-            const query_country = value
+            const query_countries = value
 
-            if(player_country == query_country){
-              filteredPlayer = row
-            }
+            query_countries.forEach((country) => {
+              if(player_country == country){
+                filteredPlayer = row
+              }              
+            });
+
+            // if(player_country == query_country){
+            //   filteredPlayer = row
+            // }
           }
           else if (key === 'debut-year') {            
             const query_debut = value

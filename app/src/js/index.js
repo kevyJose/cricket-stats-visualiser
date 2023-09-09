@@ -30,13 +30,16 @@ function submit_filterForm(event) {
   let debutYear = document.getElementById('debut-year-dropdown').value;
   let finalYear = document.getElementById('final-year-dropdown').value;
   const chartSelect = parseInt(document.getElementById('chart-select-dropdown').value);
-  const countrySelect = document.getElementById('country-select-dropdown').value;
+  // const countrySelect = document.getElementById('country-select-dropdown').value;
+  const countrySelect = document.querySelectorAll('input[name="country-checkbox"]:checked');
+  const countrySelectArr = Array.from(countrySelect).map(checkbox => checkbox.value)
 
   const selectedChart = allCharts[chartSelect-1]
   const filtersMap = new Map()
 
   console.log('startYr: ' + startYear)
   console.log('endYr: ' + endYear)
+  console.log('countrySelect: ' + countrySelect)
 
   if ((startYear !== 'NONE') && (endYear !== 'NONE')) {
     startYear = parseInt(startYear)
@@ -50,8 +53,8 @@ function submit_filterForm(event) {
     }       
   }
 
-  if (countrySelect !== 'NONE') {
-    filtersMap.set('country-select', countrySelect)    
+  if (countrySelectArr !== 'NONE') {
+    filtersMap.set('country-select', countrySelectArr)    
   }
 
   if (debutYear !== 'NONE') {    
@@ -114,7 +117,7 @@ function enableFilterElems() {
   const finalYr_elem = document.getElementById("final-year-dropdown")
   startYr_elem.disabled = false
   endYr_elem.disabled = false
-  countrySelect_elem.disabled = false
+  // countrySelect_elem.disabled = false
   debutYr_elem.disabled = false
   finalYr_elem.disabled = false
 }
