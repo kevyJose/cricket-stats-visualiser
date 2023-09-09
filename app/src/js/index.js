@@ -135,7 +135,8 @@ function doScatterPlot_div() {
   newDiv.id = newPlotId
 
   // add div element to html body
-  document.body.appendChild(newDiv)
+  let centerDiv = document.querySelector('.center')
+  centerDiv.appendChild(newDiv)
 
   return newPlotId;
 }
