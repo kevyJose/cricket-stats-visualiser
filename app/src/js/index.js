@@ -21,6 +21,57 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+function submit_configForm(event) {
+  event.preventDefault();
+  
+  let newPlotId = doScatterPlot_div();
+  enableFilterElems();   
+  const form = document.getElementById("config_form")
+  const chartSelect_elem = document.getElementById("chart-select-dropdown")  
+
+  const map = new Map();
+  const data = new FormData(form)
+
+  for (const entry of data) {
+    const inputElement = form.elements[entry[0]];
+    let key = entry[0]
+    let value = entry[1]
+    console.log('key: ', key)
+    console.log('value: ', value)
+
+    // radio btn or checkbox
+    if ((inputElement.type === "radio" || inputElement.type === "checkbox") &&
+      inputElement.checked) {
+      map.set(key, value)
+    }
+    // select dropdown 
+    else if (inputElement.tagName === "SELECT") {
+      const selectedOption = inputElement.options[inputElement.selectedIndex];
+      map.set(key, selectedOption.value)
+    }
+    //other input types 
+    else {
+      map.set(key, value)
+    }
+  }
+
+  //set global variables
+  setCurrChartAttributes(map);
+  //use extracted info to plot chart
+  // const chartIndex = allCharts.length
+
+  doGlobalChart(event, '#'+newPlotId);
+
+  // update chart-selection dropdown
+  if(allCharts.length > 0){
+    doChartSelectDropdown(chartSelect_elem)
+    chartSelect_elem.disabled = false
+  }
+}
+
+
+
 function submit_filterForm(event) {
   event.preventDefault();
 
@@ -143,53 +194,7 @@ function doScatterPlot_div() {
 
 
 
-function submit_configForm(event) {
-  event.preventDefault();
-  
-  let newPlotId = doScatterPlot_div();
-  enableFilterElems();   
-  const form = document.getElementById("config_form")
-  const chartSelect_elem = document.getElementById("chart-select-dropdown")  
 
-  const map = new Map();
-  const data = new FormData(form)
-
-  for (const entry of data) {
-    const inputElement = form.elements[entry[0]];
-    let key = entry[0]
-    let value = entry[1]
-    console.log('key: ', key)
-    console.log('value: ', value)
-
-    // radio btn or checkbox
-    if ((inputElement.type === "radio" || inputElement.type === "checkbox") &&
-      inputElement.checked) {
-      map.set(key, value)
-    }
-    // select dropdown 
-    else if (inputElement.tagName === "SELECT") {
-      const selectedOption = inputElement.options[inputElement.selectedIndex];
-      map.set(key, selectedOption.value)
-    }
-    //other input types 
-    else {
-      map.set(key, value)
-    }
-  }
-
-  //set global variables
-  setCurrChartAttributes(map);
-  //use extracted info to plot chart
-  // const chartIndex = allCharts.length
-
-  doGlobalChart(event, '#'+newPlotId);
-
-  // update chart-selection dropdown
-  if(allCharts.length > 0){
-    doChartSelectDropdown(chartSelect_elem)
-    chartSelect_elem.disabled = false
-  }
-}
 
 
 function setCurrChartAttributes(map) {

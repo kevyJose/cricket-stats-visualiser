@@ -12,9 +12,14 @@ div {
 }
 
 
-.left, .right {
-  flex-basis: 15%;
-  background-color: #f2f2f2;
+.left{
+  flex-basis: 20%;
+  background-color: #262c7e;
+}
+
+.right {
+  flex-basis: 20%;
+  background-color: black;
 }
 
 .center {
@@ -82,6 +87,14 @@ button {
   border-radius: 15px;
 }
 
-.chart {  
+.chart {
+  /* align-content: ex-end;   */
   margin-top: 20px;
+}
+
+
+.tooltip {
+  margin-left: 50px;
+  margin-top: 30px;
+  font-size: x-large;
 }
