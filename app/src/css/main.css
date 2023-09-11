@@ -29,6 +29,9 @@ div {
 .center {
   flex-basis: 70%;
   background-color: #262c7e;
+  /* align-content: center; */
+  padding-left: 14%;
+  padding-top: 2%;
 }
 
 
@@ -91,10 +94,7 @@ button {
   border-radius: 15px;
 }
 
-.chart {
-  /* align-content: ex-end;   */
-  margin-top: 20px;
-}
+
 
 
 .tooltip {
