@@ -14,12 +14,16 @@ div {
 
 .left{
   flex-basis: 20%;
-  background-color: #262c7e;
+  background-color: #0e1249;
+  height: fit-content;
+  padding: 1%;
 }
 
 .right {
-  flex-basis: 20%;
-  background-color: black;
+  flex-basis: 20%;  
+  background-color: #0e1249;
+  height: 1600px;
+  padding: 2%;
 }
 
 .center {
@@ -94,7 +98,5 @@ button {
 
 
 .tooltip {
-  margin-left: 50px;
-  margin-top: 30px;
   font-size: x-large;
 }
