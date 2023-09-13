@@ -166,11 +166,14 @@ function enableFilterElems() {
   const countrySelect_elem = document.getElementById("country-select-dropdown")
   const debutYr_elem = document.getElementById("debut-year-dropdown")
   const finalYr_elem = document.getElementById("final-year-dropdown")
+  const applyBtn_elem = document.getElementById("apply-filter-btn")
+
   startYr_elem.disabled = false
   endYr_elem.disabled = false
   // countrySelect_elem.disabled = false
   debutYr_elem.disabled = false
   finalYr_elem.disabled = false
+  applyBtn_elem.disabled = false
 }
 
 
