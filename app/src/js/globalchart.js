@@ -12,8 +12,8 @@ class GlobalChart {
     this.y_selected = y_selected;
     this.color_code = color_code;
     this.margin = { top: 25, right: 30, bottom: 50, left: 70 };
-    this.width = 900 - this.margin.left - this.margin.right;
-    this.height = 780 - this.margin.top - this.margin.bottom;
+    this.width = 800 - this.margin.left - this.margin.right;
+    this.height = 700 - this.margin.top - this.margin.bottom;
     this.svg = null; 
   }
 
