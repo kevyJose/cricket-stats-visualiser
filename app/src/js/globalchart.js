@@ -71,21 +71,23 @@ class GlobalChart {
       if (filteredRow.length > 0) {
         const selectedRow = filteredRow[0];        
         
-        const row = {
-          id: selectedRow.id,
-          name: selectedRow.name,
-          country: selectedRow.country,
-          span: selectedRow.span,
-          matches_played: selectedRow.matches_played,        
-          xAttr: selectedRow[x_selected],
-          yAttr: selectedRow[y_selected],
-        };
+        // const row = {
+        //   id: selectedRow.id,
+        //   name: selectedRow.name,
+        //   country: selectedRow.country,
+        //   span: selectedRow.span,
+        //   matches_played: selectedRow.matches_played,        
+        //   xAttr: selectedRow[x_selected],
+        //   yAttr: selectedRow[y_selected],
+        // };
+        selectedRow.xAttr = selectedRow[this.x_selected];
+        selectedRow.yAttr = selectedRow[this.y_selected];
         
-        return row;        
+        return selectedRow;        
       }
       
       return null;
-    }).filter(row => row !== null);    
+    }).filter(selectedRow => selectedRow !== null);    
   }
   
 
@@ -199,7 +201,17 @@ class GlobalChart {
 
   doDotsGroup(svg, data, x, y) {  
     // console.log('doing doDotsGroup....')
-    // console.log('data:  ', data)  
+    // console.log('data:  ', data)
+    const locationsMap = new Map([
+      ['C', 'Combined'],
+      ['H', 'Home'],
+      ['A', 'Away'],
+      ['N', 'Neutral'],
+      ['B', 'BIS'],
+      ['S', 'SENA'],
+      ['O', 'Other'],
+    ]);    
+
     const dotsGroup = svg.append('g')
       .attr('class', 'dots')
 
@@ -221,11 +233,21 @@ class GlobalChart {
         .style('opacity', 0.9)
         .style('color', 'white')          
         .html(`
-          <div>Name: ${d.name}</div>
+          <div class='tooltip-name'>${d.name}</div>
           <div>Country: ${d.country}</div>
-          <div>Span: ${d.span}</div> 
-          <div>${x_title}: ${d.xAttr}</div>
-          <div>${y_title}: ${d.yAttr}</div>                
+          <div>Location: ${locationsMap.get(d.location)}</div>
+          <div>Span: ${d.span}</div>
+          <div>Matches Played: ${d.matches_played}</div>
+          <div>Innings: ${d.innings}</div>
+          <div>Runs: ${d.runs}</div>
+          <div>Not Outs: ${d.not_outs}</div>
+          <div>High Score: ${d.high_score}</div>
+          <div>Batting Average: ${d.batting_avg}</div>
+          <div>Balls Faced: ${d.balls_faced}</div>
+          <div>Strike Rate: ${d.strike_rate}</div>
+          <div>Centuries: ${d.centuries}</div>
+          <div>Half Centuries: ${d.half_cents}</div>
+          <div>Below Fifties: ${d.below_fifties}</div>
         `)
       })
       // mouseout...

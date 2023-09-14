@@ -10,6 +10,13 @@ div.inner-form-option {
   margin: 15px;  
 }
 
+div.tooltip-name {
+  font-weight: bolder;
+  font-size: xxx-large;
+  text-decoration: underline;
+  margin-bottom: 10px;
+}
+
 .content {
   display: flex;
   height: 100vh;

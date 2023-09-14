@@ -197,9 +197,6 @@ function doScatterPlot_div() {
 
 
 
-
-
-
 function setCurrChartAttributes(map) {
   selectedLocation = map.get('location')
   x_selected = map.get('x-attr')
@@ -258,17 +255,6 @@ function reduceData(values) {
       country: row.Player.slice(row.Player.indexOf('(')+1, row.Player.length-1) || 'na',
       location: row.Location || 'na',
       span: row.Span || 'na',
-      // matches_played: parseInt(row.Mat) || 'na',
-      // innings: parseInt(row.Inns) || 'na',
-      // not_outs: parseInt(row.NO) || 'na',
-      // runs: parseInt(row.Runs) || 'na',
-      // high_score: parseInt(row.HS) || 'na',
-      // batting_avg: parseFloat(row.Ave) || 'na',
-      // balls_faced: parseInt(row.BF) || 'na',
-      // strike_rate: parseFloat(row.SR) || 'na',
-      // centuries: row['100'] === '0' ? 0 : (parseInt(row['100']) || 'na'),
-      // half_cents: row['50'] === '0' ? 0 : (parseInt(row['50']) || 'na'),
-      // below_fifties: row['0'] === '0' ? 0 : (parseInt(row['0']) || 'na')
       matches_played: parseInt(row.Mat) || 0,
       innings: parseInt(row.Inns) || 0,
       not_outs: parseInt(row.NO) || 0,
