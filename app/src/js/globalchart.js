@@ -96,21 +96,22 @@ class GlobalChart {
     let count = 0
     
     return raw_data.map(player => {
-      const filteredRow = player.data.filter(row => row.location === selectedLocation);     
-
-      // handle players that don't return rows for the queried-location
+      const filteredRow = player.data.filter(row => row.location === selectedLocation);
+      
       if (filteredRow.length > 0) {
-        const selectedRow = filteredRow[0];
+        const row = filteredRow[0];
 
-        const row = {
-          id: selectedRow.id,
-          name: selectedRow.name,
-          country: selectedRow.country,
-          span: selectedRow.span,
-          matches_played: selectedRow.matches_played,        
-          xAttr: selectedRow[x_selected],
-          yAttr: selectedRow[y_selected],
-        };  
+        // const row = {
+        //   id: selectedRow.id,
+        //   name: selectedRow.name,
+        //   country: selectedRow.country,
+        //   span: selectedRow.span,
+        //   matches_played: selectedRow.matches_played,        
+        //   xAttr: selectedRow[x_selected],
+        //   yAttr: selectedRow[y_selected],
+        // };        
+        row.xAttr = row[this.x_selected];
+        row.yAttr = row[this.y_selected];
         
         let filteredPlayer = null
 

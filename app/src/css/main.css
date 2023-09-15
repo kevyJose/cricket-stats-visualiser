@@ -12,9 +12,14 @@ div.inner-form-option {
 
 div.tooltip-name {
   font-weight: bolder;
-  font-size: xxx-large;
+  font-size: xx-large;
   text-decoration: underline;
   margin-bottom: 10px;
+}
+
+div.chart {
+  margin: 20px;
+  /* margin-bottom: 25px; */
 }
 
 .content {
@@ -24,7 +29,7 @@ div.tooltip-name {
 
 
 .left{
-  flex-basis: 20%;
+  flex-basis: 15%;
   background-color: #0e1249;
   height: 82vh;
   overflow-y: auto;
@@ -33,7 +38,7 @@ div.tooltip-name {
 }
 
 .right {
-  flex-basis: 20%;  
+  flex-basis: 15%;  
   background-color: #0e1249;
   height: 82vh;
   overflow-y: auto;
@@ -46,8 +51,8 @@ div.tooltip-name {
 
 .right img {
   /* margin-top: 25px; */
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
 }
 
 .tooltip {
