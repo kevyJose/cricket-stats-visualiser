@@ -46,7 +46,8 @@ class GlobalChart {
 
       // remove chart contents (axes, dots)
       const dotsGroup = this.svg.select('.dots')
-      dotsGroup.selectAll('circle').remove()
+      dotsGroup.remove()
+      // dotsGroup.selectAll('circle').remove()
       const xAxis = this.svg.select('.x-axis')
       const yAxis = this.svg.select('.y-axis')
       xAxis.remove()

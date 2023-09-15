@@ -37,8 +37,8 @@ function submit_configForm(event) {
     const inputElement = form.elements[entry[0]];
     let key = entry[0]
     let value = entry[1]
-    console.log('key: ', key)
-    console.log('value: ', value)
+    // console.log('key: ', key)
+    // console.log('value: ', value)
 
     // radio btn or checkbox
     if ((inputElement.type === "radio" || inputElement.type === "checkbox") &&
@@ -181,7 +181,7 @@ function enableFilterElems() {
 function doScatterPlot_div() {
 
   let numPlots = document.querySelectorAll('[id^="scatter-plot"]').length
-  console.log('num of scatter plots:  ' + numPlots)
+  // console.log('num of scatter plots, before appending new one:  ' + numPlots)
   let newPlotId = 'scatter-plot-' + numPlots
 
   let newDiv = document.createElement('div')
@@ -205,8 +205,8 @@ function setCurrChartAttributes(map) {
   y_title = capitalizeString(y_selected)
   color_code = map.get('color-code')
 
-  console.log('testing global var updates:  { ', selectedLocation, x_selected, y_selected, 
-                                                 x_title, y_title, color_code, ' }')
+  // console.log('testing global var updates:  { ', selectedLocation, x_selected, y_selected, 
+  //                                                x_title, y_title, color_code, ' }')
 }
 
 
