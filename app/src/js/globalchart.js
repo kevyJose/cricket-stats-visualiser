@@ -409,12 +409,29 @@ class GlobalChart {
   }
 
 
-  doTitle(svg, width, margin, prefix = '') {            
+  doTitle(svg, width, margin, prefix = '') {
+    let x_str = this.x_title
+    let y_str = this.y_title
+
+    if (x_str.includes('_')) {
+      const index = x_str.indexOf('_')
+      x_str = x_str.replace('_',' ')
+
+      if(index < x_str.length - 1) {
+        x_str = x_str.substring(0, index+1) + x_str.charAt(index+1).toUpperCase() + x_str.substring(index+2)
+        this.x_title = x_str
+      }
+      // above code not yet working, try debugging to see if entering the final condition.
+    }
+    
+    
+
     svg.append('text')
     .attr('x', (width / 2))
     .attr('y', margin.top - 20)
     .attr('text-anchor', 'middle')
-    .style('font-size', '16px')
+    .style('font-family', 'Arial')    
+    .style('font-size', '26px')
     .style('fill', '#000000')
     .text(prefix + y_title + ' vs. ' + x_title);
   }
