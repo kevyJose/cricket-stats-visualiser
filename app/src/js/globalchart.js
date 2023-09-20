@@ -28,6 +28,7 @@ class GlobalChart {
     this.svg = this.createSVG(this.id_tag, this.margin, this.width, this.height);
     const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, selectedData, this.margin);
     this.doDotsGroup(this.svg, selectedData, xScale, yScale);
+    this.doTitleReformat();
     this.doTitle(this.svg, this.width, this.margin);
     this.doAxisLabels(this.svg, this.width, this.height, this.margin);
     this.doLegend(this.svg, this.width);
@@ -306,9 +307,10 @@ class GlobalChart {
     svg.append('text')
     .attr('transform', 'translate(' + (width / 2) + ',' + (height + 45) + ')')
     .style('text-anchor', 'middle')
-    .style('font-size', '14px')
+    .style('font-family', 'Arial') 
+    .style('font-size', '24px')
     .style('fill', '#000000')
-    .text(x_title);
+    .text(this.x_title);
 
     // Add Y axis label
     svg.append('text')
@@ -317,9 +319,10 @@ class GlobalChart {
       .attr('x',0 - (height / 2))
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
-      .style('font-size', '14px')
+      .style('font-family', 'Arial') 
+      .style('font-size', '24px')
       .style('fill', '#000000')
-      .text(y_title);
+      .text(this.y_title);
   }
 
 
@@ -409,7 +412,7 @@ class GlobalChart {
   }
 
 
-  doTitle(svg, width, margin, prefix = '') {
+  doTitleReformat() {
     let x_str = this.x_title
     let y_str = this.y_title
 
@@ -419,7 +422,7 @@ class GlobalChart {
       x_str = x_str.replace('_',' ')
 
       if(index < x_str.length - 1) {
-        console.log('I MADE IT INSIDE....')
+        // console.log('I MADE IT INSIDE....')
         x_str = x_str.substring(0, index+1) + x_str.charAt(index+1).toUpperCase() + x_str.substring(index+2)
         this.x_title = x_str
       }      
@@ -430,21 +433,28 @@ class GlobalChart {
       y_str = y_str.replace('_',' ')
 
       if(index < y_str.length - 1) {
-        console.log('I MADE IT INSIDE....')
+        // console.log('I MADE IT INSIDE....')
         y_str = y_str.substring(0, index+1) + y_str.charAt(index+1).toUpperCase() + y_str.substring(index+2)
         this.y_title = y_str
       }      
     }
+  }
+
+
+
+  doTitle(svg, width, margin, prefix = '') {
+    // this.doTitleReformat();    
 
     svg.append('text')
     .attr('x', (width / 2))
     .attr('y', margin.top - 20)
     .attr('text-anchor', 'middle')
     .style('font-family', 'Arial')    
-    .style('font-size', '26px')
+    .style('font-size', '28px')
     .style('fill', '#000000')
     .text(prefix + this.y_title + ' vs. ' + this.x_title);
   }
+
 
 }
 
