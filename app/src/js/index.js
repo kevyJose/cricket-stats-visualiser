@@ -260,7 +260,7 @@ function reduceData(values) {
       not_outs: parseInt(row.NO) || 0,
       runs: parseInt(row.Runs) || 0,
       high_score: parseInt(row.HS) || 0,
-      batting_avg: parseFloat(row.Ave) || 0,
+      batting_average: parseFloat(row.Ave) || 0,
       balls_faced: parseInt(row.BF) || 0,
       strike_rate: parseFloat(row.SR) || 0,
       centuries: parseInt(row['100']) || 0,

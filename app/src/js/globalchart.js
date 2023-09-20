@@ -244,7 +244,7 @@ class GlobalChart {
           <div>Runs: ${d.runs}</div>
           <div>Not Outs: ${d.not_outs}</div>
           <div>High Score: ${d.high_score}</div>
-          <div>Batting Average: ${d.batting_avg}</div>
+          <div>Batting Average: ${d.batting_average}</div>
           <div>Balls Faced: ${d.balls_faced}</div>
           <div>Strike Rate: ${d.strike_rate}</div>
           <div>Centuries: ${d.centuries}</div>
@@ -413,18 +413,28 @@ class GlobalChart {
     let x_str = this.x_title
     let y_str = this.y_title
 
+    // reformat x-title
     if (x_str.includes('_')) {
       const index = x_str.indexOf('_')
       x_str = x_str.replace('_',' ')
 
       if(index < x_str.length - 1) {
+        console.log('I MADE IT INSIDE....')
         x_str = x_str.substring(0, index+1) + x_str.charAt(index+1).toUpperCase() + x_str.substring(index+2)
         this.x_title = x_str
-      }
-      // above code not yet working, try debugging to see if entering the final condition.
+      }      
     }
-    
-    
+    // reformat y-title
+    if (y_str.includes('_')) {
+      const index = y_str.indexOf('_')
+      y_str = y_str.replace('_',' ')
+
+      if(index < y_str.length - 1) {
+        console.log('I MADE IT INSIDE....')
+        y_str = y_str.substring(0, index+1) + y_str.charAt(index+1).toUpperCase() + y_str.substring(index+2)
+        this.y_title = y_str
+      }      
+    }
 
     svg.append('text')
     .attr('x', (width / 2))
@@ -433,7 +443,7 @@ class GlobalChart {
     .style('font-family', 'Arial')    
     .style('font-size', '26px')
     .style('fill', '#000000')
-    .text(prefix + y_title + ' vs. ' + x_title);
+    .text(prefix + this.y_title + ' vs. ' + this.x_title);
   }
 
 }
