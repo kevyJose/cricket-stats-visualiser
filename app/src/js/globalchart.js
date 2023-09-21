@@ -117,8 +117,14 @@ class GlobalChart {
         
         let filteredPlayer = null
 
-        // THIS IS WORKING FOR APPLYING ONE FILTER. I DONT THINK YOU CAN APPLY BOTH FILTER OPTIONS SIMULTANEOUSLY
+        // THIS IS WORKING FOR APPLYING ONE FILTER. IT CURRENTLY USES 'or' LOGIC BUT I WANT TO USE 'and' LOGIC.
         // NEED TO IMPLEMENT THIS
+
+
+        //In the filter.foreach loop, only set 'filteredPlayer = row'....
+        // IF in the final iteration of the filters array 
+            // and also if the curr. player has a matching_count of filters.size 
+            // and also if the final filter-item has matching query-value and curr-player-value.
   
         filters.forEach((value, key) => {
           // console.log('Filters Array contents...')
