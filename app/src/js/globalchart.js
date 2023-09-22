@@ -43,7 +43,7 @@ class GlobalChart {
     if (filters.size > 0) {
       const filteredData = this.filterData(filters)      
       console.log('filteredData: ', filteredData)
-      console.log('filteredData size: ', filteredData.length)
+      // console.log('filteredData size: ', filteredData.length)
 
       // remove chart contents (axes, dots)
       const dotsGroup = this.svg.select('.dots')
@@ -71,17 +71,10 @@ class GlobalChart {
 
       // only process players that return a row
       if (filteredRow.length > 0) {
-        const selectedRow = filteredRow[0];        
-        
-        // const row = {
-        //   id: selectedRow.id,
-        //   name: selectedRow.name,
-        //   country: selectedRow.country,
-        //   span: selectedRow.span,
-        //   matches_played: selectedRow.matches_played,        
-        //   xAttr: selectedRow[x_selected],
-        //   yAttr: selectedRow[y_selected],
-        // };
+        const selectedRow = filteredRow[0];
+
+        // append x,y features to the row
+        // these features are used as chart coords
         selectedRow.xAttr = selectedRow[this.x_selected];
         selectedRow.yAttr = selectedRow[this.y_selected];
         
@@ -95,46 +88,30 @@ class GlobalChart {
 
 
   filterData(filters = {}) {
-    let count = 0
-    
+    // console.log('filters... ', filters)    
     return raw_data.map(player => {
       const filteredRow = player.data.filter(row => row.location === selectedLocation);
       
       if (filteredRow.length > 0) {
         const row = filteredRow[0];
 
-        // const row = {
-        //   id: selectedRow.id,
-        //   name: selectedRow.name,
-        //   country: selectedRow.country,
-        //   span: selectedRow.span,
-        //   matches_played: selectedRow.matches_played,        
-        //   xAttr: selectedRow[x_selected],
-        //   yAttr: selectedRow[y_selected],
-        // };        
+        // append x,y features to the row
+        // these features are used as chart coords                
         row.xAttr = row[this.x_selected];
         row.yAttr = row[this.y_selected];
         
         let filteredPlayer = null
-
-        // THIS IS WORKING FOR APPLYING ONE FILTER. IT CURRENTLY USES 'or' LOGIC BUT I WANT TO USE 'and' LOGIC.
-        // NEED TO IMPLEMENT THIS
-
-
-        //In the filter.foreach loop, only set 'filteredPlayer = row'....
-        // IF in the final iteration of the filters array 
-            // and also if the curr. player has a matching_count of filters.size 
-            // and also if the final filter-item has matching query-value and curr-player-value.
+        let i = 0  // index
+        let match_count = 0  // the no. of filters fulfilled
   
-        filters.forEach((value, key) => {
-          // console.log('Filters Array contents...')
-          // console.log(`Key: ${key}, Value: ${value}`)
-
+        // iterate the queried filters
+        // if the player values fulfil ALL the queried filters, then select player
+        filters.forEach((value, key) => {          
           // curr. player values
           const player_span = row.span 
           const spanArray = player_span.split('-')
-          const span_start = parseInt(spanArray[0]) 
-          const span_end = parseInt(spanArray[1])
+          const player_debut = parseInt(spanArray[0]) 
+          const player_final = parseInt(spanArray[1])
           const player_country = row.country          
 
           if (key === 'year-range') {
@@ -143,45 +120,97 @@ class GlobalChart {
             const query_end = value[1]           
   
             // check if query-range touches span-range
-            if (((query_start >= span_start) && (query_start <= span_end)) || 
-               ((query_end >= span_start) && (query_end <= span_end))) {                
-                // count++
-                // console.log('count #' + count)
-                // console.log('name: ' + player.name)
-                // console.log('span-start: ' + span_start)
-                // console.log('span-end: ' + span_end)
-                // console.log('query-start: ' + query_start)
-                // console.log('query-end: ' + query_end)                
-                filteredPlayer = row                
+            if (((query_start >= player_debut) && (query_start <= player_final)) || 
+               ((query_end >= player_debut) && (query_end <= player_final))) {                
+                // final iteration 
+                if (i == filters.size - 1) {                 
+                  match_count++
+                  // match_count is 100%
+                  if (match_count == filters.size) {
+                    filteredPlayer = row
+                  }                  
+                }
+                // less than final iteration
+                else {
+                  match_count++
+                }                                
             }
           }
+
           else if (key === 'country-select') {
             // queried value
             const query_countries = value
+            
+            query_countries.some((query_country) => {
+              //check if curr. player country matches query country
+              if (player_country == query_country) {
+                // final iteration 
+                if (i == filters.size - 1) {                                 
+                  match_count++
 
-            query_countries.forEach((country) => {
-              if(player_country == country){
-                filteredPlayer = row
+                  // match_count is 100%
+                  if (match_count == filters.size) {
+                    filteredPlayer = row
+                    return true;
+                  }                  
+                }
+                // less than final iteration
+                else {
+                  match_count++
+                  return true;
+                }
               }              
-            });
-
-            // if(player_country == query_country){
-            //   filteredPlayer = row
-            // }
+            });            
           }
+
           else if (key === 'debut-year') {            
             const query_debut = value
+            
+            //check if curr-player-debut matches query-debut
+            if (player_debut == query_debut) {
+                // final iteration 
+                if (i == filters.size - 1) {                                   
+                  match_count++
 
-            if (query_debut == span_start) {
-              filteredPlayer = row
+                  // match_count is 100%
+                  if (match_count == filters.size) {
+                    filteredPlayer = row
+                  }                  
+                }
+                // less than final iteration
+                else {
+                  match_count++
+                }              
             }            
           }
+
           else if (key === 'final-year') {
             const query_final = value
 
-            if (query_final == span_end) {
-              filteredPlayer = row
+            // check if curr-player-final matches query-final
+            if (player_final == query_final) { 
+                // final iteration 
+                if (i == filters.size - 1) {                                   
+                  match_count++
+
+                  // match_count is 100%
+                  if (match_count == filters.size) {
+                    filteredPlayer = row
+                  }                  
+                }
+                // less than final iteration
+                else {
+                  match_count++
+                }             
             }
+          }
+          
+          //increment i to prep for next iteration
+          i++
+          // after final iter, reset 'i' and 'match_count'
+          if (i == filters.size) {
+            i = 0
+            match_count = 0
           }
         });
         

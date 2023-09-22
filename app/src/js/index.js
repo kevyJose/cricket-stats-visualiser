@@ -88,9 +88,9 @@ function submit_filterForm(event) {
   const selectedChart = allCharts[chartSelect-1]
   const filtersMap = new Map()
 
-  console.log('startYr: ' + startYear)
-  console.log('endYr: ' + endYear)
-  console.log('countrySelect: ' + countrySelect)
+  // console.log('startYr: ' + startYear)
+  // console.log('endYr: ' + endYear)
+  // console.log('countrySelect: ' + countrySelect)
 
   if ((startYear !== 'NONE') && (endYear !== 'NONE')) {
     startYear = parseInt(startYear)
@@ -104,7 +104,7 @@ function submit_filterForm(event) {
     }       
   }
 
-  if (countrySelectArr !== 'NONE') {
+  if (countrySelectArr.length > 0) {
     filtersMap.set('country-select', countrySelectArr)    
   }
 
