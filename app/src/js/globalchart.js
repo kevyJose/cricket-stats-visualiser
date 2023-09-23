@@ -29,9 +29,10 @@ class GlobalChart {
     const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, selectedData, this.margin);
     this.doDotsGroup(this.svg, selectedData, xScale, yScale);
     this.doTitleReformat();
-    this.doTitle(this.svg, this.width, this.margin);
+    this.doTitle(this.svg, this.width, this.selectedLocation);
     this.doAxisLabels(this.svg, this.width, this.height, this.margin);
     this.doLegend(this.svg, this.width);
+    this.doPopups();
 
     
   }
@@ -39,27 +40,37 @@ class GlobalChart {
 
 
   // NEW version
-  reRender(filters = {}) {
-    console.log('filters length:  ', filters.size)
+  reRender(filters = {}) {    
+    console.log('filters length:  ', filters.size)    
     // console.log('filters:  ', filters)
+
     if (filters.size > 0) {
       const filteredData = this.filterData(filters)      
       console.log('filteredData: ', filteredData)
-      // console.log('filteredData size: ', filteredData.length)
+      // console.log('filteredData size: ', filteredData.length)            
 
-      // remove chart contents (axes, dots)
-      const dotsGroup = this.svg.select('.dots')
-      dotsGroup.remove()
-      // dotsGroup.selectAll('circle').remove()
+      // remove chart contents (title, axes, dots)
+      const filterTypes = (Array.from(filters.keys())).join(', ') 
+      const chartTitle = this.svg.select('.chart-title')
+      chartTitle.remove()     
+
       const xAxis = this.svg.select('.x-axis')
       const yAxis = this.svg.select('.y-axis')
       xAxis.remove()
       yAxis.remove()
 
+      const dotsGroup = this.svg.select('.dots')
+      dotsGroup.remove()     
+
+
       // new axes
       const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, filteredData, this.margin);
       // new dots-group
-      this.doDotsGroup(this.svg, filteredData, xScale, yScale);      
+      this.doDotsGroup(this.svg, filteredData, xScale, yScale);
+      
+      this.doTitle(this.svg, this.width, this.selectedLocation, filterTypes)
+
+
     }
   }
   
@@ -224,16 +235,112 @@ class GlobalChart {
   }
 
 
+  doPopups() {
+    // Create the tooltip element
+    const tooltip = d3.select('.center')
+    .append("div")
+    .attr("class", "tooltip-chart")
+    .style("position", "absolute")
+    .style("visibility", "hidden");
+
+    // Attach the mouseover and mousemove event listeners to the SVG element
+    this.svg.on('mouseover', function () {
+      console.log('mouseover triggered');
+      const tooltip = d3.select('.tooltip-chart');
+      // make the tooltip visible and update its text
+      tooltip
+        .style('visibility', 'visible')
+        .text(`THIS IS THE CONTENT HERE....`)
+        .style('font-size', '24px')
+        .style('fill', '#000000');
+    });
+
+    this.svg.on('mousemove', function (event) {
+      console.log('mousemove triggered');
+      const tooltip = d3.select('.tooltip-chart');
+      tooltip
+        .style('top', event.pageY - 10 + 'px')
+        .style('left', event.pageX + 10 + 'px');
+    });
+
+    // Remove the mouseout event listener from data points
+    // ...
+
+    // Mouseout event listener for the entire SVG element
+    this.svg.on('mouseout', function () {
+      const tooltip = d3.select('.tooltip-chart');
+      // Hide tooltip
+      tooltip.style('visibility', 'hidden');
+    });
+    
+  }
+
+
   createSVG(id_tag, margin, width, height) {  
-    console.log('id_tag:  ' + id_tag)  
-    return d3.select(id_tag)
-    .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .style('background-color', '#e6effc') // background color
-      .style('border', '4px solid #ccc') // svg border
-    .append('g')
-      .attr('transform', `translate( ${margin.left} , ${margin.top} )`);
+    // console.log('id_tag:  ' + id_tag)
+
+    // create the svg element
+    const svg = d3.select(id_tag)
+      .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .style('background-color', '#e6effc') // background color
+        .style('border', '4px solid #ccc') // svg border        
+      .append('g')
+        .attr('class', 'svg-group')
+        .attr('transform', `translate( ${margin.left} , ${margin.top} )`)
+
+    const svg_group = d3.select('.svg-group')
+
+      
+    // // Create the tooltip element
+    // const tooltip = d3.select('.center')
+    //   .append("div")
+    //   .attr("class", "tooltip-chart")
+    //   .style("position", "absolute")
+    //   .style("visibility", "hidden");
+      
+      
+    //##############################################################
+
+    // working on this....
+
+    // Mouseover event listener to SVG
+    // svg.on('mouseover', function () {
+    //   console.log('mouseover triggered')      
+    //   // if (d3.event) {
+    //     console.log('D3 event triggered')
+    //     const tooltip = d3.select('.tooltip-chart');
+    //     // make the tooltip visible and update its text
+    //     tooltip
+    //       .style("visibility", "visible")
+    //       .text(`THIS IS THE CONTENT HERE....`)
+    //       .style('font-size', '24px')
+    //       .style('fill', '#000000')
+    //   // }
+    // });
+
+    // svg.on("mousemove", function(event) {
+    //   console.log('mousemove triggered')      
+      
+    //     const tooltip = d3.select('.tooltip-chart');
+    //     tooltip
+    //       .style("top", event.pageY - 10 + "px")
+    //       .style("left", event.pageX + 10 + "px");
+      
+    // });
+
+    // // Mouseout event listener to SVG
+    // svg.on('mouseout', function () {      
+    //   const tooltip = d3.select('.tooltip-chart');
+    //   // Hide tooltip
+    //   tooltip.style("visibility", "hidden");
+    // });
+
+    // //####################################################################
+    
+    
+    return svg;
   }
 
 
@@ -268,11 +375,11 @@ class GlobalChart {
       // mouseover...
       .on('mouseover', (event, d) => {        
         // show tooltip on mouseover
-        d3.select('.tooltip')
+        d3.select('.tooltip-player')
         .style('opacity', 0.9)
         .style('color', 'white')          
         .html(`
-          <div class='tooltip-name'>${d.name}</div>
+          <div class='tooltip-player-name'>${d.name}</div>
           <div>Country: ${d.country}</div>
           <div>Location: ${locationsMap.get(d.location)}</div>
           <div>Span: ${d.span}</div>
@@ -291,7 +398,7 @@ class GlobalChart {
       })
       // mouseout...
       .on('mouseout', (event, d) => {        
-        d3.select('.tooltip').style('opacity', 0);
+        d3.select('.tooltip-player').style('opacity', 0);
       });
         
   }
@@ -478,16 +585,23 @@ class GlobalChart {
 
 
 
-  doTitle(svg, width, margin, prefix = '') {
-    // this.doTitleReformat();
+  doTitle(svg, width, prefix, suffix) {
+    console.log('yooo... ', this.x_title, this.y_title)
+    console.log('selectedLocation... ', prefix)
+    // console.log()
+
     svg.append('text')
-    .attr('x', (width / 2))
-    .attr('y', -40)
-    .attr('text-anchor', 'middle')
-    .style('font-family', 'Arial')    
-    .style('font-size', '28px')
-    .style('fill', '#000000')
-    .text(prefix + this.y_title + ' vs. ' + this.x_title);
+      .attr('class', 'chart-title') // reference
+      .attr('x', (width / 2))
+      .attr('y', -40)
+      .attr('text-anchor', 'middle')
+      .style('font-family', 'Arial')    
+      .style('font-size', '25px')
+      .style('fill', '#000000')
+      .style('font-weight', 'bold')
+      // if(prefix)
+      
+      .text(prefix + ': ' + this.y_title + ' vs. ' + this.x_title + ' (' + suffix + ')');
   }
 
 

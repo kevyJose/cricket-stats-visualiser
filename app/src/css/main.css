@@ -10,7 +10,7 @@ div.inner-form-option {
   margin: 15px;  
 }
 
-div.tooltip-name {
+div.tooltip-player-name {
   font-weight: bolder;
   font-size: xx-large;
   text-decoration: underline;
@@ -55,7 +55,7 @@ div.chart {
   height: 200px;
 }
 
-.tooltip {
+.tooltip-player {
   display: block;
   margin-top: 20px;
 
