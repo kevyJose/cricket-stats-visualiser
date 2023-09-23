@@ -11,7 +11,7 @@ class GlobalChart {
     this.x_selected = x_selected;
     this.y_selected = y_selected;
     this.color_code = color_code;
-    this.margin = { top: 25, right: 30, bottom: 50, left: 70 };
+    this.margin = { top: 80, right: 70, bottom: 60, left: 70 };
     this.width = 800 - this.margin.left - this.margin.right;
     this.height = 700 - this.margin.top - this.margin.bottom;
     this.svg = null; 
@@ -32,6 +32,8 @@ class GlobalChart {
     this.doTitle(this.svg, this.width, this.margin);
     this.doAxisLabels(this.svg, this.width, this.height, this.margin);
     this.doLegend(this.svg, this.width);
+
+    
   }
 
 
@@ -229,10 +231,9 @@ class GlobalChart {
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .style('background-color', '#e6effc') // background color
-      .style('border', '4px solid #ccc') // Set the border properties here
+      .style('border', '4px solid #ccc') // svg border
     .append('g')
-      .attr('transform',
-            'translate(' + margin.left + ',' + margin.top + ')');
+      .attr('transform', `translate( ${margin.left} , ${margin.top} )`);
   }
 
 
@@ -339,16 +340,16 @@ class GlobalChart {
 
   doAxisLabels(svg, width, height, margin) {    
     // Add X axis label
-    svg.append('text')
-    .attr('transform', 'translate(' + (width / 2) + ',' + (height + 45) + ')')
-    .style('text-anchor', 'middle')
-    .style('font-family', 'Arial') 
-    .style('font-size', '24px')
-    .style('fill', '#000000')
-    .text(this.x_title);
+    const xLabel = svg.append('text')
+      .attr('transform', `translate( ${width/2}, ${height+45} )`)
+      .style('text-anchor', 'middle')
+      .style('font-family', 'Arial') 
+      .style('font-size', '24px')
+      .style('fill', '#000000')
+      .text(this.x_title);
 
     // Add Y axis label
-    svg.append('text')
+    const yLabel = svg.append('text')      
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - margin.left)
       .attr('x',0 - (height / 2))
@@ -364,7 +365,7 @@ class GlobalChart {
   doLegend(svg, width) {    
     let legend = svg.append('g')
     .attr('class', 'legend')
-    .attr('transform', 'translate(' + (width - 40) + ',' + 2 + ')'); // Adjust the position as needed
+    .attr('transform', `translate(${width}, -40)`); // Adjust the position as needed
   
     // Define the legend for COUNTRY-GROUPINGS
     let legendData_bis = [
@@ -426,19 +427,19 @@ class GlobalChart {
     // Y-scale
     let yScale = d3.scaleLinear()    
     .domain(d3.extent(data, d => d.yAttr)).nice()
-    .range([ height, 0])    
+    .range([ height+5, 0 ])    
 
     // add X-axis
     const xAxis = svg.append('g')
       .attr('class', 'x-axis') // reference
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(xScale).ticks(width/50))
       .style('fill', '#000000')
       .style('color', '#000000');
      
     // add Y-axis
     const yAxis = svg.append('g')
-      .attr('class', 'y-axis') // reference
+      .attr('class', 'y-axis') // reference      
       .call(d3.axisLeft(yScale))
       .style('fill', '#000000')
       .style('color', '#000000');
@@ -478,11 +479,10 @@ class GlobalChart {
 
 
   doTitle(svg, width, margin, prefix = '') {
-    // this.doTitleReformat();    
-
+    // this.doTitleReformat();
     svg.append('text')
     .attr('x', (width / 2))
-    .attr('y', margin.top - 20)
+    .attr('y', -40)
     .attr('text-anchor', 'middle')
     .style('font-family', 'Arial')    
     .style('font-size', '28px')
