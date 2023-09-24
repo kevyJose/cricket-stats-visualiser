@@ -11,10 +11,11 @@ class GlobalChart {
     this.x_selected = x_selected;
     this.y_selected = y_selected;
     this.color_code = color_code;
-    this.margin = { top: 80, right: 70, bottom: 60, left: 70 };
+    this.margin = { top: 80, right: 75, bottom: 60, left: 90 };
     this.width = 800 - this.margin.left - this.margin.right;
     this.height = 700 - this.margin.top - this.margin.bottom;
     this.svg = null; 
+    this.filterTypes = null
   }
 
 
@@ -32,9 +33,24 @@ class GlobalChart {
     this.doTitle(this.svg, this.width, this.selectedLocation);
     this.doAxisLabels(this.svg, this.width, this.height, this.margin);
     this.doLegend(this.svg, this.width);
-    this.doPopups();
-
+    this.doPopups()   
     
+  }
+
+
+  reformatKeys(map) {
+    let newMap = new Map()
+
+    for (let key of map.keys()) {
+      // Reformat the key here, for example, make it uppercase
+      let spacedKey = key.replace(/-/g, ' ')     
+      
+      let newKey = spacedKey.charAt(0).toUpperCase() + spacedKey.slice(1)      
+      // Add the newKey and its value to the new map
+      newMap.set(newKey, map.get(key))
+    }
+
+    return newMap;
   }
 
 
@@ -44,33 +60,29 @@ class GlobalChart {
     console.log('filters length:  ', filters.size)    
     // console.log('filters:  ', filters)
 
+    // reformat the keys in given map
+    let newFilters = this.reformatKeys(filters)
+    this.filterTypes = newFilters
+    this.doPopups();
+
     if (filters.size > 0) {
       const filteredData = this.filterData(filters)      
       console.log('filteredData: ', filteredData)
       // console.log('filteredData size: ', filteredData.length)            
 
-      // remove chart contents (title, axes, dots)
-      const filterTypes = (Array.from(filters.keys())).join(', ') 
-      const chartTitle = this.svg.select('.chart-title')
-      chartTitle.remove()     
-
+      // remove chart axes
       const xAxis = this.svg.select('.x-axis')
       const yAxis = this.svg.select('.y-axis')
       xAxis.remove()
       yAxis.remove()
-
+      // remove chart dots
       const dotsGroup = this.svg.select('.dots')
-      dotsGroup.remove()     
-
+      dotsGroup.remove()    
 
       // new axes
       const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, filteredData, this.margin);
       // new dots-group
       this.doDotsGroup(this.svg, filteredData, xScale, yScale);
-      
-      this.doTitle(this.svg, this.width, this.selectedLocation, filterTypes)
-
-
     }
   }
   
@@ -235,45 +247,46 @@ class GlobalChart {
   }
 
 
+  // pop-up triggers on-hover of chart-titles
   doPopups() {
     // Create the tooltip element
     const tooltip = d3.select('.center')
     .append("div")
     .attr("class", "tooltip-chart")
-    .style("position", "absolute")
-    .style("visibility", "hidden");
 
-    // Attach the mouseover and mousemove event listeners to the SVG element
-    this.svg.on('mouseover', function () {
-      console.log('mouseover triggered');
-      const tooltip = d3.select('.tooltip-chart');
+    const chartTitle = this.svg.select('.chart-title')
+    let filterTypes = ''
+
+    if (this.filterTypes != null) {      
+      filterTypes = (Array.from(this.filterTypes.keys())).join(', ')
+    }    
+
+    // mouseover event listener
+    chartTitle.on('mouseover', function () {
+      // console.log('mouseover triggered');
       // make the tooltip visible and update its text
       tooltip
         .style('visibility', 'visible')
-        .text(`THIS IS THE CONTENT HERE....`)
-        .style('font-size', '24px')
-        .style('fill', '#000000');
+        .html(`Filtered by: ${filterTypes} <br>Selected location: `)
     });
 
-    this.svg.on('mousemove', function (event) {
-      console.log('mousemove triggered');
-      const tooltip = d3.select('.tooltip-chart');
+    // mousemove event listener
+    chartTitle.on('mousemove', function (event) {
+      // console.log('mousemove triggered');
+      // tooltip tracks the cursor position
       tooltip
         .style('top', event.pageY - 10 + 'px')
         .style('left', event.pageX + 10 + 'px');
     });
 
-    // Remove the mouseout event listener from data points
-    // ...
-
-    // Mouseout event listener for the entire SVG element
-    this.svg.on('mouseout', function () {
-      const tooltip = d3.select('.tooltip-chart');
+    // mouseout event listener
+    chartTitle.on('mouseout', function () {
       // Hide tooltip
       tooltip.style('visibility', 'hidden');
     });
     
   }
+
 
 
   createSVG(id_tag, margin, width, height) {  
@@ -282,62 +295,13 @@ class GlobalChart {
     // create the svg element
     const svg = d3.select(id_tag)
       .append('svg')
+        .attr('class', 'svg')
         .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .style('background-color', '#e6effc') // background color
-        .style('border', '4px solid #ccc') // svg border        
+        .attr('height', height + margin.top + margin.bottom)  
       .append('g')
-        .attr('class', 'svg-group')
-        .attr('transform', `translate( ${margin.left} , ${margin.top} )`)
+        // .attr('class', 'svg-group')
+        .attr('transform', `translate( ${margin.left} , ${margin.top} )`)      
 
-    const svg_group = d3.select('.svg-group')
-
-      
-    // // Create the tooltip element
-    // const tooltip = d3.select('.center')
-    //   .append("div")
-    //   .attr("class", "tooltip-chart")
-    //   .style("position", "absolute")
-    //   .style("visibility", "hidden");
-      
-      
-    //##############################################################
-
-    // working on this....
-
-    // Mouseover event listener to SVG
-    // svg.on('mouseover', function () {
-    //   console.log('mouseover triggered')      
-    //   // if (d3.event) {
-    //     console.log('D3 event triggered')
-    //     const tooltip = d3.select('.tooltip-chart');
-    //     // make the tooltip visible and update its text
-    //     tooltip
-    //       .style("visibility", "visible")
-    //       .text(`THIS IS THE CONTENT HERE....`)
-    //       .style('font-size', '24px')
-    //       .style('fill', '#000000')
-    //   // }
-    // });
-
-    // svg.on("mousemove", function(event) {
-    //   console.log('mousemove triggered')      
-      
-    //     const tooltip = d3.select('.tooltip-chart');
-    //     tooltip
-    //       .style("top", event.pageY - 10 + "px")
-    //       .style("left", event.pageX + 10 + "px");
-      
-    // });
-
-    // // Mouseout event listener to SVG
-    // svg.on('mouseout', function () {      
-    //   const tooltip = d3.select('.tooltip-chart');
-    //   // Hide tooltip
-    //   tooltip.style("visibility", "hidden");
-    // });
-
-    // //####################################################################
     
     
     return svg;
@@ -371,34 +335,33 @@ class GlobalChart {
       .attr('cy', (d) => y(d.yAttr))
       .attr('r', 3.0)
       .style('fill', (d) => this.setDotColor(d))
+ 
 
       // mouseover...
-      .on('mouseover', (event, d) => {        
-        // show tooltip on mouseover
+      .on('mouseover', (event, d) => {
         d3.select('.tooltip-player')
-        .style('opacity', 0.9)
-        .style('color', 'white')          
-        .html(`
-          <div class='tooltip-player-name'>${d.name}</div>
-          <div>Country: ${d.country}</div>
-          <div>Location: ${locationsMap.get(d.location)}</div>
-          <div>Span: ${d.span}</div>
-          <div>Matches Played: ${d.matches_played}</div>
-          <div>Innings: ${d.innings}</div>
-          <div>Runs: ${d.runs}</div>
-          <div>Not Outs: ${d.not_outs}</div>
-          <div>High Score: ${d.high_score}</div>
-          <div>Batting Average: ${d.batting_average}</div>
-          <div>Balls Faced: ${d.balls_faced}</div>
-          <div>Strike Rate: ${d.strike_rate}</div>
-          <div>Centuries: ${d.centuries}</div>
-          <div>Half Centuries: ${d.half_cents}</div>
-          <div>Below Fifties: ${d.below_fifties}</div>
-        `)
+          .style('opacity', 1.0)          
+          .html(`
+            <div class='tooltip-player-name'>${d.name}</div>
+            <div>Country: ${d.country}</div>
+            <div>Location: ${locationsMap.get(d.location)}</div>
+            <div>Span: ${d.span}</div>
+            <div>Matches Played: ${d.matches_played}</div>
+            <div>Innings: ${d.innings}</div>
+            <div>Runs: ${d.runs}</div>
+            <div>Not Outs: ${d.not_outs}</div>
+            <div>High Score: ${d.high_score}</div>
+            <div>Batting Average: ${d.batting_average}</div>
+            <div>Balls Faced: ${d.balls_faced}</div>
+            <div>Strike Rate: ${d.strike_rate}</div>
+            <div>Centuries: ${d.centuries}</div>
+            <div>Half Centuries: ${d.half_cents}</div>
+            <div>Below Fifties: ${d.below_fifties}</div>
+          `)
       })
       // mouseout...
       .on('mouseout', (event, d) => {        
-        d3.select('.tooltip-player').style('opacity', 0);
+        d3.select('.tooltip-player').style('opacity', 0);        
       });
         
   }
@@ -448,23 +411,17 @@ class GlobalChart {
   doAxisLabels(svg, width, height, margin) {    
     // Add X axis label
     const xLabel = svg.append('text')
+      .attr('class', 'x-label')
       .attr('transform', `translate( ${width/2}, ${height+45} )`)
-      .style('text-anchor', 'middle')
-      .style('font-family', 'Arial') 
-      .style('font-size', '24px')
-      .style('fill', '#000000')
       .text(this.x_title);
 
     // Add Y axis label
-    const yLabel = svg.append('text')      
+    const yLabel = svg.append('text')
+      .attr('class', 'y-label')      
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - margin.left)
       .attr('x',0 - (height / 2))
       .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .style('font-family', 'Arial') 
-      .style('font-size', '24px')
-      .style('fill', '#000000')
       .text(this.y_title);
   }
 
@@ -516,11 +473,10 @@ class GlobalChart {
   
     // Add the text labels to the legend items
     legendItems.append('text')
+      .attr('class', 'legend-item-labels')
       .attr('x', 20)
       .attr('y', 6)
-      .attr('dy', '0.35em')
-      .style('font-size', '12px')
-      .style('fill', '#000000')
+      .attr('dy', '0.35em')      
       .text(d => d.label);
   }
 
@@ -541,15 +497,11 @@ class GlobalChart {
       .attr('class', 'x-axis') // reference
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(xScale).ticks(width/50))
-      .style('fill', '#000000')
-      .style('color', '#000000');
      
     // add Y-axis
     const yAxis = svg.append('g')
       .attr('class', 'y-axis') // reference      
       .call(d3.axisLeft(yScale))
-      .style('fill', '#000000')
-      .style('color', '#000000');
 
     return { xScale: xScale, yScale: yScale };
   }
@@ -595,13 +547,10 @@ class GlobalChart {
       .attr('x', (width / 2))
       .attr('y', -40)
       .attr('text-anchor', 'middle')
-      .style('font-family', 'Arial')    
-      .style('font-size', '25px')
-      .style('fill', '#000000')
-      .style('font-weight', 'bold')
       // if(prefix)
       
-      .text(prefix + ': ' + this.y_title + ' vs. ' + this.x_title + ' (' + suffix + ')');
+      // .text(prefix + ': ' + this.y_title + ' vs. ' + this.x_title + ' (' + suffix + ')');
+      .text(this.y_title + ' vs. ' + this.x_title)
   }
 
 

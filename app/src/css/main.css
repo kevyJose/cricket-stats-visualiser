@@ -37,6 +37,81 @@ div.chart {
   
 }
 
+.center {
+  flex-basis: 70%;
+  background-color: #262c7e;
+  height: 82vh;
+  overflow-y: auto;
+  padding: 1%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.svg {
+  background-color: #e6effc;  /* background color */
+  border: 6px solid #ccc;  /* svg border */
+}
+
+
+.tooltip-chart {
+  display: block;
+
+  background: rgba(69,77,93,.9);
+  border-radius: .1rem;
+  color: #fff;
+  display: block;
+  font-size: 20px;
+  /* max-width: 1000px; */
+  padding: .2rem .4rem;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: pre;
+  z-index: 300;
+  visibility: hidden;  
+}
+
+.x-axis {
+  fill: #000000;
+  color: #000000;
+  font-size: 90%;
+}
+
+.y-axis {
+  fill: #000000;
+  color: #000000;
+  font-size: 90%;
+}
+
+.x-label {
+  text-anchor: middle;
+  font-family: 'Arial'; 
+  font-size: 26px;
+  fill: #000000;
+}
+
+.y-label {
+  text-anchor: middle;
+  font-family: 'Arial'; 
+  font-size: 26px;
+  fill: #000000;
+}
+
+
+.chart-title {
+  font-family: 'Arial';    
+  font-size: 28px;
+  fill: #000000;
+  font-weight: bold;
+}
+
+.legend-item-labels {
+  font-size: 16px;
+  fill: #000000;
+}
+
+
 .right {
   flex-basis: 15%;  
   background-color: #0e1249;
@@ -58,22 +133,11 @@ div.chart {
 .tooltip-player {
   display: block;
   margin-top: 20px;
-
   font-size: x-large;
+  color: white;
+  opacity: 0;  
 }
 
-
-.center {
-  flex-basis: 70%;
-  background-color: #262c7e;
-  height: 82vh;
-  overflow-y: auto;
-  padding: 1%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 
 h1 {
@@ -131,6 +195,9 @@ button {
   font-size: large;
   border-radius: 15px;
 }
+
+
+
 
 
 
