@@ -25,12 +25,14 @@ class GlobalChart {
     // console.log('doing initChart...')
     const selectedData = this.selectData()
     console.log('selectedData: ', selectedData)
+    console.log('selectedLoc: ', this.selectedLocation)
+    console.log('type of above var: ', typeof this.selectedLocation)
 
     this.svg = this.createSVG(this.id_tag, this.margin, this.width, this.height);
     const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, selectedData, this.margin);
     this.doDotsGroup(this.svg, selectedData, xScale, yScale);
     this.doTitleReformat();
-    this.doTitle(this.svg, this.width, this.selectedLocation);
+    this.doTitle(this.svg, this.width);
     this.doAxisLabels(this.svg, this.width, this.height, this.margin);
     this.doLegend(this.svg, this.width);
     this.doPopups()   
@@ -249,6 +251,19 @@ class GlobalChart {
 
   // pop-up triggers on-hover of chart-titles
   doPopups() {
+    const locationsMap = new Map([
+      ['C', 'Combined'],
+      ['H', 'Home'],
+      ['A', 'Away'],
+      ['N', 'Neutral'],
+      ['B', 'BIS'],
+      ['S', 'SENA'],
+      ['O', 'Other'],
+    ]);
+
+    // prepare the location info chart-tooltip
+    let selectedLocation = locationsMap.get(this.selectedLocation)
+
     // Create the tooltip element
     const tooltip = d3.select('.center')
     .append("div")
@@ -259,7 +274,7 @@ class GlobalChart {
 
     if (this.filterTypes != null) {      
       filterTypes = (Array.from(this.filterTypes.keys())).join(', ')
-    }    
+    }   
 
     // mouseover event listener
     chartTitle.on('mouseover', function () {
@@ -267,7 +282,7 @@ class GlobalChart {
       // make the tooltip visible and update its text
       tooltip
         .style('visibility', 'visible')
-        .html(`Filtered by: ${filterTypes} <br>Selected location: `)
+        .html(`Filtered by: ${filterTypes} <br>Selected location: ${selectedLocation}`)
     });
 
     // mousemove event listener
@@ -537,9 +552,9 @@ class GlobalChart {
 
 
 
-  doTitle(svg, width, prefix, suffix) {
+  doTitle(svg, width) {
     console.log('yooo... ', this.x_title, this.y_title)
-    console.log('selectedLocation... ', prefix)
+    // console.log('selectedLocation... ', prefix)
     // console.log()
 
     svg.append('text')
@@ -547,9 +562,6 @@ class GlobalChart {
       .attr('x', (width / 2))
       .attr('y', -40)
       .attr('text-anchor', 'middle')
-      // if(prefix)
-      
-      // .text(prefix + ': ' + this.y_title + ' vs. ' + this.x_title + ' (' + suffix + ')');
       .text(this.y_title + ' vs. ' + this.x_title)
   }
 
