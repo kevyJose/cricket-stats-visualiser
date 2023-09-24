@@ -75,13 +75,27 @@ div.chart {
 .x-axis {
   fill: #000000;
   color: #000000;
-  font-size: 90%;
+  font-size: 75%;
+  
 }
 
 .y-axis {
   fill: #000000;
   color: #000000;
   font-size: 90%;
+}
+
+.x-axis line {
+  stroke: #000; 
+  stroke-width: 4;
+  shape-rendering: auto;
+}
+
+
+.y-axis line {
+  stroke: #000; 
+  stroke-width: 4; 
+  shape-rendering: auto; 
 }
 
 .x-label {

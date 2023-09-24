@@ -5,6 +5,7 @@ class GlobalChart {
               y_title, x_selected, y_selected, color_code) {                
     this.id_tag = id_tag;
     this.rawData = rawData;
+    this.selectedData = null; // contains the data displayed on-chart
     this.selectedLocation = selectedLocation;
     this.x_title = x_title;
     this.y_title = y_title;
@@ -23,19 +24,15 @@ class GlobalChart {
   // initialise the chart
   initChart() {
     // console.log('doing initChart...')
-    const selectedData = this.selectData()
-    console.log('selectedData: ', selectedData)
-    console.log('selectedLoc: ', this.selectedLocation)
-    console.log('type of above var: ', typeof this.selectedLocation)
-
+    this.selectedData = this.selectData()
     this.svg = this.createSVG(this.id_tag, this.margin, this.width, this.height);
-    const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, selectedData, this.margin);
-    this.doDotsGroup(this.svg, selectedData, xScale, yScale);
+    const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, this.selectedData, this.margin);
+    this.doDotsGroup(this.svg, this.selectedData, xScale, yScale);
     this.doTitleReformat();
     this.doTitle(this.svg, this.width);
     this.doAxisLabels(this.svg, this.width, this.height, this.margin);
     this.doLegend(this.svg, this.width);
-    this.doPopups()   
+    this.doPopups() 
     
   }
 
@@ -45,19 +42,17 @@ class GlobalChart {
 
     for (let key of map.keys()) {
       // Reformat the key here, for example, make it uppercase
-      let spacedKey = key.replace(/-/g, ' ')     
-      
+      let spacedKey = key.replace(/-/g, ' ')
       let newKey = spacedKey.charAt(0).toUpperCase() + spacedKey.slice(1)      
       // Add the newKey and its value to the new map
       newMap.set(newKey, map.get(key))
     }
-
     return newMap;
   }
 
 
 
-  // NEW version
+  // re-render the chart after filtering
   reRender(filters = {}) {    
     console.log('filters length:  ', filters.size)    
     // console.log('filters:  ', filters)
@@ -67,10 +62,11 @@ class GlobalChart {
     this.filterTypes = newFilters
     this.doPopups();
 
+    // re-render based on filtered-data
     if (filters.size > 0) {
-      const filteredData = this.filterData(filters)      
-      console.log('filteredData: ', filteredData)
-      // console.log('filteredData size: ', filteredData.length)            
+      // const filteredData = this.filterData(filters)
+      this.selectedData = this.filterData(filters)       
+      console.log('filteredData: ', this.selectedData)                 
 
       // remove chart axes
       const xAxis = this.svg.select('.x-axis')
@@ -82,9 +78,9 @@ class GlobalChart {
       dotsGroup.remove()    
 
       // new axes
-      const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, filteredData, this.margin);
+      const { xScale, yScale } = this.doAxes(this.svg, this.width, this.height, this.selectedData, this.margin);
       // new dots-group
-      this.doDotsGroup(this.svg, filteredData, xScale, yScale);
+      this.doDotsGroup(this.svg, this.selectedData, xScale, yScale);
     }
   }
   
@@ -93,7 +89,7 @@ class GlobalChart {
 
   // select relevant data, according to configuration
   selectData() {   
-    return raw_data.map(player => {
+    return this.rawData.map(player => {
       const filteredRow = player.data.filter(row => row.location === selectedLocation); 
 
       // only process players that return a row
@@ -103,8 +99,7 @@ class GlobalChart {
         // append x,y features to the row
         // these features are used as chart coords
         selectedRow.xAttr = selectedRow[this.x_selected];
-        selectedRow.yAttr = selectedRow[this.y_selected];
-        
+        selectedRow.yAttr = selectedRow[this.y_selected];        
         return selectedRow;        
       }
       
@@ -116,7 +111,7 @@ class GlobalChart {
 
   filterData(filters = {}) {
     // console.log('filters... ', filters)    
-    return raw_data.map(player => {
+    return this.rawData.map(player => {
       const filteredRow = player.data.filter(row => row.location === selectedLocation);
       
       if (filteredRow.length > 0) {
@@ -511,12 +506,13 @@ class GlobalChart {
     const xAxis = svg.append('g')
       .attr('class', 'x-axis') // reference
       .attr('transform', `translate(0, ${height})`)
-      .call(d3.axisBottom(xScale).ticks(width/50))
+      // .call(d3.axisBottom(xScale).ticks(width/50).tickSizeInner(15))
+      .call(d3.axisBottom(xScale).tickSizeInner(12))
      
     // add Y-axis
     const yAxis = svg.append('g')
       .attr('class', 'y-axis') // reference      
-      .call(d3.axisLeft(yScale))
+      .call(d3.axisLeft(yScale).tickSizeInner(12))
 
     return { xScale: xScale, yScale: yScale };
   }
@@ -553,7 +549,7 @@ class GlobalChart {
 
 
   doTitle(svg, width) {
-    console.log('yooo... ', this.x_title, this.y_title)
+    // console.log('yooo... ', this.x_title, this.y_title)
     // console.log('selectedLocation... ', prefix)
     // console.log()
 
