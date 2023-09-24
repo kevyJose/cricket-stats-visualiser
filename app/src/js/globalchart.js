@@ -282,7 +282,7 @@ class GlobalChart {
       // make the tooltip visible and update its text
       tooltip
         .style('visibility', 'visible')
-        .html(`Filtered by: ${filterTypes} <br>Selected location: ${selectedLocation}`)
+        .html(`<b>Filtered by:</b> ${filterTypes} <br><b>Selected location:</b> ${selectedLocation}`)
     });
 
     // mousemove event listener

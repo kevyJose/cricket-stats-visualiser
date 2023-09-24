@@ -58,7 +58,7 @@ div.chart {
 .tooltip-chart {
   display: block;
 
-  background: rgba(69,77,93,.9);
+  background: rgb(69, 77, 93);
   border-radius: .1rem;
   color: #fff;
   display: block;
