@@ -22,17 +22,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-function submit_configForm(event) {
+function enablePlayerSearch() {
+  const chartSelect_right = document.getElementById("chart-select-right") //dropdown
+  const searchField = document.getElementById("player-search-field")
+  const errorMsg = document.getElementById('search-error-msg')
+  const searchButton = document.getElementById("searchButton")
+
+  searchField.disabled = false
+  searchButton.disabled = false
+
+  searchField.addEventListener('input', () => {
+    const pattern = /^[a-zA-Z -]+$/;
+    const inputValue = searchField.value;
+    
+    if (! pattern.test(inputValue)) {
+      // errorMsg.textContent = 'Try again! Please enter a valid player name.';
+      searchField.setCustomValidity('Try again! Please enter a valid player name.');
+    } else {
+      // errorMsg.textContent = ''; // empty error message for valid input
+      searchField.setCustomValidity('');
+    }
+  });  
+}
+
+
+// perform the player search
+function submit_searchForm(event) {
   event.preventDefault();
   
-  let newPlotId = doScatterPlot_div();
-  enableFilterElems();   
-  const form = document.getElementById("config_form")
-  const chartSelect_elem = document.getElementById("chart-select-dropdown")  
+  // get selected chart
+  const selectedChartId = document.getElementById('chart-select-right').value
+  const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId)
+  // console.log('selectedChart: ', selectedChart)
+  const searchQuery = document.getElementById("player-search-field").value.toLowerCase().trim()
 
+  if (selectedChart) {
+    // get search results and display them
+    const searchResults = selectedChart.selectedData.filter(player => player.name.toLowerCase().includes(searchQuery))    
+    displaySearchResults(searchResults);
+  } 
+  else {
+    // selected chart not found
+    console.error("Selected chart not found.");
+  }   
+  
+}
+
+
+function displaySearchResults(results) {
+  const searchResultsDiv = document.getElementById("searchResults");
+  searchResultsDiv.innerHTML = ""; // Clear previous results
+
+  if (results.length === 0) {
+    searchResultsDiv.innerHTML = "No results found.";
+  } 
+  else {
+    // Create a list of matching players
+    const ul = document.createElement("ul");
+    results.forEach(player => {
+      const li = document.createElement("li");
+      li.textContent = player.name;
+      ul.appendChild(li);
+    });
+    searchResultsDiv.appendChild(ul);
+  }
+}
+
+
+
+function submit_configForm(event) {
+  event.preventDefault();
+  enableFilterElems();
+  enablePlayerSearch();
+  
+  let newPlotId = doScatterPlot_div();    
+  const form = document.getElementById("config_form")
+  const chartSelect_left = document.getElementById("chart-select-left")
+  const chartSelect_right = document.getElementById("chart-select-right")
   const map = new Map();
   const data = new FormData(form)
 
+  // extract form info... 
   for (const entry of data) {
     const inputElement = form.elements[entry[0]];
     let key = entry[0]
@@ -40,33 +110,34 @@ function submit_configForm(event) {
     // console.log('key: ', key)
     // console.log('value: ', value)
 
-    // radio btn or checkbox
+    // READ radio button inputs
     if ((inputElement.type === "radio" || inputElement.type === "checkbox") &&
       inputElement.checked) {
       map.set(key, value)
     }
-    // select dropdown 
+    // READ dropdown inputs
     else if (inputElement.tagName === "SELECT") {
       const selectedOption = inputElement.options[inputElement.selectedIndex];
       map.set(key, selectedOption.value)
     }
-    //other input types 
+    // READ other input types 
     else {
       map.set(key, value)
     }
   }
 
   //set global variables
+  // global vars. are re-assigned to most recent chart
   setCurrChartAttributes(map);
   //use extracted info to plot chart
-  // const chartIndex = allCharts.length
-
   doGlobalChart(event, '#'+newPlotId);
 
   // update chart-selection dropdown
   if(allCharts.length > 0){
-    doChartSelectDropdown(chartSelect_elem)
-    chartSelect_elem.disabled = false
+    doChartSelectDropdown(chartSelect_left)
+    doChartSelectDropdown(chartSelect_right)
+    chartSelect_left.disabled = false
+    chartSelect_right.disabled = false
   }
 }
 
@@ -78,41 +149,38 @@ function submit_filterForm(event) {
   // Get filter-form inputs
   let startYear = document.getElementById('start-year-dropdown').value;
   let endYear = document.getElementById('end-year-dropdown').value;
+  // let endYearElem = document.getElementById('end-year-dropdown');
   let debutYear = document.getElementById('debut-year-dropdown').value;
   let finalYear = document.getElementById('final-year-dropdown').value;
-  const chartSelect = parseInt(document.getElementById('chart-select-dropdown').value);
-  // const countrySelect = document.getElementById('country-select-dropdown').value;
+  const selectedChartId = document.getElementById('chart-select-left').value;
   const countrySelect = document.querySelectorAll('input[name="country-checkbox"]:checked');
   const countrySelectArr = Array.from(countrySelect).map(checkbox => checkbox.value)
 
-  const selectedChart = allCharts[chartSelect-1]
+  const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId);
+  // console.log('selectedChart: ', selectedChart)
   const filtersMap = new Map()
 
-  // console.log('startYr: ' + startYear)
-  // console.log('endYr: ' + endYear)
-  // console.log('countrySelect: ' + countrySelect)
 
   if ((startYear !== 'NONE') && (endYear !== 'NONE')) {
     startYear = parseInt(startYear)
     endYear = parseInt(endYear)
     if (endYear >= startYear) {
       //update the graph to render filtered values    
-      filtersMap.set('year-range', [startYear, endYear])
+      filtersMap.set('year-range', [startYear, endYear])      
     }
     else {
-      alert("End year must be greater than or equal to start year.")
+      // FIX: return and change this to equiv. of setCustomValidity()
+      alert("End year must be greater than or equal to start year.")     
     }       
   }
 
   if (countrySelectArr.length > 0) {
     filtersMap.set('country-select', countrySelectArr)    
   }
-
   if (debutYear !== 'NONE') {    
     debutYear = parseInt(debutYear)
     filtersMap.set('debut-year', debutYear)
   }
-
   if(finalYear !== 'NONE') {
     finalYear = parseInt(finalYear)
     filtersMap.set('final-year', finalYear)
@@ -127,6 +195,9 @@ function submit_filterForm(event) {
   }
   
 }
+
+
+
 
 
 function doFilterDropdowns() { 
@@ -144,7 +215,7 @@ function doFilterDropdowns() {
 function doChartSelectDropdown(elem) {
   let i = allCharts.length
   let option = document.createElement("option")
-  option.value = i
+  option.value = '#scatter-plot-' + i
   option.text = 'Chart #' + i
   elem.appendChild(option)  
 }
@@ -163,26 +234,33 @@ function doYearDropdown(elem) {
 function enableFilterElems() {
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
-  const countrySelect_elem = document.getElementById("country-select-dropdown")
+  const countrySelect_grp = document.getElementById("country-select-boxes")
   const debutYr_elem = document.getElementById("debut-year-dropdown")
   const finalYr_elem = document.getElementById("final-year-dropdown")
   const applyBtn_elem = document.getElementById("apply-filter-btn")
 
+  // enable the elems
   startYr_elem.disabled = false
   endYr_elem.disabled = false
-  // countrySelect_elem.disabled = false
   debutYr_elem.disabled = false
   finalYr_elem.disabled = false
   applyBtn_elem.disabled = false
+
+  // select all input checkboxes within the div
+  const checkboxes = countrySelect_grp.querySelectorAll('input[type="checkbox"]')
+
+  // enable each checkbox
+  for (const box of checkboxes) {    
+    box.removeAttribute('disabled');
+  }
 }
 
 
 // creates a new div element for each scatter-plot
 function doScatterPlot_div() {
-
   let numPlots = document.querySelectorAll('[id^="scatter-plot"]').length
   // console.log('num of scatter plots, before appending new one:  ' + numPlots)
-  let newPlotId = 'scatter-plot-' + numPlots
+  let newPlotId = 'scatter-plot-' + (numPlots+1)
 
   let newDiv = document.createElement('div')
   newDiv.className = 'chart'
@@ -204,7 +282,6 @@ function setCurrChartAttributes(map) {
   x_title = capitalizeString(x_selected)
   y_title = capitalizeString(y_selected)
   color_code = map.get('color-code')
-
   // console.log('testing global var updates:  { ', selectedLocation, x_selected, y_selected, 
   //                                                x_title, y_title, color_code, ' }')
 }

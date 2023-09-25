@@ -91,7 +91,6 @@ div.chart {
   shape-rendering: auto;
 }
 
-
 .y-axis line {
   stroke: #000; 
   stroke-width: 4; 
@@ -139,9 +138,9 @@ div.chart {
 }
 
 .right img {
-  /* margin-top: 25px; */
-  width: 200px;
-  height: 200px;
+  margin-top: 25px;
+  width: 100px;
+  height: 100px;
 }
 
 .tooltip-player {
@@ -150,6 +149,63 @@ div.chart {
   font-size: x-large;
   color: white;
   opacity: 0;  
+}
+
+.right label {
+  color: white;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.error-msg {
+  color: #ff0000;
+  font-size: large;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.search-button {
+  width: 80px;
+  height: 40px;
+  margin-top: 10px;  
+  border-radius: 15px;
+  background-color: #1279ff;
+  cursor: pointer;   
+  &:active {    
+      background-color: #1216ff;   
+  }
+}
+
+/* style the button when in disabled state */
+.search-button:disabled {
+  background-color: #868686;
+  cursor: not-allowed; /* Cursor to 'not-allowed' */
+}
+
+.svg-icon.search-icon {
+  display: inline-block;  
+  width: 25px;
+  height: 25px;
+  .search-path {
+    stroke: #ffffff;  
+  }
+}
+
+#player-search-field {
+  width: 200px;
+  height: 30px;
+  font-size: medium;
+  margin-top: 8px;
+}
+
+.searchResults {
+  margin-top: 20px;  
+  height: 20vh;
+  background-color: #000;
+  color: #ffffff;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: large;
+  overflow-y: auto;  
 }
 
 
@@ -179,8 +235,7 @@ h3 {
 form label {
   color: white;
   font-size: 22px;
-  font-weight: bold;
-  
+  font-weight: bold;  
 }
 
 form filter_type {
@@ -208,6 +263,14 @@ button {
   margin-top: 20px;
   font-size: large;
   border-radius: 15px;
+  cursor: pointer;
+}
+
+/* style the button when in disabled state */
+button:disabled {
+  background-color: #868686;
+  color: #aaaaaa; /* Icon color */
+  cursor: not-allowed; /* Cursor to 'not-allowed' */
 }
 
 
