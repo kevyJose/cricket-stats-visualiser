@@ -316,9 +316,9 @@ class GlobalChart {
     
     return svg;
   }
+  
 
 
-  // NEED TO RE-DRAW CIRCLE SO THAT EMPHASISED CIRCLES ALWAYS ON TOP
   highlightPlayer(player, isHighlighted) {    
     const dotsGroup = this.svg.select('.dots')
 
@@ -326,11 +326,14 @@ class GlobalChart {
     const selectedCircle = dotsGroup.selectAll('circle')
       .filter((d) => d.id === player.id);
 
+    // move object to foreground
+    selectedCircle.raise()
+
     selectedCircle.transition()
       .duration(700) // Duration of transition
       .attr('r', isHighlighted ? 12.0 : 3.0) // radius
       .style('stroke', isHighlighted ? 'black' : 'none')
-      .style('stroke-width', isHighlighted ? 3 : 0);
+      .style('stroke-width', isHighlighted ? '2.5px' : '0px');
   }
 
 
