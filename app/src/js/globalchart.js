@@ -88,7 +88,7 @@ class GlobalChart {
 
 
   // select relevant data, according to configuration
-  selectData() {   
+  selectData() {
     return this.rawData.map(player => {
       const filteredRow = player.data.filter(row => row.location === selectedLocation); 
 
@@ -110,7 +110,7 @@ class GlobalChart {
 
 
   filterData(filters = {}) {
-    // console.log('filters... ', filters)    
+    console.log('filters... ', filters)    
     return this.rawData.map(player => {
       const filteredRow = player.data.filter(row => row.location === selectedLocation);
       

@@ -1,7 +1,7 @@
 //global attributes for latest chart
 let selectedLocation = 'C'
-let x_selected = 'none'
-let y_selected = 'none'
+let x_selected = ''
+let y_selected = ''
 let x_title = 'X title'
 let y_title = 'Y title'
 let color_code = ''
@@ -92,6 +92,20 @@ function displaySearchResults(results) {
 
 function submit_configForm(event) {
   event.preventDefault();
+  // CONFIG FORM VALIDATION
+  // Get the selected values of 'x-attr-menu' and 'y-attr-menu'
+  const xAttr = document.getElementById('x-attr-menu').value;
+  const yAttr = document.getElementById('y-attr-menu').value;
+
+  // Check for invalid values
+  if (xAttr == '' || yAttr == '') {
+    // Display an error message or alert
+    alert('Please select valid values for X and Y features.');
+    return; // Prevent the rest of the code from executing
+  }
+
+
+  // if above validation passes, the following code runs...
   enableFilterElems();
   enablePlayerSearch();
   
@@ -131,6 +145,8 @@ function submit_configForm(event) {
   setCurrChartAttributes(map);
   //use extracted info to plot chart
   doGlobalChart(event, '#'+newPlotId);
+  lastElem = allCharts[allCharts.length-1]
+  console.log('latest chart selected-data: ', lastElem.selectedData)
 
   // update chart-selection dropdown
   if(allCharts.length > 0){
@@ -145,7 +161,6 @@ function submit_configForm(event) {
 
 function submit_filterForm(event) {
   event.preventDefault();
-
   // Get filter-form inputs
   let startYear = document.getElementById('start-year-dropdown').value;
   let endYear = document.getElementById('end-year-dropdown').value;
@@ -156,12 +171,23 @@ function submit_filterForm(event) {
   const countrySelect = document.querySelectorAll('input[name="country-checkbox"]:checked');
   const countrySelectArr = Array.from(countrySelect).map(checkbox => checkbox.value)
 
+  // FILTER FORM VALIDATION
+
+  // Check for invalid values
+  if (selectedChartId == '' ) {
+    // Display an error message or alert
+    alert('Please select a chart to apply filters.');
+    return; // Prevent the rest of the code from executing
+  }
+
+  
+
   const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId);
   // console.log('selectedChart: ', selectedChart)
   const filtersMap = new Map()
 
 
-  if ((startYear !== 'NONE') && (endYear !== 'NONE')) {
+  if ((startYear !== '') && (endYear !== '')) {
     startYear = parseInt(startYear)
     endYear = parseInt(endYear)
     if (endYear >= startYear) {
@@ -170,18 +196,19 @@ function submit_filterForm(event) {
     }
     else {
       // FIX: return and change this to equiv. of setCustomValidity()
-      alert("End year must be greater than or equal to start year.")     
+      alert("END YEAR must be greater than or equal to START YEAR.")
+      return;     
     }       
   }
 
   if (countrySelectArr.length > 0) {
     filtersMap.set('country-select', countrySelectArr)    
   }
-  if (debutYear !== 'NONE') {    
+  if (debutYear !== '') {    
     debutYear = parseInt(debutYear)
     filtersMap.set('debut-year', debutYear)
   }
-  if(finalYear !== 'NONE') {
+  if(finalYear !== '') {
     finalYear = parseInt(finalYear)
     filtersMap.set('final-year', finalYear)
   }

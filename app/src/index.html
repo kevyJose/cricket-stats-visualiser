@@ -35,7 +35,7 @@
         <div class="inner-form-option">
           <label for="x-attr-menu">X feature:</label>
           <select id="x-attr-menu" name="x-attr">
-            <option value="NONE">None</option>
+            <option value="" disabled selected>Select an option</option>
             <option value="runs">Runs</option>
             <option value="matches_played">Matches Played</option>
             <option value="innings">Innings</option>
@@ -53,7 +53,7 @@
         <div class="inner-form-option">
           <label for="y-attr-menu">Y feature:</label>
           <select id="y-attr-menu" name="y-attr">
-            <option value="NONE">None</option>
+            <option value="" disabled selected>Select an option</option>
             <option value="runs">Runs</option>
             <option value="matches_played">Matches Played</option>
             <option value="innings">Innings</option>
@@ -93,7 +93,9 @@
     
         <div class="form-option">
           <label for="chart-select-left">Select Chart:</label>
-          <select id="chart-select-left" name="chart-select" disabled></select>
+          <select id="chart-select-left" name="chart-select" disabled>            
+            <option value="" disabled selected>Select an option</option>
+          </select>
         </div>
     
         <div class="form-option">
@@ -102,14 +104,14 @@
             <filter_type>Year-Range:</filter_type><br><br>
             <label for="start-year-dropdown">Start Year:</label>
             <select id="start-year-dropdown" name="start-year" disabled>
-              <option value="NONE">None</option>
+              <option value="" disabled selected>Select an option</option>
             </select>
           </div>
           
           <div class="inner-form-option">
             <label for="end-year-dropdown">End Year:</label>
             <select id="end-year-dropdown" name="end-year" disabled>
-              <option value="NONE">None</option>
+              <option value="" disabled selected>Select an option</option>
             </select>
           </div>
         </div>    
@@ -117,14 +119,14 @@
         <div class="form-option">
           <filter_type>Debut Year:</filter_type><br><br>      
           <select id="debut-year-dropdown" name="debut-year" disabled>
-            <option value="NONE">None</option>
+            <option value="" disabled selected>Select an option</option>
           </select>
         </div>
     
         <div class="form-option">
           <filter_type>Final Year:</filter_type><br><br>      
           <select id="final-year-dropdown" name="final-year" disabled>
-            <option value="NONE">None</option>
+            <option value="" disabled selected>Select an option</option>
           </select>
         </div>
     
@@ -132,8 +134,8 @@
         <div id="country-select-boxes" class="form-option" >
           <filter_type>Select Country:</filter_type><br><br>
     
-          <input type="checkbox" id="none-checkbox" name="country-checkbox" value="NONE" disabled>
-          <label for="none-checkbox">None</label><br>
+          <!-- <input type="checkbox" id="none-checkbox" name="country-checkbox" value="NONE" disabled> -->
+          <!-- <label for="none-checkbox">None</label><br> -->
           <input type="checkbox" id="afg-checkbox" name="country-checkbox" value="AFG" disabled>
           <label for="afg-checkbox">Afghanistan</label><br>
           <input type="checkbox" id="aus-checkbox" name="country-checkbox" value="AUS" disabled>
@@ -204,7 +206,9 @@
         <div class="player-search">      
           <!-- chart selector -->
           <label for="chart-select-right">Select Chart:</label>
-          <select id="chart-select-right" name="chart-select" disabled></select><br><br>
+          <select id="chart-select-right" name="chart-select" disabled>
+            <option value="" disabled selected>Select an option</option>
+          </select><br><br>
   
           <!-- search input field -->
           <label for="player-search-field">Player Search:</label>
