@@ -318,6 +318,21 @@ class GlobalChart {
   }
 
 
+  // NEED TO RE-DRAW CIRCLE SO THAT EMPHASISED CIRCLES ALWAYS ON TOP
+  highlightPlayer(player, isHighlighted) {    
+    const dotsGroup = this.svg.select('.dots')
+
+    // Find the circle that matches player.id
+    const selectedCircle = dotsGroup.selectAll('circle')
+      .filter((d) => d.id === player.id);
+
+    selectedCircle.transition()
+      .duration(700) // Duration of transition
+      .attr('r', isHighlighted ? 12.0 : 3.0) // radius
+      .style('stroke', isHighlighted ? 'black' : 'none')
+      .style('stroke-width', isHighlighted ? 3 : 0);
+  }
+
 
   doDotsGroup(svg, data, x, y) {  
     // console.log('doing doDotsGroup....')
@@ -344,8 +359,7 @@ class GlobalChart {
       .attr('cx', (d) => x(d.xAttr))
       .attr('cy', (d) => y(d.yAttr))
       .attr('r', 3.0)
-      .style('fill', (d) => this.setDotColor(d))
- 
+      .style('fill', (d) => this.setDotColor(d)) 
 
       // mouseover...
       .on('mouseover', (event, d) => {

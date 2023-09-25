@@ -59,7 +59,7 @@ function submit_searchForm(event) {
   if (selectedChart) {
     // get search results and display them
     const searchResults = selectedChart.selectedData.filter(player => player.name.toLowerCase().includes(searchQuery))    
-    displaySearchResults(searchResults);
+    displaySearchResults(searchResults, selectedChart);
   } 
   else {
     // selected chart not found
@@ -68,20 +68,81 @@ function submit_searchForm(event) {
   
 }
 
+// state variable 
+let isHighlighted = false;
 
-function displaySearchResults(results) {
+// Function to handle player button click
+function handlePlayerButtonClick(player, selectedChart) {
+  isHighlighted = !isHighlighted;
+
+  // Highlight the player dot on the selectedChart
+  selectedChart.highlightPlayer(player, isHighlighted);
+
+  // Display the tooltip-player info for the selected player
+  displayTooltipPlayerInfo(player);
+}
+
+
+// Function to display the tooltip-player info for the selected player
+function displayTooltipPlayerInfo(player) {
+  const locationsMap = new Map([
+    ['C', 'Combined'],
+    ['H', 'Home'],
+    ['A', 'Away'],
+    ['N', 'Neutral'],
+    ['B', 'BIS'],
+    ['S', 'SENA'],
+    ['O', 'Other'],
+  ]); 
+
+    // Inside the click event handler, select the .tooltip-player element
+    const tooltipDiv = d3.select('.tooltip-player');
+    tooltipDiv.html(''); // Clear previous content
+
+    // Set the content of tooltip
+    tooltipDiv
+      .style('opacity', 1.0) 
+      .html(`
+        <div class='tooltip-player-name'>${player.name}</div>
+        <div>Country: ${player.country}</div>
+        <div>Location: ${locationsMap.get(player.location)}</div>
+        <div>Span: ${player.span}</div>
+        <div>Matches Played: ${player.matches_played}</div>
+        <div>Innings: ${player.innings}</div>
+        <div>Runs: ${player.runs}</div>
+        <div>Not Outs: ${player.not_outs}</div>
+        <div>High Score: ${player.high_score}</div>
+        <div>Batting Average: ${player.batting_average}</div>
+        <div>Balls Faced: ${player.balls_faced}</div>
+        <div>Strike Rate: ${player.strike_rate}</div>
+        <div>Centuries: ${player.centuries}</div>
+        <div>Half Centuries: ${player.half_cents}</div>
+        <div>Below Fifties: ${player.below_fifties}</div>
+      `);
+}
+
+
+
+
+function displaySearchResults(results, selectedChart) {
   const searchResultsDiv = document.getElementById("searchResults");
   searchResultsDiv.innerHTML = ""; // Clear previous results
 
   if (results.length === 0) {
     searchResultsDiv.innerHTML = "No results found.";
   } 
-  else {
-    // Create a list of matching players
+  else {    
+    // Create a list of matching players as buttons
     const ul = document.createElement("ul");
     results.forEach(player => {
       const li = document.createElement("li");
-      li.textContent = player.name;
+      const button = document.createElement("button");
+      button.textContent = player.name;
+      // Add a click event listener to the button
+      button.addEventListener("click", () => {
+        handlePlayerButtonClick(player, selectedChart);
+      });
+      li.appendChild(button);
       ul.appendChild(li);
     });
     searchResultsDiv.appendChild(ul);
@@ -145,8 +206,6 @@ function submit_configForm(event) {
   setCurrChartAttributes(map);
   //use extracted info to plot chart
   doGlobalChart(event, '#'+newPlotId);
-  lastElem = allCharts[allCharts.length-1]
-  console.log('latest chart selected-data: ', lastElem.selectedData)
 
   // update chart-selection dropdown
   if(allCharts.length > 0){
@@ -172,14 +231,12 @@ function submit_filterForm(event) {
   const countrySelectArr = Array.from(countrySelect).map(checkbox => checkbox.value)
 
   // FILTER FORM VALIDATION
-
   // Check for invalid values
   if (selectedChartId == '' ) {
     // Display an error message or alert
     alert('Please select a chart to apply filters.');
     return; // Prevent the rest of the code from executing
   }
-
   
 
   const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId);
