@@ -316,24 +316,29 @@ class GlobalChart {
     
     return svg;
   }
-  
 
 
-  highlightPlayer(player, isHighlighted) {    
+
+  highlightPlayer(player) {    
     const dotsGroup = this.svg.select('.dots')
 
     // Find the circle that matches player.id
     const selectedCircle = dotsGroup.selectAll('circle')
-      .filter((d) => d.id === player.id);
+      .filter((d) => d.id === player.id)
+
+    const initialRadius = parseFloat(selectedCircle.attr('r'))
+    
+    let isHighlighted = initialRadius == 12.0
+    console.log('isHighlighted... ', isHighlighted)
 
     // move object to foreground
     selectedCircle.raise()
 
     selectedCircle.transition()
       .duration(700) // Duration of transition
-      .attr('r', isHighlighted ? 12.0 : 3.0) // radius
-      .style('stroke', isHighlighted ? 'black' : 'none')
-      .style('stroke-width', isHighlighted ? '2.5px' : '0px');
+      .attr('r', isHighlighted ? 3.0 : 12.0) // radius
+      .style('stroke', isHighlighted ? 'none' : 'black')
+      .style('stroke-width', isHighlighted ? '0px' : '2.5px');
   }
 
 

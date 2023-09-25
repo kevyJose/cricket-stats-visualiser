@@ -68,15 +68,11 @@ function submit_searchForm(event) {
   
 }
 
-// state variable 
-let isHighlighted = false;
 
 // Function to handle player button click
 function handlePlayerButtonClick(player, selectedChart) {
-  isHighlighted = !isHighlighted;
-
   // Highlight the player dot on the selectedChart
-  selectedChart.highlightPlayer(player, isHighlighted);
+  selectedChart.highlightPlayer(player);
 
   // Display the tooltip-player info for the selected player
   displayTooltipPlayerInfo(player);
@@ -229,6 +225,8 @@ function submit_filterForm(event) {
   const selectedChartId = document.getElementById('chart-select-left').value;
   const countrySelect = document.querySelectorAll('input[name="country-checkbox"]:checked');
   const countrySelectArr = Array.from(countrySelect).map(checkbox => checkbox.value)
+  let resultsDiv = document.getElementById('searchResults');
+
 
   // FILTER FORM VALIDATION
   // Check for invalid values
@@ -237,6 +235,9 @@ function submit_filterForm(event) {
     alert('Please select a chart to apply filters.');
     return; // Prevent the rest of the code from executing
   }
+
+  // Reset search results
+  resultsDiv.innerHTML = ""
   
 
   const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId);
