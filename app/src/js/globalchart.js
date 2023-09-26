@@ -13,8 +13,8 @@ class GlobalChart {
     this.y_selected = y_selected;
     this.color_code = color_code;
     this.margin = { top: 80, right: 75, bottom: 60, left: 90 };
-    this.width = 800 - this.margin.left - this.margin.right;
-    this.height = 700 - this.margin.top - this.margin.bottom;
+    this.width = 550 - this.margin.left - this.margin.right;
+    this.height = 475 - this.margin.top - this.margin.bottom;
     this.svg = null; 
     this.filterTypes = null
   }
@@ -329,7 +329,7 @@ class GlobalChart {
     const initialRadius = parseFloat(selectedCircle.attr('r'))
     
     let isHighlighted = initialRadius == 12.0
-    console.log('isHighlighted... ', isHighlighted)
+    console.log('isHighlighted... ', isHighlighted)    
 
     // move object to foreground
     selectedCircle.raise()
@@ -461,7 +461,7 @@ class GlobalChart {
   doLegend(svg, width) {    
     let legend = svg.append('g')
     .attr('class', 'legend')
-    .attr('transform', `translate(${width}, -40)`); // Adjust the position as needed
+    .attr('transform', `translate(${width}, -30)`); // Adjust the position as needed
   
     // Define the legend for COUNTRY-GROUPINGS
     let legendData_bis = [

@@ -17,8 +17,8 @@ div.tooltip-player-name {
   margin-bottom: 10px;
 }
 
-div.chart {
-  margin: 20px;
+.chart {
+  margin: 10px;
   /* margin-bottom: 25px; */
 }
 
@@ -43,10 +43,10 @@ div.chart {
   height: 82vh;
   overflow-y: auto;
   padding: 1%;
-
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row; /* Change to row for horizontal layout */
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  justify-content: center;
 }
 
 .svg {
@@ -139,8 +139,8 @@ div.chart {
 
 .right img {
   margin-top: 25px;
-  width: 100px;
-  height: 100px;
+  width: 75px;
+  height: 75px;
 }
 
 .tooltip-player {
@@ -149,6 +149,7 @@ div.chart {
   font-size: 24px;
   color: white;
   opacity: 0;  
+  overflow-y: auto;
 }
 
 .right label {
@@ -200,13 +201,26 @@ div.chart {
 
 .searchResults {
   margin-top: 20px;  
-  height: 20vh;
+  height: 220px;
   background-color: #000;
-  color: #ffffff;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: large;
-  overflow-y: auto;  
+  overflow-y: auto;
+  /* align-content: center;     */
 }
+
+
+.resultButton {
+  background-color: #ffffff;
+  height: 40px;
+  width: 200px;
+  border-radius: 5px;
+
+  
+
+}
+
+
+
+
 
 
 

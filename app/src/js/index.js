@@ -71,6 +71,28 @@ function submit_searchForm(event) {
 
 // Function to handle player button click
 function handlePlayerButtonClick(player, selectedChart) {
+  //highlight the button
+  // const searchResultsDiv = document.getElementById('searchResults')
+  // const playerButton = searchResultsDiv.querySelector(`#${player.id}`)
+  // const playerButton = document.getElementById(player.id)
+  // const resultsList = document.getElementById('results-list')
+  const playerButton  = document.getElementById(player.id)
+
+  console.log('playerButton:  ', playerButton)
+
+
+
+  // color the button
+  if(playerButton.style.backgroundColor == '#ffffff'){
+    playerButton.style.backgroundColor = '#000000'
+    playerButton.style.color = '#ffffff'
+  }
+  else {
+    playerButton.style.backgroundColor = '#ffffff'
+    playerButton.style.color = '#000000'
+  }
+  
+
   // Highlight the player dot on the selectedChart
   selectedChart.highlightPlayer(player);
 
@@ -129,19 +151,23 @@ function displaySearchResults(results, selectedChart) {
   } 
   else {    
     // Create a list of matching players as buttons
-    const ul = document.createElement("ul");
+    const resultsList = document.createElement("ul")
+    resultsList.id = "results-list"
+
     results.forEach(player => {
-      const li = document.createElement("li");
       const button = document.createElement("button");
+      button.className = 'resultButton'      
+      button.id = player.id
       button.textContent = player.name;
+
       // Add a click event listener to the button
       button.addEventListener("click", () => {
         handlePlayerButtonClick(player, selectedChart);
-      });
-      li.appendChild(button);
-      ul.appendChild(li);
+      });      
+      resultsList.appendChild(button)
     });
-    searchResultsDiv.appendChild(ul);
+
+    searchResultsDiv.appendChild(resultsList);
   }
 }
 
