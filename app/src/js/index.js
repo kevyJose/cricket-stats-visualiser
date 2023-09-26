@@ -152,7 +152,8 @@ function displaySearchResults(results, selectedChart) {
   else {    
     // Create a list of matching players as buttons
     const resultsList = document.createElement("ul")
-    resultsList.id = "results-list"
+    // resultsList.id = "results-list"
+    resultsList.className = 'results-list'
 
     results.forEach(player => {
       const button = document.createElement("button");
