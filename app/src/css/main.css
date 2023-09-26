@@ -205,6 +205,10 @@ div.tooltip-player-name {
   background-color: #000;
   overflow-y: auto;
   /* align-content: center;     */
+  display: flex; /* Display children in a column layout */
+  flex-direction: column;
+  justify-content: center;
+  
 }
 
 
