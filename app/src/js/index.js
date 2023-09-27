@@ -26,24 +26,31 @@ document.addEventListener('DOMContentLoaded', () => {
 function enablePlayerSearch() {
   const chartSelect_right = document.getElementById("chart-select-right") //dropdown
   const searchField = document.getElementById("player-search-field")
-  const errorMsg = document.getElementById('search-error-msg')
   const searchButton = document.getElementById("searchButton")
+  const resultsList = document.getElementById("results-list");
+  const errorMsg = document.getElementById("error-msg");
 
   searchField.disabled = false
   searchButton.disabled = false
 
+  // form-validation for search field
   searchField.addEventListener('input', () => {
     const pattern = /^[a-zA-Z -]+$/;
     const inputValue = searchField.value;
     
     if (! pattern.test(inputValue)) {
-      // errorMsg.textContent = 'Try again! Please enter a valid player name.';
       searchField.setCustomValidity('Try again! Please enter a valid player name.');
     } else {
-      // errorMsg.textContent = ''; // empty error message for valid input
       searchField.setCustomValidity('');
     }
-  });  
+  });
+
+  // Clear previous content for new queries
+  chartSelect_right.addEventListener('change', () => {
+    resultsList.innerHTML = ""; 
+    errorMsg.textContent = "";
+  });
+
 }
 
 

@@ -336,7 +336,7 @@ class GlobalChart {
 
     selectedCircle.transition()
       .duration(700) // Duration of transition
-      .attr('r', isHighlighted ? 3.0 : 12.0) // radius
+      .attr('r', isHighlighted ? 3.0 : 9.0) // radius
       .style('stroke', isHighlighted ? 'none' : 'black')
       .style('stroke-width', isHighlighted ? '0px' : '2.5px');
   }

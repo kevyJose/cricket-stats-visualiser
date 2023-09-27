@@ -207,16 +207,17 @@
     <div class="right">      
 
       <form id="search_form" onsubmit="submit_searchForm(event)">
-        <div class="player-search">      
+        <div class="player-search">
+          <!-- search input field -->
+          <label for="player-search-field">Player Search:</label>
+          <input type="text" id="player-search-field" placeholder="Name" disabled><br><br>
+          
           <!-- chart selector -->
           <label for="chart-select-right">Select Chart:</label>
           <select id="chart-select-right" name="chart-select" disabled>
             <option value="" disabled selected>Select an option</option>
-          </select><br><br>
-  
-          <!-- search input field -->
-          <label for="player-search-field">Player Search:</label>
-          <input type="text" id="player-search-field" placeholder="Name" disabled>
+          </select>
+          
   
           <!-- error message -->
           <!-- <div id="search-error-msg" class="error-msg"></div> -->
