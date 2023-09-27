@@ -269,28 +269,39 @@ function submit_filterForm(event) {
   // let endYearElem = document.getElementById('end-year-dropdown');
   let debutYear = document.getElementById('debut-year-dropdown').value;
   let finalYear = document.getElementById('final-year-dropdown').value;
-  const selectedChartId = document.getElementById('chart-select-left').value;
+  const selectedChartVal = document.getElementById('chart-select-left').value;
+  let selectedCharts = [];
   const countrySelect = document.querySelectorAll('input[name="country-checkbox"]:checked');
   const countrySelectArr = Array.from(countrySelect).map(checkbox => checkbox.value)
-  let resultsDiv = document.getElementById('searchResults');
+  // let resultsDiv = document.getElementById('searchResults');
+  const resultsList = document.getElementById("results-list");
+  const errorMsg = document.getElementById("error-msg");
 
+
+  // Clear search-results box 
+  resultsList.innerHTML = ""; 
+  errorMsg.textContent = "";
 
   // FILTER FORM VALIDATION
   // Check for invalid values
-  if (selectedChartId == '' ) {
+  if (selectedChartVal == '' ) {
     // Display an error message or alert
     alert('Please select a chart to apply filters.');
     return; // Prevent the rest of the code from executing
   }
 
-  // Reset search results
-  // resultsDiv.innerHTML = ""
-  
 
-  const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId);
-  // console.log('selectedChart: ', selectedChart)
-  const filtersMap = new Map()
+  if (selectedChartVal === 'all') {
+    selectedCharts = allCharts
+  }
+  else {    
+    const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartVal);
+    selectedCharts.push(selectedChart)
+    // console.log('selectedChart: ', selectedChart)
+  }
 
+
+  const filtersMap = new Map();
 
   if ((startYear !== '') && (endYear !== '')) {
     startYear = parseInt(startYear)
@@ -305,7 +316,6 @@ function submit_filterForm(event) {
       return;     
     }       
   }
-
   if (countrySelectArr.length > 0) {
     filtersMap.set('country-select', countrySelectArr)    
   }
@@ -320,10 +330,12 @@ function submit_filterForm(event) {
 
   // Do the reRender
   if (filtersMap.size > 0) {
-    selectedChart.reRender(filtersMap)    
+    // do a for loop to call rerender on all charts
+    selectedCharts.forEach((chart) => chart.reRender(filtersMap));
+    // selectedChart.reRender(filtersMap)    
   }
   else {    
-    alert("You must input the fields to apply filters!")    
+    alert("You must select values in fields to apply filters!")    
   }
   
 }
