@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(console.log('Data read successfully'))
     .catch((error) => console.log('Error: ', error.message))
     
-  doFilterDropdowns();  
+  doFilterDropdowns(); 
+  
 });
 
 
@@ -71,28 +72,6 @@ function submit_searchForm(event) {
 
 // Function to handle player button click
 function handlePlayerButtonClick(player, selectedChart) {
-  //highlight the button
-  // const searchResultsDiv = document.getElementById('searchResults')
-  // const playerButton = searchResultsDiv.querySelector(`#${player.id}`)
-  // const playerButton = document.getElementById(player.id)
-  // const resultsList = document.getElementById('results-list')
-  const playerButton  = document.getElementById(player.id)
-
-  console.log('playerButton:  ', playerButton)
-
-
-
-  // color the button
-  if(playerButton.style.backgroundColor == '#ffffff'){
-    playerButton.style.backgroundColor = '#000000'
-    playerButton.style.color = '#ffffff'
-  }
-  else {
-    playerButton.style.backgroundColor = '#ffffff'
-    playerButton.style.color = '#000000'
-  }
-  
-
   // Highlight the player dot on the selectedChart
   selectedChart.highlightPlayer(player);
 
@@ -141,34 +120,38 @@ function displayTooltipPlayerInfo(player) {
 
 
 
-
 function displaySearchResults(results, selectedChart) {
   const searchResultsDiv = document.getElementById("searchResults");
-  searchResultsDiv.innerHTML = ""; // Clear previous results
+  const resultsList = document.getElementById("results-list");
+  const errorMsg = document.getElementById("error-msg");
+
+  // Clear previous content
+  resultsList.innerHTML = ""; 
+  errorMsg.textContent = ""; 
 
   if (results.length === 0) {
-    searchResultsDiv.innerHTML = "No results found.";
+    resultsList.innerHTML = "";
+    errorMsg.textContent = "No results found.";
   } 
   else {    
-    // Create a list of matching players as buttons
-    const resultsList = document.createElement("ul")
-    // resultsList.id = "results-list"
-    resultsList.className = 'results-list'
-
+    // Create buttons for each player in results
     results.forEach(player => {
       const button = document.createElement("button");
-      button.className = 'resultButton'      
+      button.className = 'resultButton-Off'
+      // button.classList      
       button.id = player.id
       button.textContent = player.name;
 
       // Add a click event listener to the button
-      button.addEventListener("click", () => {
+      button.addEventListener("click", () => {        
+        // toggle the button
+        button.classList.toggle("resultButton-On");
+        button.classList.toggle("resultButton-Off");
+
         handlePlayerButtonClick(player, selectedChart);
-      });      
+      });   
       resultsList.appendChild(button)
     });
-
-    searchResultsDiv.appendChild(resultsList);
   }
 }
 
@@ -264,7 +247,7 @@ function submit_filterForm(event) {
   }
 
   // Reset search results
-  resultsDiv.innerHTML = ""
+  // resultsDiv.innerHTML = ""
   
 
   const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId);

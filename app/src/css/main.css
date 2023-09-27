@@ -3,7 +3,6 @@ body {
 }
 
 
-
 div.form-option {
   margin-bottom: 40px;
 }
@@ -212,6 +211,7 @@ div.tooltip-player-name {
 .searchResults {
   margin-top: 20px;  
   height: 220px;
+  width: 105%;
   background-color: #000;
   overflow-y: auto;
   align-content: center;
@@ -220,22 +220,40 @@ div.tooltip-player-name {
 }
 
 
-.resultButton {
-  background-color: #ffffff;
+.resultButton-On {
+  background-color: #353535;
+  color: #ffffff;
   font-size: 14px;
   height: 35px;
   width: 180px;
   border-radius: 5px;
   margin: 0;
   margin-bottom: 15px;
-  margin-right: 35px;
-  
+  margin-right: 35px;  
 }
+
+.resultButton-Off {
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 14px;
+  height: 35px;
+  width: 180px;
+  border-radius: 5px;
+  margin: 0;
+  margin-bottom: 15px;
+  margin-right: 35px;  
+}
+
+
 
 .results-list {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #ffffff;
+  font-size: larger;
+  font-weight: bolder;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 
@@ -248,10 +266,20 @@ div.tooltip-player-name {
   text-align: center;
 }
 
+
+.error-msg {
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 h1 {
   color:white;
   font-size: 40px;
-  font-family: 'Segoe UI';
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
   margin: 0;  
 }
@@ -261,12 +289,15 @@ h2 {
   color: white;
   font-size: 32px;
   font-weight: bold;
+  text-align: center;
 }
 
 h3 {
   color: white;
   font-size: 28px;
   font-weight: bold;
+  text-align: center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 
@@ -311,10 +342,4 @@ button:disabled {
   color: #aaaaaa; /* Icon color */
   cursor: not-allowed; /* Cursor to 'not-allowed' */
 }
-
-
-
-
-
-
 
