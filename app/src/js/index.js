@@ -30,8 +30,7 @@ function enablePlayerSearch() {
   const resultsList = document.getElementById("results-list");
   const errorMsg = document.getElementById("error-msg");
 
-  searchField.disabled = false
-  searchButton.disabled = false
+  searchField.disabled = false  
 
   // form-validation for search field
   searchField.addEventListener('input', () => {
@@ -49,6 +48,7 @@ function enablePlayerSearch() {
   chartSelect_right.addEventListener('change', () => {
     resultsList.innerHTML = ""; 
     errorMsg.textContent = "";
+    searchButton.disabled = false
   });
 
 }
@@ -59,28 +59,45 @@ function submit_searchForm(event) {
   event.preventDefault();
   
   // get selected chart
-  const selectedChartId = document.getElementById('chart-select-right').value
-  const selectedChart = allCharts.find(chart => chart.id_tag === selectedChartId)
-  // console.log('selectedChart: ', selectedChart)
-  const searchQuery = document.getElementById("player-search-field").value.toLowerCase().trim()
+  const selectedChartVal = document.getElementById('chart-select-right').value;
+  const searchQuery = document.getElementById("player-search-field").value.toLowerCase().trim();
+  let selectedCharts = [];
 
-  if (selectedChart) {
-    // get search results and display them
-    const searchResults = selectedChart.selectedData.filter(player => player.name.toLowerCase().includes(searchQuery))    
-    displaySearchResults(searchResults, selectedChart);
-  } 
+  if(selectedChartVal === 'all') {    
+    selectedCharts = allCharts
+
+    // get common players across all selected charts, that match the search query
+    const commonPlayers = selectedCharts.reduce((intersection, chart) => {
+      const chartSearchResults = chart.selectedData.filter(player => player.name.toLowerCase().includes(searchQuery));
+      return intersection.length === 0
+        ? chartSearchResults
+        : intersection.filter(player => chartSearchResults.some(p => p.name === player.name));
+    }, []);
+  
+    displaySearchResults(commonPlayers, selectedCharts);
+  }
   else {
-    // selected chart not found
-    console.error("Selected chart not found.");
-  }   
+    let selectedChart = allCharts.find(chart => chart.id_tag === selectedChartVal)
+    selectedCharts.push(selectedChart)
+
+    if (selectedChart) {
+      // get search results and display them
+      const searchResults = selectedChart.selectedData.filter(player => player.name.toLowerCase().includes(searchQuery))    
+      displaySearchResults(searchResults, selectedCharts);
+    } 
+    else {
+      // selected chart not found
+      console.error("Selected chart not found.");
+    } 
+  }    
   
 }
 
 
 // Function to handle player button click
-function handlePlayerButtonClick(player, selectedChart) {
-  // Highlight the player dot on the selectedChart
-  selectedChart.highlightPlayer(player);
+function handlePlayerButtonClick(player, selectedCharts) {
+  console.log('handling player-button click...')
+  selectedCharts.forEach((chart) => chart.highlightPlayer(player));
 
   // Display the tooltip-player info for the selected player
   displayTooltipPlayerInfo(player);
@@ -127,7 +144,7 @@ function displayTooltipPlayerInfo(player) {
 
 
 
-function displaySearchResults(results, selectedChart) {
+function displaySearchResults(results, selectedCharts) {
   const searchResultsDiv = document.getElementById("searchResults");
   const resultsList = document.getElementById("results-list");
   const errorMsg = document.getElementById("error-msg");
@@ -144,8 +161,7 @@ function displaySearchResults(results, selectedChart) {
     // Create buttons for each player in results
     results.forEach(player => {
       const button = document.createElement("button");
-      button.className = 'resultButton-Off'
-      // button.classList      
+      button.className = 'resultButton-Off'       
       button.id = player.id
       button.textContent = player.name;
 
@@ -155,7 +171,7 @@ function displaySearchResults(results, selectedChart) {
         button.classList.toggle("resultButton-On");
         button.classList.toggle("resultButton-Off");
 
-        handlePlayerButtonClick(player, selectedChart);
+        handlePlayerButtonClick(player, selectedCharts);
       });   
       resultsList.appendChild(button)
     });
@@ -220,8 +236,22 @@ function submit_configForm(event) {
   //use extracted info to plot chart
   doGlobalChart(event, '#'+newPlotId);
 
+  // append all-charts option when >1 charts exist
+  if (allCharts.length == 2) {
+    // add an option to the select dropdown
+    const allOptionR = document.createElement("option");
+    const allOptionL = document.createElement("option");
+    allOptionR.value = 'all';
+    allOptionR.text = 'All Charts';
+    allOptionL.value = 'all';
+    allOptionL.text = 'All Charts';
+    chartSelect_right.insertBefore(allOptionR, chartSelect_right.childNodes[2]);
+    chartSelect_left.insertBefore(allOptionL, chartSelect_left.childNodes[2]);
+  }  
+
   // update chart-selection dropdown
   if(allCharts.length > 0){
+    console.log('updating chart selection dropdowns...')
     doChartSelectDropdown(chartSelect_left)
     doChartSelectDropdown(chartSelect_right)
     chartSelect_left.disabled = false
@@ -297,8 +327,6 @@ function submit_filterForm(event) {
   }
   
 }
-
-
 
 
 

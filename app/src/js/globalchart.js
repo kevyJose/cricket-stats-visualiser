@@ -326,17 +326,19 @@ class GlobalChart {
     const selectedCircle = dotsGroup.selectAll('circle')
       .filter((d) => d.id === player.id)
 
+    const bigR = 9.0
+    const smallR = 3.0
     const initialRadius = parseFloat(selectedCircle.attr('r'))
     
-    let isHighlighted = initialRadius == 12.0
+    let isHighlighted = (initialRadius == bigR)
     console.log('isHighlighted... ', isHighlighted)    
 
     // move object to foreground
     selectedCircle.raise()
 
     selectedCircle.transition()
-      .duration(700) // Duration of transition
-      .attr('r', isHighlighted ? 3.0 : 9.0) // radius
+      .duration(800) // Duration of transition
+      .attr('r', isHighlighted ? smallR : bigR) // radius
       .style('stroke', isHighlighted ? 'none' : 'black')
       .style('stroke-width', isHighlighted ? '0px' : '2.5px');
   }
