@@ -123,6 +123,13 @@ div.tooltip-player-name {
   font-weight: bold;
 }
 
+.chart-index {
+  font-family: 'Arial';    
+  font-size: 18px;
+  fill: #000000;
+  font-weight: bold;
+}
+
 .legend-item-labels {
   font-size: 16px;
   fill: #000000;

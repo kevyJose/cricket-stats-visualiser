@@ -577,13 +577,24 @@ class GlobalChart {
     // console.log('selectedLocation... ', prefix)
     // console.log()
 
+    // title
     svg.append('text')
       .attr('class', 'chart-title') // reference
       .attr('x', (width / 2))
       .attr('y', -40)
       .attr('text-anchor', 'middle')
       .text(this.y_title + ' vs. ' + this.x_title)
+
+    // indexing
+    svg.append('text')
+      .attr('class', 'chart-index') // reference
+      .attr('x', -80)
+      .attr('y', -55)
+      // .attr('text-anchor', 'left')
+      .text('#' + this.id_tag.charAt(this.id_tag.length-1))
+      
   }
+
 
 
 }
