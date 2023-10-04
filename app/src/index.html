@@ -1,258 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./css/main.css">
-  <script src="https://d3js.org/d3.v7.min.js"></script>  
-  <script src="./js/index.js"></script>
-  <script src="./js/globalchart.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./js/globalchart.js"></script>
 
-  <title>Cricket Mania</title>
-</head>
-<body>
-  
-  
-  
+    <title>Cricket Mania</title>
+  </head>
+  <body>
+    <div class="content">
+      <div class="left">
+        <form id="config_form" onsubmit="submit_configForm(event)">
+          <h2>Create Chart:</h2>
+          <div class="form-option">
+            <option-label for="location-menu">Location:</option-label>
+            <select id="location-menu" name="location">
+              <option value="C">Combined</option>
+              <option value="H">Home</option>
+              <option value="A">Away</option>
+              <option value="N">Neutral</option>
+              <option value="B">BIS</option>
+              <option value="S">SENA</option>
+              <option value="O">Other Countries</option>
+            </select>
+          </div>
 
-  <div class="content">    
-
-    <div class="left">
-      <form id="config_form" onsubmit="submit_configForm(event)">
-        <div class="form-option">
-          <label for="location-menu">Location:</label>
-          <select id="location-menu" name="location">
-            <option value="C">Combined</option>
-            <option value="H">Home</option>
-            <option value="A">Away</option>
-            <option value="N">Neutral</option>
-            <option value="B">BIS</option>
-            <option value="S">SENA</option>
-            <option value="O">Other Countries</option>
-          </select>
-        </div>
-    
-        <div class="inner-form-option">
-          <label for="x-attr-menu">X feature:</label>
-          <select id="x-attr-menu" name="x-attr">
-            <option value="" disabled selected>Select an option</option>
-            <option value="runs">Runs</option>
-            <option value="matches_played">Matches Played</option>
-            <option value="innings">Innings</option>
-            <option value="not_outs">Not-Outs</option>
-            <option value="high_score">High Score</option>
-            <option value="batting_average">Batting Average</option>
-            <option value="balls_faced">Balls Faced</option>
-            <option value="strike_rate">Strike Rate</option>
-            <option value="centuries">Centuries</option>
-            <option value="half_cents">Half-Centuries</option>
-            <option value="below_fifties">Below-Fifties</option>
-          </select>
-        </div>
-    
-        <div class="inner-form-option">
-          <label for="y-attr-menu">Y feature:</label>
-          <select id="y-attr-menu" name="y-attr">
-            <option value="" disabled selected>Select an option</option>
-            <option value="runs">Runs</option>
-            <option value="matches_played">Matches Played</option>
-            <option value="innings">Innings</option>
-            <option value="not_outs">Not-Outs</option>
-            <option value="high_score">High Score</option>
-            <option value="batting_average">Batting Average</option>
-            <option value="balls_faced">Balls Faced</option>
-            <option value="strike_rate">Strike Rate</option>
-            <option value="centuries">Centuries</option>
-            <option value="half_cents">Half-Centuries</option>
-            <option value="below_fifties">Below-Fifties</option>
-          </select>
-        </div>
-    
-    
-        <div class="form-option">
-            <label>Colour-coding:</label>
-            <div>          
-              <input type="radio" id="colorCode_1" name="color-code" value="bis" checked/>
-              <label for="colorCode_1">BIS/SENA/Other</label>
-    
-              <input type="radio" id="colorCode_2" name="color-code" value="matches"/>
-              <label for="colorCode_2">Matches Played</label>
+          <div class="form-option">
+            <option-label>Choose Features:</option-label>
+            <div class="inner-form-option">
+              <sub-label for="x-attr-menu">X feature:</sub-label>
+              <select id="x-attr-menu" name="x-attr">
+                <option value="" disabled selected>Select an option</option>
+                <option value="runs">Runs</option>
+                <option value="matches_played">Matches Played</option>
+                <option value="innings">Innings</option>
+                <option value="not_outs">Not-Outs</option>
+                <option value="high_score">High Score</option>
+                <option value="batting_average">Batting Average</option>
+                <option value="balls_facelabeld">Balls Faced</option>
+                <option value="strike_rate">Strike Rate</option>
+                <option value="centuries">Centuries</option>
+                <option value="half_cents">Half-Centuries</option>
+                <option value="below_fifties">Below-Fifties</option>
+              </select>
             </div>
-    
-            <div>
-              <button type="submit">Submit</button>
-            </div>      
-        </div>
-        <!-- <br> -->
-      </form>    
-    
-    
-      <form id="filter_form" onsubmit="submit_filterForm(event)">
-    
-        <h2>Filters:</h2>
-    
-        <div class="form-option">
-          <label for="chart-select-left">Select Chart:</label>
-          <select id="chart-select-left" name="chart-select" disabled>            
-            <option value="" disabled selected>Select an option</option>
-          </select>
-        </div>
-    
-        <div class="form-option">
 
-          <div class="inner-form-option">            
-            <filter_type>Year-Range:</filter_type><br><br>
-            <label for="start-year-dropdown">Start Year:</label>
-            <select id="start-year-dropdown" name="start-year" disabled>
-              <option value="" disabled selected>Select an option</option>
-            </select>
+            <div class="inner-form-option">
+              <sub-label for="y-attr-menu">Y feature:</label>
+              <select id="y-attr-menu" name="y-attr">
+                <option value="" disabled selected>Select an option</option>
+                <option value="runs">Runs</option>
+                <option value="matches_played">Matches Played</option>
+                <option value="innings">Innings</option>
+                <option value="not_outs">Not-Outs</option>
+                <option value="high_score">High Score</option>
+                <option value="batting_average">Batting Average</option>
+                <option value="balls_faced">Balls Faced</option>
+                <option value="strike_rate">Strike Rate</option>
+                <option value="centuries">Centuries</option>
+                <option value="half_cents">Half-Centuries</option>
+                <option value="below_fifties">Below-Fifties</option>
+              </select>
+            </div>
           </div>
+
           
-          <div class="inner-form-option">
-            <label for="end-year-dropdown">End Year:</label>
-            <select id="end-year-dropdown" name="end-year" disabled>
+          <div class="form-option">
+            <option-label>Colour-coding:</option-label>            
+            <div class="inner-form-option">
+              <input
+                type="radio"
+                id="colorCode_1"
+                name="color-code"
+                value="bis"
+                checked
+              />
+              <sub-label for="colorCode_1">Country Grouping</sub-label><br>
+            </div>
+
+            <div class="inner-form-option">
+              <input
+                type="radio"
+                id="colorCode_2"
+                name="color-code"
+                value="matches"
+              />
+              <sub-label for="colorCode_2">Matches Played</sub-label>
+            </div>
+            
+
+            <div>
+              <button type="submit">Create</button>
+            </div>
+          </div>
+          <!-- <br> -->
+        </form>
+
+        <hr />
+
+        <form id="filter_form" onsubmit="submit_filterForm(event)">
+          <h2>Filters:</h2>
+
+          <div class="form-option">
+            <option-label for="chart-select-left">Select Chart:</option-label>
+            <select id="chart-select-left" name="chart-select" disabled>
               <option value="" disabled selected>Select an option</option>
             </select>
           </div>
-        </div>    
-    
-        <div class="form-option">
-          <filter_type>Debut Year:</filter_type><br><br>      
-          <select id="debut-year-dropdown" name="debut-year" disabled>
-            <option value="" disabled selected>Select an option</option>
-          </select>
-        </div>
-    
-        <div class="form-option">
-          <filter_type>Final Year:</filter_type><br><br>      
-          <select id="final-year-dropdown" name="final-year" disabled>
-            <option value="" disabled selected>Select an option</option>
-          </select>
-        </div>
-    
-    
-        <div id="country-select-boxes" class="form-option" >
-          <filter_type>Select Country:</filter_type><br><br>
-    
-          <!-- <input type="checkbox" id="none-checkbox" name="country-checkbox" value="NONE" disabled> -->
-          <!-- <label for="none-checkbox">None</label><br> -->
-          <input type="checkbox" id="afg-checkbox" name="country-checkbox" value="AFG" disabled>
-          <label for="afg-checkbox">Afghanistan</label><br>
-          <input type="checkbox" id="aus-checkbox" name="country-checkbox" value="AUS" disabled>
-          <label for="aus-checkbox">Australia</label><br>
-          <input type="checkbox" id="ban-checkbox" name="country-checkbox" value="BAN" disabled>
-          <label for="ban-checkbox">Bangladesh</label><br>
-          <input type="checkbox" id="bmuda-checkbox" name="country-checkbox" value="BMUDA" disabled>
-          <label for="bmuda-checkbox">Bermuda</label><br>
-          <input type="checkbox" id="can-checkbox" name="country-checkbox" value="CAN" disabled>
-          <label for="can-checkbox">Canada</label><br>
-          <input type="checkbox" id="eaf-checkbox" name="country-checkbox" value="EAf" disabled>
-          <label for="eaf-checkbox">East Africa</label><br>
-          <input type="checkbox" id="eng-checkbox" name="country-checkbox" value="ENG" disabled>
-          <label for="eng-checkbox">England</label><br>
-          <input type="checkbox" id="hkg-checkbox" name="country-checkbox" value="HKG" disabled>
-          <label for="hkg-checkbox">Hong Kong</label><br>
-          <input type="checkbox" id="ind-checkbox" name="country-checkbox" value="IND" disabled>
-          <label for="ind-checkbox">India</label><br>
-          <input type="checkbox" id="ire-checkbox" name="country-checkbox" value="IRE" disabled>
-          <label for="ire-checkbox">Ireland</label><br>
-          <input type="checkbox" id="jer-checkbox" name="country-checkbox" value="JER" disabled>
-          <label for="jer-checkbox">Jersey</label><br>
-          <input type="checkbox" id="kenya-checkbox" name="country-checkbox" value="KENYA" disabled>
-          <label for="kenya-checkbox">Kenya</label><br>
-          <input type="checkbox" id="nam-checkbox" name="country-checkbox" value="NAM" disabled>
-          <label for="nam-checkbox">Namibia</label><br>
-          <input type="checkbox" id="nepal-checkbox" name="country-checkbox" value="NEPAL" disabled>
-          <label for="nepal-checkbox">Nepal</label><br>
-          <input type="checkbox" id="ned-checkbox" name="country-checkbox" value="NED" disabled>
-          <label for="ned-checkbox">Netherlands</label><br>
-          <input type="checkbox" id="nz-checkbox" name="country-checkbox" value="NZ" disabled>
-          <label for="nz-checkbox">New Zealand</label><br>
-          <input type="checkbox" id="oma-checkbox" name="country-checkbox" value="OMA" disabled>
-          <label for="oma-checkbox">Oman</label><br>
-          <input type="checkbox" id="pak-checkbox" name="country-checkbox" value="PAK" disabled>
-          <label for="pak-checkbox">Pakistan</label><br>
-          <input type="checkbox" id="png-checkbox" name="country-checkbox" value="PNG" disabled>
-          <label for="png-checkbox">Papa New Guinea</label><br>
-          <input type="checkbox" id="scot-checkbox" name="country-checkbox" value="SCOT" disabled>
-          <label for="scot-checkbox">Scotland</label><br>
-          <input type="checkbox" id="sa-checkbox" name="country-checkbox" value="SA" disabled>
-          <label for="sa-checkbox">South Africa</label><br>
-          <input type="checkbox" id="sl-checkbox" name="country-checkbox" value="SL" disabled>
-          <label for="sl-checkbox">Sri Lanka</label><br>
-          <input type="checkbox" id="uae-checkbox" name="country-checkbox" value="UAE" disabled>
-          <label for="uae-checkbox">United Arab Emirates</label><br>
-          <input type="checkbox" id="usa-checkbox" name="country-checkbox" value="USA" disabled>
-          <label for="usa-checkbox">United States of America</label><br>
-          <input type="checkbox" id="wi-checkbox" name="country-checkbox" value="WI" disabled>
-          <label for="wi-checkbox">West Indies</label><br>
-          <input type="checkbox" id="zim-checkbox" name="country-checkbox" value="ZIM" disabled>
-          <label for="zim-checkbox">Zimbabwe</label><br>
-        </div>    
-    
-        <div>
-          <button type="submit" id="apply-filter-btn" disabled>Apply Filter</button>
-        </div>      
-      </form>
 
-    </div>
+          <div class="form-option">
+            <filter_type>Year-Range:</filter_type><br /><br />
+            <div class="inner-form-option">
+              <option-label for="start-year-dropdown">Start Year:</option-label>
+              <select id="start-year-dropdown" name="start-year" disabled>
+                <option value="" disabled selected>Select an option</option>
+              </select>
+            </div>
 
-    <div class="center">
-      <div class="title">
-        <h1>Cricket Mania</h1>
+            <div class="inner-form-option">
+              <option-label for="end-year-dropdown">End Year:</option-label>
+              <select id="end-year-dropdown" name="end-year" disabled>
+                <option value="" disabled selected>Select an option</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-option">
+            <filter_type>Debut Year:</filter_type><br /><br />
+            <select id="debut-year-dropdown" name="debut-year" disabled>
+              <option value="" disabled selected>Select an option</option>
+            </select>
+          </div>
+
+          <div class="form-option">
+            <filter_type>Final Year:</filter_type><br /><br />
+            <select id="final-year-dropdown" name="final-year" disabled>
+              <option value="" disabled selected>Select an option</option>
+            </select>
+          </div>
+
+          <div id="country-select-boxes" class="form-option">
+            <filter_type>Select Country:</filter_type><br /><br />
+
+            <!-- <input type="checkbox" id="none-checkbox" name="country-checkbox" value="NONE" disabled> -->
+            <!-- <label for="none-checkbox">None</label><br> -->
+            <input
+              type="checkbox"
+              id="afg-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="AFG"
+              disabled
+            />
+            <label for="afg-checkbox">Afghanistan</label><br />
+            <input
+              type="checkbox"
+              id="aus-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="AUS"
+              disabled
+            />
+            <label for="aus-checkbox">Australia</label><br />
+            <input
+              type="checkbox"
+              id="ban-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="BAN"
+              disabled
+            />
+            <label for="ban-checkbox">Bangladesh</label><br />
+            <input
+              type="checkbox"
+              id="bmuda-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="BMUDA"
+              disabled
+            />
+            <label for="bmuda-checkbox">Bermuda</label><br />
+            <input
+              type="checkbox"
+              id="can-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="CAN"
+              disabled
+            />
+            <label for="can-checkbox">Canada</label><br />
+            <input
+              type="checkbox"
+              id="eaf-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="EAf"
+              disabled
+            />
+            <label for="eaf-checkbox">East Africa</label><br />
+            <input
+              type="checkbox"
+              id="eng-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="ENG"
+              disabled
+            />
+            <label for="eng-checkbox">England</label><br />
+            <input
+              type="checkbox"
+              id="hkg-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="HKG"
+              disabled
+            />
+            <label for="hkg-checkbox">Hong Kong</label><br />
+            <input
+              type="checkbox"
+              id="ind-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="IND"
+              disabled
+            />
+            <label for="ind-checkbox">India</label><br />
+            <input
+              type="checkbox"
+              id="ire-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="IRE"
+              disabled
+            />
+            <label for="ire-checkbox">Ireland</label><br />
+            <input
+              type="checkbox"
+              id="jer-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="JER"
+              disabled
+            />
+            <label for="jer-checkbox">Jersey</label><br />
+            <input
+              type="checkbox"
+              id="kenya-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="KENYA"
+              disabled
+            />
+            <label for="kenya-checkbox">Kenya</label><br />
+            <input
+              type="checkbox"
+              id="nam-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="NAM"
+              disabled
+            />
+            <label for="nam-checkbox">Namibia</label><br />
+            <input
+              type="checkbox"
+              id="nepal-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="NEPAL"
+              disabled
+            />
+            <label for="nepal-checkbox">Nepal</label><br />
+            <input
+              type="checkbox"
+              id="ned-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="NED"
+              disabled
+            />
+            <label for="ned-checkbox">Netherlands</label><br />
+            <input
+              type="checkbox"
+              id="nz-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="NZ"
+              disabled
+            />
+            <label for="nz-checkbox">New Zealand</label><br />
+            <input
+              type="checkbox"
+              id="oma-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="OMA"
+              disabled
+            />
+            <label for="oma-checkbox">Oman</label><br />
+            <input
+              type="checkbox"
+              id="pak-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="PAK"
+              disabled
+            />
+            <label for="pak-checkbox">Pakistan</label><br />
+            <input
+              type="checkbox"
+              id="png-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="PNG"
+              disabled
+            />
+            <label for="png-checkbox">Papa New Guinea</label><br />
+            <input
+              type="checkbox"
+              id="scot-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="SCOT"
+              disabled
+            />
+            <label for="scot-checkbox">Scotland</label><br />
+            <input
+              type="checkbox"
+              id="sa-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="SA"
+              disabled
+            />
+            <label for="sa-checkbox">South Africa</label><br />
+            <input
+              type="checkbox"
+              id="sl-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="SL"
+              disabled
+            />
+            <label for="sl-checkbox">Sri Lanka</label><br />
+            <input
+              type="checkbox"
+              id="uae-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="UAE"
+              disabled
+            />
+            <label for="uae-checkbox">United Arab Emirates</label><br />
+            <input
+              type="checkbox"
+              id="usa-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="USA"
+              disabled
+            />
+            <label for="usa-checkbox">United States of America</label><br />
+            <input
+              type="checkbox"
+              id="wi-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="WI"
+              disabled
+            />
+            <label for="wi-checkbox">West Indies</label><br />
+            <input
+              type="checkbox"
+              id="zim-checkbox"
+              class="country-checkbox"
+              name="country-checkbox"
+              value="ZIM"
+              disabled
+            />
+            <label for="zim-checkbox">Zimbabwe</label><br />
+          </div>
+
+          <div>
+            <button type="submit" id="apply-filter-btn" disabled>Apply</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="center">
+        <div class="title">
+          <h1>Cricket Mania</h1>
+        </div>
+      </div>
+
+      <div class="right">
+        <form id="search_form" onsubmit="submit_searchForm(event)">
+          <div class="player-search">
+            <!-- search input field -->
+            <label for="player-search-field">Player Search:</label>
+            <input
+              type="text"
+              id="player-search-field"
+              placeholder="Surname"
+              disabled
+            /><br /><br />
+
+            <!-- chart selector -->
+            <label for="chart-select-right">Select Chart:</label>
+            <select id="chart-select-right" name="chart-select" disabled>
+              <option id="csr-default" value="" disabled selected>
+                Select an option
+              </option>
+            </select>
+
+            <!-- error message -->
+            <!-- <div id="search-error-msg" class="error-msg"></div> -->
+
+            <!-- search button -->
+            <button
+              type="submit"
+              id="searchButton"
+              class="search-button"
+              disabled
+            >
+              <div
+                style="
+                  width: 30%;
+                  margin: 0 auto;
+                  text-align: center;
+                  font-family: helvetica, arial, sans-serif;
+                "
+              >
+                <a>
+                  <!-- Here's the inline SVG icon -->
+                  <svg
+                    class="svg-icon search-icon"
+                    aria-labelledby="title desc"
+                    role="img"
+                    \
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 19.9 19.7"
+                  >
+                    <title \ id="title">Search</title>
+                    <desc id="desc">A magnifying glass icon.</desc>
+                    <g
+                      \
+                      class="search-path"
+                      fill="none"
+                      stroke="#848F91"
+                      stroke-width="3"
+                    >
+                      <path \ stroke-linecap="square" d="M18.5 18.3l-5.4-5.4" />
+                      <circle cx="8" cy="8" \ r="6" />
+                    </g>
+                  </svg>
+                </a>
+              </div>
+            </button>
+          </div>
+          <br />
+        </form>
+
+        <!-- Display search results -->
+        <div id="searchResults" class="searchResults">
+          <ul id="results-list" class="results-list"></ul>
+          <p id="error-msg" class="error-msg"></p>
+        </div>
+
+        <!-- <div><img src="images\player_icon.png"></div> -->
+        <div class="tooltip-player"></div>
       </div>
     </div>
-
-    <div class="right">      
-
-      <form id="search_form" onsubmit="submit_searchForm(event)">
-        <div class="player-search">
-          <!-- search input field -->
-          <label for="player-search-field">Player Search:</label>
-          <input type="text" id="player-search-field" placeholder="Surname" disabled><br><br>
-          
-          <!-- chart selector -->
-          <label for="chart-select-right">Select Chart:</label>
-          <select id="chart-select-right" name="chart-select" disabled>
-            <option id="csr-default" value="" disabled selected>Select an option</option>            
-          </select>
-          
-  
-          <!-- error message -->
-          <!-- <div id="search-error-msg" class="error-msg"></div> -->
-  
-          <!-- search button -->
-          <button type="submit" id="searchButton" class="search-button" disabled>
-            <div style="width:30%; margin: 0 auto; text-align:center; font-family: helvetica, arial, sans-serif;">            
-              <a>
-                <!-- Here's the inline SVG icon -->
-                <svg class="svg-icon search-icon" aria-labelledby="title desc" role="img" \
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title \
-                id="title">Search</title><desc id="desc">A magnifying glass icon.</desc><g \
-                class="search-path" fill="none" stroke="#848F91" stroke-width="3"><path \
-                stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"/><circle cx="8" cy="8" \
-                r="6"/></g></svg>
-              </a>
-            </div>          
-          </button>
-        </div><br>      
-      </form>
-      
-
-      <!-- Display search results -->
-      <div id="searchResults" class="searchResults">
-        <ul id="results-list" class="results-list"></ul>
-        <p id="error-msg" class="error-msg"></p>
-      </div>        
-      
-
-      <!-- <div><img src="images\player_icon.png"></div> -->
-      <div class="tooltip-player"></div>
-    </div>
-
-  </div>  
-
-  
-</body>
+  </body>
 </html>
