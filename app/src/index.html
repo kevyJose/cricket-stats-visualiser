@@ -30,9 +30,9 @@
           </div>
 
           <div class="form-option">
-            <option-label>Choose Features:</option-label>
+            <config-type>Choose Features:</config-type>
             <div class="inner-form-option">
-              <sub-label for="x-attr-menu">X feature:</sub-label>
+              <option-label for="x-attr-menu">X variable:</option-label>
               <select id="x-attr-menu" name="x-attr">
                 <option value="" disabled selected>Select an option</option>
                 <option value="runs">Runs</option>
@@ -50,7 +50,7 @@
             </div>
 
             <div class="inner-form-option">
-              <sub-label for="y-attr-menu">Y feature:</label>
+              <option-label for="y-attr-menu">Y variable:</option-label>
               <select id="y-attr-menu" name="y-attr">
                 <option value="" disabled selected>Select an option</option>
                 <option value="runs">Runs</option>
@@ -70,7 +70,7 @@
 
           
           <div class="form-option">
-            <option-label>Colour-coding:</option-label>            
+            <config-type>Colour-coding:</config-type>            
             <div class="inner-form-option">
               <input
                 type="radio"
@@ -79,7 +79,7 @@
                 value="bis"
                 checked
               />
-              <label for="colorCode_1">Country Grouping</sub-label><br>
+              <label for="colorCode_1">Country Grouping</label><br>
             </div>
 
             <div class="inner-form-option">
@@ -89,13 +89,12 @@
                 name="color-code"
                 value="matches"
               />
-              <label for="colorCode_2">Matches Played</sub-label>
+              <label for="colorCode_2">Matches Played</label>
             </div>
-            
+          </div>
 
-            <div>
-              <button type="submit">Create</button>
-            </div>
+          <div>
+            <button type="submit">Create</button>
           </div>
           <!-- <br> -->
         </form>
@@ -113,7 +112,7 @@
           </div>
 
           <div class="form-option">
-            <filter_type>Year-Range:</filter_type><br /><br />
+            <filter-type>Year-Range:</filter-type><br />
             <div class="inner-form-option">
               <option-label for="start-year-dropdown">Start Year:</option-label>
               <select id="start-year-dropdown" name="start-year" disabled>
@@ -130,21 +129,21 @@
           </div>
 
           <div class="form-option">
-            <filter_type>Debut Year:</filter_type><br /><br />
+            <filter-type>Debut Year:</filter-type><br /><br />
             <select id="debut-year-dropdown" name="debut-year" disabled>
               <option value="" disabled selected>Select an option</option>
             </select>
           </div>
 
           <div class="form-option">
-            <filter_type>Final Year:</filter_type><br /><br />
+            <filter-type>Final Year:</filter-type><br /><br />
             <select id="final-year-dropdown" name="final-year" disabled>
               <option value="" disabled selected>Select an option</option>
             </select>
           </div>
 
           <div id="country-select-boxes" class="form-option">
-            <filter_type>Select Country:</filter_type><br /><br />
+            <filter-type>Select Country:</filter-type><br /><br />
 
             <!-- <input type="checkbox" id="none-checkbox" name="country-checkbox" value="NONE" disabled> -->
             <!-- <label for="none-checkbox">None</label><br> -->
