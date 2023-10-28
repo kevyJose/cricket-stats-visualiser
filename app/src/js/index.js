@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
+/**
+ * 
+ */
 function enablePlayerSearch() {
   const chartSelect_right = document.getElementById("chart-select-right") //dropdown
   const searchField = document.getElementById("player-search-field")
@@ -30,11 +32,13 @@ function enablePlayerSearch() {
   const resultsList = document.getElementById("results-list");
   const errorMsg = document.getElementById("error-msg");
 
+  // enable the element
   searchField.disabled = false  
 
-  // form-validation for search field
+  // form-validation for searching player's name
   searchField.addEventListener('input', () => {
-    const pattern = /^[a-zA-Z -]+$/;
+    // only accept letters, spaces, apostrophes, hyphens
+    const pattern = /^[a-zA-Z '-]+$/; 
     const inputValue = searchField.value;
     
     if (! pattern.test(inputValue)) {
@@ -50,11 +54,16 @@ function enablePlayerSearch() {
     errorMsg.textContent = "";
     searchButton.disabled = false
   });
-
 }
 
 
-// perform the player search
+
+/**
+ * Handles the submission of the search form
+ * Displays the resulting players from the search query 
+ * 
+ * @param {object} event 
+ */
 function submit_searchForm(event) {
   event.preventDefault();
   
@@ -63,10 +72,11 @@ function submit_searchForm(event) {
   const searchQuery = document.getElementById("player-search-field").value.toLowerCase().trim();
   let selectedCharts = [];
 
+  // searching for player(s) that are present in all charts 
   if(selectedChartVal === 'all') {    
     selectedCharts = allCharts
 
-    // get common players across all selected charts, that match the search query
+    // get common player(s) across all charts, whose name matches the search query
     const commonPlayers = selectedCharts.reduce((intersection, chart) => {
       const chartSearchResults = chart.selectedData.filter(player => player.name.toLowerCase().includes(searchQuery));
       return intersection.length === 0
@@ -94,9 +104,17 @@ function submit_searchForm(event) {
 }
 
 
-// Function to handle player button click
+
+/**
+ * Handles the click event of a player button by:
+ *     - higlighting the player data-point
+ *     - displaying the player profile
+ * 
+ * @param {object} player 
+ * @param {Array} selectedCharts 
+ */
 function handlePlayerButtonClick(player, selectedCharts) {
-  console.log('handling player-button click...')
+  // console.log('handling player-button click...')
   selectedCharts.forEach((chart) => chart.highlightPlayer(player));
 
   // Display the tooltip-player info for the selected player
@@ -143,7 +161,11 @@ function displayTooltipPlayerInfo(player) {
 }
 
 
-
+/**
+ * 
+ * @param {*} results 
+ * @param {*} selectedCharts 
+ */
 function displaySearchResults(results, selectedCharts) {
   const searchResultsDiv = document.getElementById("searchResults");
   const resultsList = document.getElementById("results-list");
@@ -372,7 +394,7 @@ function doYearDropdown(elem) {
   }  
 }
 
-
+// 
 function enableFilterElems() {
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
