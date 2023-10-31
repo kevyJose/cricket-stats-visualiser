@@ -1,4 +1,4 @@
-//global attributes for latest chart
+// global attributes for most recent chart
 let selectedLocation = 'C'
 let x_selected = ''
 let y_selected = ''
@@ -8,7 +8,7 @@ let color_code = ''
 let allCharts = [] // all generated charts
 let raw_data;
 
-
+// LISTENERS
 window.addEventListener('DOMContentLoaded', () => {
 });
 
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /**
- * 
+ * Set up the player-search functionality
  */
 function enablePlayerSearch() {
   const chartSelect_right = document.getElementById("chart-select-right") //dropdown
@@ -122,7 +122,12 @@ function handlePlayerButtonClick(player, selectedCharts) {
 }
 
 
-// Function to display the tooltip-player info for the selected player
+
+/**
+ * Displays tooltip of a player's full career stats
+ * 
+ * @param {*} player 
+ */
 function displayTooltipPlayerInfo(player) {
   const locationsMap = new Map([
     ['C', 'Combined'],
@@ -162,9 +167,10 @@ function displayTooltipPlayerInfo(player) {
 
 
 /**
+ * Creates and displays buttons as search results
  * 
- * @param {*} results 
- * @param {*} selectedCharts 
+ * @param {*} results array of player objects
+ * @param {*} selectedCharts array of chart objects
  */
 function displaySearchResults(results, selectedCharts) {
   const searchResultsDiv = document.getElementById("searchResults");
@@ -201,7 +207,13 @@ function displaySearchResults(results, selectedCharts) {
 }
 
 
-
+/**
+ * Function is triggered on submission of the chart-configuration form
+ * It extracts the form inputs and stores them as chart parameters
+ * Finally, a new chart is generated
+ * 
+ * @param {*} event 
+ */
 function submit_configForm(event) {
   event.preventDefault();
   // CONFIG FORM VALIDATION
@@ -283,6 +295,11 @@ function submit_configForm(event) {
 
 
 
+/**
+ * On submission of the filter-form...
+ * It extracts the form inputs and stores them as filter-queries
+ * Finally, the selected chart is re-rendered according to the queried filters
+ */
 function submit_filterForm(event) {
   event.preventDefault();
   // Get filter-form inputs
@@ -364,6 +381,10 @@ function submit_filterForm(event) {
 
 
 
+/**
+ * Prepare the dropdown elements in the filter-form
+ * These elements require a long list of values to be added
+ */
 function doFilterDropdowns() { 
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
@@ -376,6 +397,11 @@ function doFilterDropdowns() {
 }
 
 
+/**
+ * Dynamically updates the dropdown for chart-selection, as new charts are created
+ * 
+ * @param {*} elem 
+ */
 function doChartSelectDropdown(elem) {
   let i = allCharts.length
   let option = document.createElement("option")
@@ -385,6 +411,12 @@ function doChartSelectDropdown(elem) {
 }
 
 
+/**
+ * Populates the given element with a list of years
+ * Specifically for filtering elements
+ * 
+ * @param {*} elem 
+ */
 function doYearDropdown(elem) {
   for (let i = 1971; i <= 2023; i++) {
     let option = document.createElement("option")
@@ -394,7 +426,10 @@ function doYearDropdown(elem) {
   }  
 }
 
-// 
+/**
+ * Toggles the elements in the filter-form to be ready for use
+ * This function occurs after the first chart is created
+ */
 function enableFilterElems() {
   const startYr_elem = document.getElementById("start-year-dropdown")
   const endYr_elem = document.getElementById("end-year-dropdown")
@@ -420,7 +455,12 @@ function enableFilterElems() {
 }
 
 
-// creates a new div element for each scatter-plot
+
+/**
+ * Creates a new div element for newly created scatter chart
+ * 
+ * @returns {string} the id of the new div element
+ */
 function doScatterPlot_div() {
   let numPlots = document.querySelectorAll('[id^="scatter-plot"]').length
   // console.log('num of scatter plots, before appending new one:  ' + numPlots)
@@ -438,7 +478,10 @@ function doScatterPlot_div() {
 }
 
 
-
+/**
+ * 
+ * @param {Map} map 
+ */
 function setCurrChartAttributes(map) {
   selectedLocation = map.get('location')
   x_selected = map.get('x-attr')

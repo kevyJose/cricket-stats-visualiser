@@ -14,6 +14,7 @@
   <body>
     <div class="content">
       <div class="left">
+        <!-- FORM: configure and create new charts -->
         <form id="config_form" onsubmit="submit_configForm(event)">
           <h2>Create Chart:</h2>
           <div class="form-option">
@@ -100,7 +101,7 @@
         </form>
 
         <hr />
-
+        <!-- FORM: filter existing charts -->
         <form id="filter_form" onsubmit="submit_filterForm(event)">
           <h2>Filters:</h2>
 
@@ -144,9 +145,7 @@
 
           <div id="country-select-boxes" class="form-option">
             <filter-type>Select Country:</filter-type><br /><br />
-
-            <!-- <input type="checkbox" id="none-checkbox" name="country-checkbox" value="NONE" disabled> -->
-            <!-- <label for="none-checkbox">None</label><br> -->
+           
             <input
               type="checkbox"
               id="afg-checkbox"
@@ -389,6 +388,7 @@
         </form>
       </div>
 
+      <!-- This section will display the generated visualisations -->
       <div class="center">
         <div class="title">
           <h1>Cricket Mania</h1>
@@ -396,6 +396,7 @@
       </div>
 
       <div class="right">
+        <!-- FORM: search for a player -->
         <form id="search_form" onsubmit="submit_searchForm(event)">
           <div class="player-search">
             <!-- search input field -->
