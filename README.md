@@ -1,5 +1,8 @@
 # Cricket Mania
 
+## Description
+A data visualisation tool that enables users to explore historical cricket batting data.
+
 🛠 Prerequisites
 Before you begin, make sure you have the following installed:
 
@@ -21,9 +24,3 @@ Before you begin, make sure you have the following installed:
 * The tool is now ready to use
 
 ---
-
-## Name
-Cricket Mania
-
-## Description
-A data visualisation tool that enables users to explore historical cricket batting data.
