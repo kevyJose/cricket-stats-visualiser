@@ -22,7 +22,7 @@ Before you begin, make sure you have the following installed:
 * Clone the repo into a local directory on your PC - ```git clone https://github.com/kevyJose/cricket-stats-visualiser.git```
 * Open the folder ```cricket-stats-visualiser``` with VSCode
 * Open the ```index.html``` file, then press "Go Live" in the bottom-right of the window
-* A server will begin running and the tool GUI will open up in your default browser
+* A server will begin running and the tool GUI will open up in your default browser (if you don’t see this, right-click the index.html tab and select "Open with Live Server")
 * The tool is now ready to use
 
 ---
