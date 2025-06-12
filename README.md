@@ -1,7 +1,7 @@
 # Cricket Mania
 
 ## Description
-A data visualisation tool that enables users to explore historical cricket batting data.
+A data visualisation and analytics tool that enables users to explore historical cricket batting data.
 
 ---
 
